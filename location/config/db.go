@@ -40,8 +40,16 @@ func processENV() {
 
 func createTable(db *gorm.DB) {
 	db.CreateTable(&entity.Country{})
+	db.CreateTable(&entity.Province{})
+	db.CreateTable(&entity.City{})
+	db.CreateTable(&entity.District{})
+	db.CreateTable(&entity.SubDistrict{})
 }
 
 func migrateDDL(db *gorm.DB) {
 	db.AutoMigrate(&entity.Country{})
+	db.AutoMigrate(&entity.Province{})
+	db.AutoMigrate(&entity.City{})
+	db.AutoMigrate(&entity.District{})
+	db.AutoMigrate(&entity.SubDistrict{})
 }
