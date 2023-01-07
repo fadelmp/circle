@@ -7,9 +7,10 @@ import (
 
 func ToProvinceDto(entity entity.Province) dto.Province {
 	return dto.Province{
-		ID:        entity.ID,
-		CountryID: entity.CountryID,
-		Name:      entity.Name,
+		ID:          entity.ID,
+		Name:        entity.Name,
+		CountryID:   entity.CountryID,
+		CountryName: entity.Country.Name,
 	}
 }
 

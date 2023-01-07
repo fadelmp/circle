@@ -24,9 +24,10 @@ func ProviderProvinceRepository(DB *gorm.DB) ProvinceRepository {
 func (p *ProvinceRepository) GetAll() []entity.Province {
 
 	var provinces []entity.Province
+	var province entity.Province
 
 	// Find All Province
-	p.DB.Find(&provinces)
+	p.DB.Model(&province).Preload("Country").Find(&provinces)
 
 	return provinces
 }
@@ -36,7 +37,7 @@ func (p *ProvinceRepository) GetByID(id uint) entity.Province {
 	var province entity.Province
 
 	// Find Province By Id
-	p.DB.Where("id=?", id).Find(&province)
+	p.DB.Model(&province).Preload("Country").Find(&province)
 
 	return province
 }
