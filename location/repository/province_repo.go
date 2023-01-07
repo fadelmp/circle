@@ -37,7 +37,7 @@ func (p *ProvinceRepository) GetByID(id uint) entity.Province {
 	var province entity.Province
 
 	// Find Province By Id
-	p.DB.Model(&province).Preload("Country").Find(&province)
+	p.DB.Model(&province).Preload("Country").Where("id=?", id).Find(&province)
 
 	return province
 }
