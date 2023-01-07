@@ -9,6 +9,7 @@ import (
 type ProvinceServiceContract interface {
 	GetAll() []dto.Province
 	GetByID(uint) dto.Province
+	GetByCountryID(uint) []dto.Province
 }
 
 type ProvinceService struct {
@@ -37,4 +38,13 @@ func (p *ProvinceService) GetByID(id uint) dto.Province {
 
 	// map data from entity to dto
 	return mapper.ToProvinceDto(province)
+}
+
+func (p *ProvinceService) GetByCountryID(country_id uint) []dto.Province {
+
+	// get province by country id
+	provinces := p.ProvinceRepository.GetByCountryID(country_id)
+
+	// map data from entity to dto
+	return mapper.ToProvinceDtoList(provinces)
 }

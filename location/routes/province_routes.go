@@ -12,5 +12,6 @@ func ProvinceRoutes(routes *echo.Echo, api controller.ProvinceController) {
 	{
 		province.GET("", api.GetAll)
 		province.GET("/:id", api.GetByID)
+		province.GET("/country/:country_id", api.GetByCountryID)
 	}
 }

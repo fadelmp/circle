@@ -43,3 +43,18 @@ func (p *ProvinceController) GetByID(e echo.Context) error {
 
 	return config.SuccessResponse(e, http.StatusOK, province)
 }
+
+func (p *ProvinceController) GetByCountryID(e echo.Context) error {
+
+	id, err := strconv.ParseUint(e.Param("country_id"), 10, 64)
+	if err != nil {
+		return config.ErrorResponse(e, http.StatusInternalServerError, config.BadRequest)
+	}
+
+	provinces := p.ProvinceService.GetByCountryID(uint(id))
+	if len(provinces) == 0 {
+		return config.SuccessResponse(e, http.StatusNoContent, config.ProvinceNotFound)
+	}
+
+	return config.SuccessResponse(e, http.StatusOK, provinces)
+}
