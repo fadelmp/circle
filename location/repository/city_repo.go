@@ -9,7 +9,7 @@ import (
 type CityRepositoryContract interface {
 	GetAll() []entity.City
 	GetByID(uint) entity.City
-	GetByprovinceID(uint) []entity.City
+	GetByProvinceID(uint) []entity.City
 }
 
 type CityRepository struct {
@@ -43,7 +43,7 @@ func (c *CityRepository) GetByID(id uint) entity.City {
 	return city
 }
 
-func (c *CityRepository) GetByprovinceID(province_id uint) []entity.City {
+func (c *CityRepository) GetByProvinceID(province_id uint) []entity.City {
 
 	var cities []entity.City
 	var city entity.City

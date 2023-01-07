@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"location/dto"
 	"location/mapper"
 	repository "location/repository"
@@ -40,11 +41,13 @@ func (c *CityService) GetByID(id uint) dto.City {
 	return mapper.ToCityDto(city)
 }
 
-func (c *CityService) GetByprovinceID(province_id uint) []dto.City {
+func (c *CityService) GetByProvinceID(province_id uint) []dto.City {
 
 	// get cities by id
-	cities := c.CityRepository.GetByprovinceID(province_id)
+	cities := c.CityRepository.GetByProvinceID(province_id)
 
+	fmt.Println("cities")
+	fmt.Println(cities)
 	// map data from entity to dto
 	return mapper.ToCityDtoList(cities)
 }

@@ -44,15 +44,15 @@ func (c *CityController) GetByID(e echo.Context) error {
 	return config.SuccessResponse(e, http.StatusOK, city)
 }
 
-func (c *CityController) GetByprovinceID(e echo.Context) error {
+func (c *CityController) GetByProvinceID(e echo.Context) error {
 
 	id, err := strconv.ParseUint(e.Param("province_id"), 10, 64)
 	if err != nil {
 		return config.ErrorResponse(e, http.StatusInternalServerError, config.BadRequest)
 	}
 
-	cities := c.CityService.GetByprovinceID(uint(id))
-	if len(cities) > 0 {
+	cities := c.CityService.GetByProvinceID(uint(id))
+	if len(cities) == 0 {
 		return config.SuccessResponse(e, http.StatusNoContent, config.CityNotFound)
 	}
 

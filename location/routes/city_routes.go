@@ -12,6 +12,6 @@ func CityRoutes(routes *echo.Echo, api controller.CityController) {
 	{
 		city.GET("", api.GetAll)
 		city.GET("/:id", api.GetByID)
-		city.GET("/province/:province_id", api.GetByprovinceID)
+		city.GET("/province/:province_id", api.GetByProvinceID)
 	}
 }
