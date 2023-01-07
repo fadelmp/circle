@@ -15,7 +15,7 @@ DB_PORT =
 
 DB_NAME = 
 
-SERVICE_PORT = :8000
+SERVICE_PORT = :8010
 
 
 Run with command 
