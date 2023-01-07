@@ -13,5 +13,9 @@ func Init(routes *echo.Echo, db *gorm.DB) *echo.Echo {
 	country := injection.CountryInjection(db)
 	CountryRoutes(routes, country)
 
+	// province Route & Injection
+	province := injection.ProvinceInjection(db)
+	ProvinceRoutes(routes, province)
+
 	return routes
 }

@@ -25,7 +25,7 @@ func (c *CountryRepository) GetAll() []entity.Country {
 
 	var countries []entity.Country
 
-	// Find All Address
+	// Find All Country
 	c.DB.Find(&countries)
 
 	return countries
@@ -35,7 +35,7 @@ func (c *CountryRepository) GetByID(id uint) entity.Country {
 
 	var country entity.Country
 
-	// Find Address By Id
+	// Find Country By Id
 	c.DB.Where("id=?", id).Find(&country)
 
 	return country
