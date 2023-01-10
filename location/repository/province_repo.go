@@ -1,8 +1,11 @@
 package repository
 
 import (
+	"location/config"
 	entity "location/entity"
+	"strconv"
 
+	"github.com/go-redis/redis"
 	"github.com/jinzhu/gorm"
 )
 
@@ -13,11 +16,12 @@ type ProvinceRepositoryContract interface {
 }
 
 type ProvinceRepository struct {
-	DB *gorm.DB
+	DB    *gorm.DB
+	Redis *redis.Client
 }
 
-func ProviderProvinceRepository(DB *gorm.DB) ProvinceRepository {
-	return ProvinceRepository{DB: DB}
+func ProviderProvinceRepository(DB *gorm.DB, Redis *redis.Client) ProvinceRepository {
+	return ProvinceRepository{DB: DB, Redis: Redis}
 }
 
 // Implementation
@@ -27,8 +31,10 @@ func (p *ProvinceRepository) GetAll() []entity.Province {
 	var provinces []entity.Province
 	var province entity.Province
 
-	// Find All Province
-	p.DB.Model(&province).Preload("Country").Find(&provinces)
+	query := p.DB.Model(&province).Preload("Country").Find(&provinces)
+	keys := "provinces"
+
+	config.CheckRedisQuery(p.Redis, query, keys)
 
 	return provinces
 }
@@ -37,8 +43,10 @@ func (p *ProvinceRepository) GetByID(id uint) entity.Province {
 
 	var province entity.Province
 
-	// Find Province By Id
-	p.DB.Model(&province).Preload("Country").Where("id=?", id).Find(&province)
+	query := p.DB.Model(&province).Preload("Country").Where("id=?", id).Find(&province)
+	keys := "province_" + strconv.FormatUint(uint64(id), 10)
+
+	config.CheckRedisQuery(p.Redis, query, keys)
 
 	return province
 }
@@ -49,7 +57,10 @@ func (p *ProvinceRepository) GetByCountryID(country_id uint) []entity.Province {
 	var province entity.Province
 
 	// Find Province By Country ID
-	p.DB.Model(&province).Preload("Country").Where("country_id=?", country_id).Find(&provinces)
+	query := p.DB.Model(&province).Preload("Country").Where("country_id=?", country_id).Find(&provinces)
+	keys := "province_country_" + strconv.FormatUint(uint64(country_id), 10)
+
+	config.CheckRedisQuery(p.Redis, query, keys)
 
 	return provinces
 }

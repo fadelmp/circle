@@ -3,22 +3,23 @@ package routes
 import (
 	"location/injection"
 
+	"github.com/go-redis/redis"
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
 )
 
-func Init(routes *echo.Echo, db *gorm.DB) *echo.Echo {
+func Init(routes *echo.Echo, db *gorm.DB, redis *redis.Client) *echo.Echo {
 
 	// country Route & Injection
-	country := injection.CountryInjection(db)
+	country := injection.CountryInjection(db, redis)
 	CountryRoutes(routes, country)
 
 	// province Route & Injection
-	province := injection.ProvinceInjection(db)
+	province := injection.ProvinceInjection(db, redis)
 	ProvinceRoutes(routes, province)
 
 	// city Route & Injection
-	city := injection.CityInjection(db)
+	city := injection.CityInjection(db, redis)
 	CityRoutes(routes, city)
 
 	return routes
