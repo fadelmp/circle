@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	redis "github.com/go-redis/redis"
 	"github.com/jinzhu/gorm"
@@ -66,7 +67,7 @@ func GetData(rdb *redis.Client, key string) interface{} {
 
 func SetData(rdb *redis.Client, key string, data interface{}) bool {
 
-	err := rdb.Set(key, data, 0).Err()
+	err := rdb.Set(key, data, 1*time.Hour).Err()
 	// if there has been an error setting the value
 	// handle the error
 	if err != nil {
