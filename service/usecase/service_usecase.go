@@ -40,6 +40,7 @@ func (s *ServiceUsecase) Create(dto dto.Service) error {
 
 	// map dto to entity
 	service_entity := mapper.ToServiceEntity(dto)
+	service_entity.Base = entity.BaseCreate()
 
 	// create service
 	return s.ServiceRepository.Create(service_entity)

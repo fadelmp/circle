@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 	"service/config"
 	"service/dto"
@@ -24,6 +25,10 @@ func (s *ServiceController) Create(e echo.Context) error {
 	var service dto.Service
 
 	if e.Bind(&service) != nil {
+		fmt.Println(e.Bind(&service))
+		fmt.Println(service.Name)
+		fmt.Println(service.Description)
+		fmt.Println(service.Price)
 		return config.ErrorResponse(e, http.StatusInternalServerError, config.BadRequest)
 	}
 
