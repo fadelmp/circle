@@ -14,6 +14,11 @@ import (
 func main() {
 
 	route := echo.New()
+	route.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"https://oshwinwashing.com", "https://office.oswhinwashing.com"},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+	}))
+
 	dbConfig := config.InitDB()
 	routes := routes2.Init(route, dbConfig)
 
