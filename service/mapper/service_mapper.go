@@ -11,6 +11,7 @@ func ToServiceEntity(dto dto.Service) entity.Service {
 		Name:        dto.Name,
 		Description: dto.Description,
 		Price:       dto.Price,
+		Code:        dto.Code,
 	}
 }
 
@@ -19,6 +20,7 @@ func ToServiceDto(entity entity.Service) dto.Service {
 		ID:          entity.ID,
 		Name:        entity.Name,
 		Description: entity.Description,
+		Code:        entity.Code,
 		Price:       entity.Price,
 		Base:        ToBaseDto(entity.Base),
 	}
