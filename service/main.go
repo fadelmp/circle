@@ -15,7 +15,7 @@ func main() {
 
 	route := echo.New()
 	route.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"https://oshwinwashing.com", "https://office.oswhinwashing.com"},
+		AllowOrigins: []string{"*"},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 	}))
 
