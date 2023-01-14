@@ -1,11 +1,11 @@
 package controller
 
 import (
-	"fmt"
 	"net/http"
 	"service/config"
 	"service/dto"
 	"service/usecase"
+	"strconv"
 
 	"github.com/labstack/echo"
 )
@@ -20,15 +20,39 @@ func ProviderServiceController(s usecase.ServiceUsecase) ServiceController {
 	}
 }
 
+func (s *ServiceController) GetAll(e echo.Context) error {
+
+	services := s.ServiceUsecase.GetAll()
+
+	if len(services) == 0 {
+		return config.SuccessResponse(e, nil, config.ServiceNotFound)
+	}
+
+	return config.SuccessResponse(e, services, config.GetServiceSuccess)
+}
+
+func (s *ServiceController) GetByID(e echo.Context) error {
+
+	id, err := strconv.ParseUint(e.Param("ID"), 10, 64)
+
+	if err != nil {
+		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
+	}
+
+	service := s.ServiceUsecase.GetByID(uint(id))
+
+	if service.ID == 0 {
+		return config.SuccessResponse(e, nil, config.ServiceNotFound)
+	}
+
+	return config.SuccessResponse(e, service, config.GetServiceSuccess)
+}
+
 func (s *ServiceController) Create(e echo.Context) error {
 
 	var service dto.Service
 
 	if e.Bind(&service) != nil {
-		fmt.Println(e.Bind(&service))
-		fmt.Println(service.Name)
-		fmt.Println(service.Description)
-		fmt.Println(service.Price)
 		return config.ErrorResponse(e, http.StatusInternalServerError, config.BadRequest)
 	}
 
@@ -38,5 +62,39 @@ func (s *ServiceController) Create(e echo.Context) error {
 		return config.ErrorResponse(e, http.StatusInternalServerError, err.Error())
 	}
 
-	return config.SuccessResponse(e, http.StatusOK, config.CreateServiceSuccess)
+	return config.SuccessResponse(e, nil, config.CreateServiceSuccess)
+}
+
+func (s *ServiceController) Update(e echo.Context) error {
+
+	var service dto.Service
+
+	if e.Bind(&service) != nil {
+		return config.ErrorResponse(e, http.StatusInternalServerError, config.BadRequest)
+	}
+
+	err := s.ServiceUsecase.Update(service)
+
+	if err != nil {
+		return config.ErrorResponse(e, http.StatusInternalServerError, err.Error())
+	}
+
+	return config.SuccessResponse(e, nil, config.UpdateServiceSuccess)
+}
+
+func (s *ServiceController) Delete(e echo.Context) error {
+
+	id, err := strconv.ParseUint(e.Param("ID"), 10, 64)
+
+	if err != nil {
+		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
+	}
+
+	err = s.ServiceUsecase.Delete(uint(id))
+
+	if err != nil {
+		return config.ErrorResponse(e, http.StatusInternalServerError, err.Error())
+	}
+
+	return config.SuccessResponse(e, nil, config.DeleteServiceSuccess)
 }

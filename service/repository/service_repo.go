@@ -14,7 +14,6 @@ type ServiceRepositoryContract interface {
 	Create(entity.Service) error
 	Update(entity.Service) error
 	Delete(entity.Service) error
-	ActiveStatus(entity.Service) error
 }
 
 type ServiceRepository struct {
@@ -79,17 +78,6 @@ func (s *ServiceRepository) Delete(service entity.Service) error {
 	err := s.DB.Model(&service).Where("id=?", service.ID).Updates(map[string]interface{}{
 		"is_actived": service.Base.Is_Actived,
 		"is_deleted": service.Base.Is_Deleted,
-		"updated_at": service.Base.Updated_At,
-		"updated_by": service.Base.Updated_By,
-	}).Error
-
-	return err
-}
-
-func (s *ServiceRepository) ActiveStatus(service entity.Service) error {
-
-	err := s.DB.Model(&s).Where("id=?", service.ID).Updates(map[string]interface{}{
-		"is_actived": service.Base.Is_Actived,
 		"updated_at": service.Base.Updated_At,
 		"updated_by": service.Base.Updated_By,
 	}).Error

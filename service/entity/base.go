@@ -14,7 +14,9 @@ type Base struct {
 }
 
 func BaseCreate() Base {
+
 	var base Base
+
 	base.Is_Actived = true
 	base.Is_Deleted = false
 	base.Created_By = "System"
@@ -26,7 +28,9 @@ func BaseCreate() Base {
 }
 
 func BaseUpdate() Base {
+
 	var base Base
+
 	base.Updated_By = "System"
 	base.Updated_At = time.Now()
 
@@ -35,8 +39,20 @@ func BaseUpdate() Base {
 
 func BaseDelete() Base {
 	var base Base
+
 	base.Is_Actived = false
 	base.Is_Deleted = true
+	base.Updated_By = "System"
+	base.Updated_At = time.Now()
+
+	return base
+}
+
+func BaseActivate(is_active bool) Base {
+
+	var base Base
+
+	base.Is_Actived = is_active
 	base.Updated_By = "System"
 	base.Updated_At = time.Now()
 
