@@ -98,3 +98,21 @@ func (s *ServiceController) Delete(e echo.Context) error {
 
 	return config.SuccessResponse(e, nil, config.DeleteServiceSuccess)
 }
+
+func (s *ServiceController) ActiveStatus(e echo.Context) error {
+
+	id, err := strconv.ParseUint(e.Param("ID"), 10, 64)
+	is_active, err := strconv.ParseBool(e.Param("Is_Active"))
+
+	if err != nil {
+		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
+	}
+
+	err = s.ServiceUsecase.ActiveStatus(uint(id), is_active)
+
+	if err != nil {
+		return config.ErrorResponse(e, http.StatusInternalServerError, err.Error())
+	}
+
+	return config.SuccessResponse(e, nil, config.ActivateServiceSuccess)
+}

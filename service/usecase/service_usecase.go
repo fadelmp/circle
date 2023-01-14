@@ -16,6 +16,7 @@ type ServiceUsecaseContract interface {
 	Create(entity.Service) error
 	Update(entity.Service) error
 	Delete(uint) error
+	ActiveStatus(uint, bool) error
 }
 
 type ServiceUsecase struct {
@@ -83,6 +84,21 @@ func (s *ServiceUsecase) Delete(id uint) error {
 	service_entity.Base = entity.BaseDelete()
 
 	return s.ServiceRepository.Delete(service_entity)
+}
+
+func (s *ServiceUsecase) ActiveStatus(id uint, is_active bool) error {
+
+	if !s.CheckID(id) {
+		return errors.New(config.ServiceNotFound)
+	}
+
+	var service_entity entity.Service
+
+	service_entity.ID = id
+	service_entity.Base = entity.BaseUpdate()
+	service_entity.Base.Is_Actived = is_active
+
+	return s.ServiceRepository.ActiveStatus(service_entity)
 }
 
 func (s *ServiceUsecase) CheckName(dto dto.Service) bool {

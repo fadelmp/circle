@@ -16,5 +16,6 @@ func ServiceRoutes(routes *echo.Echo, api controller.ServiceController) {
 		service.POST("", api.Create)
 		service.PUT("", api.Update)
 		service.DELETE("/:ID", api.Delete)
+		service.PATCH("/:ID/:Is_Active", api.ActiveStatus)
 	}
 }
