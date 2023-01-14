@@ -3,7 +3,6 @@
 package main
 
 import (
-	"net/http"
 	"os"
 	config "service/config"
 	routes2 "service/routes"
@@ -15,10 +14,10 @@ import (
 func main() {
 
 	route := echo.New()
-	route.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
-		AllowMethods: []string{http.MethodGet, http.MethodHead, http.MethodPut, http.MethodPatch, http.MethodPost, http.MethodDelete},
-	}))
+	// route.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+	// 	AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+	// 	AllowMethods: []string{http.MethodGet, http.MethodHead, http.MethodPut, http.MethodPatch, http.MethodPost, http.MethodDelete},
+	// }))
 
 	dbConfig := config.InitDB()
 	routes := routes2.Init(route, dbConfig)
