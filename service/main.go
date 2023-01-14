@@ -14,11 +14,11 @@ import (
 func main() {
 
 	route := echo.New()
-	route.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"*"},
-		AllowHeaders: []string{"*"},
-		AllowMethods: []string{"*"},
-	}))
+	// route.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+	// 	AllowOrigins: []string{"*"},
+	// 	AllowHeaders: []string{"*"},
+	// 	AllowMethods: []string{"*"},
+	// }))
 
 	dbConfig := config.InitDB()
 	routes := routes2.Init(route, dbConfig)
