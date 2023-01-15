@@ -16,7 +16,7 @@ func CheckResponse(e echo.Context, response dto.Response) error {
 	}
 
 	if response.ResponseCode != 200 {
-		return config.ErrorResponse(e, response.ResponseCode, response.Result)
+		return config.ErrorResponse(e, response.ResponseCode, response.Result.Messages)
 	}
 
 	return config.SuccessResponse(e, response.Result)

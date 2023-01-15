@@ -18,12 +18,13 @@ func ProviderDeleteRequest() DeleteRequest {
 	return DeleteRequest{}
 }
 
-func (d *DeleteRequest) Main(url string, param_body io.Reader) dto.Response {
+func (d *DeleteRequest) Main(url string) dto.Response {
 
 	var result dto.Result
 	var client = &http.Client{}
+	var io io.Reader
 
-	request, err := http.NewRequest(http.MethodDelete, url, param_body)
+	request, err := http.NewRequest(http.MethodDelete, url, io)
 	if err != nil {
 		return dto.Response{ResponseCode: http.StatusBadGateway, ErrorMessage: err, Result: result}
 	}

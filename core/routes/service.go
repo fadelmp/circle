@@ -12,9 +12,13 @@ func ServiceRoutes(routes *echo.Echo, api controller.ServiceController) {
 	{
 		service.GET("", api.GetServices)
 		service.GET("/:id", api.GetServiceById)
-		service.POST("", api.Create)
-		service.PUT("", api.Update)
-		service.DELETE("/:id", api.Delete)
+
+		service.POST("", api.CreateService)
+		service.PUT("", api.UpdateService)
+		service.DELETE("/:id", api.DeleteService)
+
+		service.PATCH("/activate/:id", api.ActivateService)
+		service.PATCH("/deactivate/:id", api.DeactivateService)
 	}
 
 }

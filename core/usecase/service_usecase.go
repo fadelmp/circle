@@ -16,7 +16,9 @@ type ServiceUsecaseContract interface {
 	CreateService(interface{}) dto.Response
 	UpdateService(interface{}) dto.Response
 	DeleteService(uint) dto.Response
-	ActiveStatus(uint, bool) dto.Response
+
+	ActivateService(uint) dto.Response
+	DeactivateService(uint) dto.Response
 }
 
 type ServiceUsecase struct {
@@ -92,6 +94,21 @@ func (s *ServiceUsecase) DeleteService(id uint) dto.Response {
 	uri := getServiceUri()
 	uri += "/" + strconv.FormatUint(uint64(id), 10)
 
-	var req_body *bytes.Buffer
-	return s.DeleteRequest.Main(uri, req_body)
+	return s.DeleteRequest.Main(uri)
+}
+
+func (s *ServiceUsecase) ActivateService(id uint) dto.Response {
+
+	uri := getServiceUri()
+	uri += "/activate/" + strconv.FormatUint(uint64(id), 10)
+
+	return s.PatchRequest.Main(uri)
+}
+
+func (s *ServiceUsecase) DeactivateService(id uint) dto.Response {
+
+	uri := getServiceUri()
+	uri += "/deactivate/" + strconv.FormatUint(uint64(id), 10)
+
+	return s.PatchRequest.Main(uri)
 }

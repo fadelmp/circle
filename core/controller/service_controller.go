@@ -40,7 +40,7 @@ func (s *ServiceController) GetServiceById(e echo.Context) error {
 	return CheckResponse(e, res)
 }
 
-func (s *ServiceController) Create(e echo.Context) error {
+func (s *ServiceController) CreateService(e echo.Context) error {
 
 	var request interface{}
 
@@ -53,7 +53,7 @@ func (s *ServiceController) Create(e echo.Context) error {
 	return CheckResponse(e, res)
 }
 
-func (s *ServiceController) Update(e echo.Context) error {
+func (s *ServiceController) UpdateService(e echo.Context) error {
 
 	var request interface{}
 
@@ -67,7 +67,7 @@ func (s *ServiceController) Update(e echo.Context) error {
 
 }
 
-func (s *ServiceController) Delete(e echo.Context) error {
+func (s *ServiceController) DeleteService(e echo.Context) error {
 
 	id, err := strconv.ParseUint(e.Param("id"), 10, 64)
 
@@ -76,6 +76,32 @@ func (s *ServiceController) Delete(e echo.Context) error {
 	}
 
 	res := s.ServiceUsecase.DeleteService(uint(id))
+
+	return CheckResponse(e, res)
+}
+
+func (s *ServiceController) ActivateService(e echo.Context) error {
+
+	id, err := strconv.ParseUint(e.Param("id"), 10, 64)
+
+	if err != nil {
+		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
+	}
+
+	res := s.ServiceUsecase.ActivateService(uint(id))
+
+	return CheckResponse(e, res)
+}
+
+func (s *ServiceController) DeactivateService(e echo.Context) error {
+
+	id, err := strconv.ParseUint(e.Param("id"), 10, 64)
+
+	if err != nil {
+		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
+	}
+
+	res := s.ServiceUsecase.DeactivateService(uint(id))
 
 	return CheckResponse(e, res)
 }

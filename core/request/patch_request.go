@@ -18,12 +18,14 @@ func ProviderPatchRequest() PatchRequest {
 	return PatchRequest{}
 }
 
-func (p *PatchRequest) Main(url string, param_body io.Reader) dto.Response {
+func (p *PatchRequest) Main(url string) dto.Response {
 
 	var result dto.Result
 	var client = &http.Client{}
 
-	request, err := http.NewRequest(http.MethodPatch, url, param_body)
+	var io io.Reader
+
+	request, err := http.NewRequest(http.MethodPatch, url, io)
 	if err != nil {
 		return dto.Response{ResponseCode: http.StatusBadGateway, ErrorMessage: err, Result: result}
 	}
