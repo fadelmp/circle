@@ -18,5 +18,5 @@ var DeleteServiceFailed = "Gagal Mengubah Layanan"
 var ActivateServiceSuccess = "Berhasil Mengaktifkan Layanan Kembali"
 var ActivateServiceFailed = "Gagal Mengaktifkan Kembali Layanan"
 
-var DeactiveServiceSuccess = "Berhasil Menonaktifkan Layanan"
-var DeactiveServiceFailed = "Gagal Menonaktifkan Layanan"
+var DeactivateServiceSuccess = "Berhasil Menonaktifkan Layanan"
+var DeactivateServiceFailed = "Gagal Menonaktifkan Layanan"
