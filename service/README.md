@@ -15,7 +15,7 @@ DB_PORT =
 
 DB_NAME = 
 
-SERVICE_PORT = :8020
+SERVICE_PORT = :8030
 
 Run with command 
 $ go run main.go
