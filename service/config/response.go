@@ -18,6 +18,7 @@ func SuccessResponse(c echo.Context, data interface{}, message interface{}) erro
 	}
 	c.Response().WriteHeader(200)
 	c.Response().Header().Set(echo.HeaderContentType, echo.MIMEApplicationJSONCharsetUTF8)
+	c.Response().Header().Set("Access-Control-Allow-Origin", "*")
 	return c.JSONPretty(200, resp, "  ")
 }
 
@@ -27,5 +28,6 @@ func ErrorResponse(c echo.Context, errorCode int, messages interface{}) error {
 	}
 	c.Response().WriteHeader(errorCode)
 	c.Response().Header().Set(echo.HeaderContentType, echo.MIMEApplicationJSONCharsetUTF8)
+	c.Response().Header().Set("Access-Control-Allow-Origin", "*")
 	return c.JSONPretty(errorCode, resp, "  ")
 }
