@@ -1,8 +1,11 @@
 package repository
 
 import (
+	"service/config"
 	entity "service/entity"
+	"strconv"
 
+	"github.com/go-redis/redis"
 	"github.com/jinzhu/gorm"
 )
 
@@ -18,11 +21,15 @@ type ServiceRepositoryContract interface {
 }
 
 type ServiceRepository struct {
-	DB *gorm.DB
+	DB    *gorm.DB
+	Redis *redis.Client
 }
 
-func ProviderServiceRepository(DB *gorm.DB) ServiceRepository {
-	return ServiceRepository{DB: DB}
+func ProviderServiceRepository(DB *gorm.DB, Redis *redis.Client) ServiceRepository {
+	return ServiceRepository{
+		DB:    DB,
+		Redis: Redis,
+	}
 }
 
 // Implementation
@@ -31,8 +38,11 @@ func (s *ServiceRepository) GetAll() []entity.Service {
 
 	var services []entity.Service
 
+	query := s.DB.Find(&services)
+	keys := "services"
+
 	// Get Service All
-	s.DB.Find(&services)
+	config.CheckRedisQuery(s.Redis, query, keys)
 
 	return services
 }
@@ -41,8 +51,11 @@ func (s *ServiceRepository) GetByID(id uint) entity.Service {
 
 	var service entity.Service
 
+	query := s.DB.Where("id=?", id).Find(&service)
+	keys := "service_id_" + strconv.FormatUint(uint64(id), 10)
+
 	// Get Service By Id
-	s.DB.Where("id=?", id).Find(&service)
+	config.CheckRedisQuery(s.Redis, query, keys)
 
 	return service
 }
@@ -51,8 +64,11 @@ func (s *ServiceRepository) GetByName(name string) entity.Service {
 
 	var service entity.Service
 
+	query := s.DB.Where("name=?", name).Find(&service)
+	keys := "service_name_" + name
+
 	// Get Service by Name
-	s.DB.Where("name=?", name).Find(&service)
+	config.CheckRedisQuery(s.Redis, query, keys)
 
 	return service
 }
