@@ -3,14 +3,14 @@ package injection
 import (
 	"core/controller"
 	"core/request"
-	"core/service"
+	"core/usecase"
 )
 
 func LocationInjection() controller.LocationController {
 
 	GetRequest := request.ProviderGetRequest()
-	LocationService := service.ProviderLocationService(GetRequest)
-	LocationController := controller.ProviderLocationController(LocationService)
+	LocationUsecase := usecase.ProviderLocationUsecase(GetRequest)
+	LocationController := controller.ProviderLocationController(LocationUsecase)
 
 	return LocationController
 }

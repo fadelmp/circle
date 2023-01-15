@@ -2,7 +2,7 @@ package controller
 
 import (
 	"core/config"
-	"core/service"
+	"core/usecase"
 	"net/http"
 	"strconv"
 
@@ -11,16 +11,16 @@ import (
 )
 
 type LocationController struct {
-	LocationService service.LocationService
+	LocationUsecase usecase.LocationUsecase
 }
 
-func ProviderLocationController(l service.LocationService) LocationController {
-	return LocationController{LocationService: l}
+func ProviderLocationController(l usecase.LocationUsecase) LocationController {
+	return LocationController{LocationUsecase: l}
 }
 
 func (l *LocationController) GetAllCountry(e echo.Context) error {
 
-	res := l.LocationService.GetAllCountry()
+	res := l.LocationUsecase.GetAllCountry()
 
 	return CheckResponse(e, res)
 }
@@ -33,14 +33,14 @@ func (l *LocationController) GetCountryByID(e echo.Context) error {
 		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
 	}
 
-	res := l.LocationService.GetCountryByID(uint(id))
+	res := l.LocationUsecase.GetCountryByID(uint(id))
 
 	return CheckResponse(e, res)
 }
 
 func (l *LocationController) GetAllProvince(e echo.Context) error {
 
-	res := l.LocationService.GetAllProvince()
+	res := l.LocationUsecase.GetAllProvince()
 
 	return CheckResponse(e, res)
 }
@@ -53,7 +53,7 @@ func (l *LocationController) GetProvinceByID(e echo.Context) error {
 		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
 	}
 
-	res := l.LocationService.GetProvinceByID(uint(id))
+	res := l.LocationUsecase.GetProvinceByID(uint(id))
 
 	return CheckResponse(e, res)
 }
@@ -66,14 +66,14 @@ func (l *LocationController) GetProvinceByCountryID(e echo.Context) error {
 		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
 	}
 
-	res := l.LocationService.GetProvinceByCountryID(uint(id))
+	res := l.LocationUsecase.GetProvinceByCountryID(uint(id))
 
 	return CheckResponse(e, res)
 }
 
 func (l *LocationController) GetAllCity(e echo.Context) error {
 
-	res := l.LocationService.GetAllCity()
+	res := l.LocationUsecase.GetAllCity()
 
 	return CheckResponse(e, res)
 }
@@ -86,7 +86,7 @@ func (l *LocationController) GetCityByID(e echo.Context) error {
 		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
 	}
 
-	res := l.LocationService.GetCityByID(uint(id))
+	res := l.LocationUsecase.GetCityByID(uint(id))
 
 	return CheckResponse(e, res)
 }
@@ -99,7 +99,7 @@ func (l *LocationController) GetCityByProvinceID(e echo.Context) error {
 		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
 	}
 
-	res := l.LocationService.GetCityByProvinceID(uint(id))
+	res := l.LocationUsecase.GetCityByProvinceID(uint(id))
 
 	return CheckResponse(e, res)
 }

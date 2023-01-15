@@ -1,4 +1,4 @@
-package service
+package usecase
 
 import (
 	"core/dto"
@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-type LocationServiceContract interface {
+type LocationUsecaseContract interface {
 	GetAllCountry() dto.Response
 	GetCountryByID(uint) dto.Response
 
@@ -20,79 +20,83 @@ type LocationServiceContract interface {
 	GetCityByProvinceID(uint) dto.Response
 }
 
-type LocationService struct {
+type LocationUsecase struct {
 	GetRequest request.GetRequest
 }
 
-func ProviderLocationService(g request.GetRequest) LocationService {
-	return LocationService{GetRequest: g}
+func ProviderLocationUsecase(g request.GetRequest) LocationUsecase {
+	return LocationUsecase{GetRequest: g}
+}
+
+func getUri() string {
+	return os.Getenv("LOCATION_Usecase_URI")
 }
 
 // Implementation
 
-func (l *LocationService) GetAllCountry() dto.Response {
+func (l *LocationUsecase) GetAllCountry() dto.Response {
 
-	uri := os.Getenv("LOCATION_SERVICE_URI")
+	uri := getUri()
 	uri += "/country"
 
 	return l.GetRequest.Main(uri)
 }
 
-func (l *LocationService) GetCountryByID(id uint) dto.Response {
+func (l *LocationUsecase) GetCountryByID(id uint) dto.Response {
 
-	uri := os.Getenv("LOCATION_SERVICE_URI")
+	uri := getUri()
 	uri += "/country/"
 	uri += strconv.FormatUint(uint64(id), 10)
 
 	return l.GetRequest.Main(uri)
 }
 
-func (l *LocationService) GetAllProvince() dto.Response {
+func (l *LocationUsecase) GetAllProvince() dto.Response {
 
-	uri := os.Getenv("LOCATION_SERVICE_URI")
+	uri := getUri()
 	uri += "/province"
 
 	return l.GetRequest.Main(uri)
 }
 
-func (l *LocationService) GetProvinceByID(id uint) dto.Response {
+func (l *LocationUsecase) GetProvinceByID(id uint) dto.Response {
 
-	uri := os.Getenv("LOCATION_SERVICE_URI")
+	uri := getUri()
 	uri += "/province/"
 	uri += strconv.FormatUint(uint64(id), 10)
 
 	return l.GetRequest.Main(uri)
 }
 
-func (l *LocationService) GetProvinceByCountryID(country_id uint) dto.Response {
+func (l *LocationUsecase) GetProvinceByCountryID(country_id uint) dto.Response {
 
-	uri := os.Getenv("LOCATION_SERVICE_URI")
+	uri := getUri()
 	uri += "/province/country/"
 	uri += strconv.FormatUint(uint64(country_id), 10)
 
 	return l.GetRequest.Main(uri)
 }
 
-func (l *LocationService) GetAllCity() dto.Response {
+func (l *LocationUsecase) GetAllCity() dto.Response {
 
-	uri := os.Getenv("LOCATION_SERVICE_URI")
+	uri := getUri()
 	uri += "/city"
 
 	return l.GetRequest.Main(uri)
 }
 
-func (l *LocationService) GetCityByID(id uint) dto.Response {
+func (l *LocationUsecase) GetCityByID(id uint) dto.Response {
 
-	uri := os.Getenv("LOCATION_SERVICE_URI")
+	uri := getUri()
 	uri += "/city/"
 	uri += strconv.FormatUint(uint64(id), 10)
 
 	return l.GetRequest.Main(uri)
 }
 
-func (l *LocationService) GetCityByProvinceID(province_id uint) dto.Response {
+func (l *LocationUsecase) GetCityByProvinceID(province_id uint) dto.Response {
 
-	uri := os.Getenv("LOCATION_SERVICE_URI")
+	uri := getUri()
 	uri += "/city/province/"
 	uri += strconv.FormatUint(uint64(province_id), 10)
 
