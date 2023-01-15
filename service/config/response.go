@@ -18,7 +18,7 @@ func SuccessResponse(c echo.Context, data interface{}, message interface{}) erro
 	}
 	c.Response().WriteHeader(200)
 	c.Response().Header().Set(echo.HeaderContentType, echo.MIMEApplicationJSONCharsetUTF8)
-	return c.JSONPretty(20, resp, "  ")
+	return c.JSONPretty(200, resp, "  ")
 }
 
 func ErrorResponse(c echo.Context, errorCode int, messages interface{}) error {
