@@ -95,8 +95,7 @@ func (s *ServiceUsecase) ActiveStatus(id uint, is_active bool) error {
 	var service_entity entity.Service
 
 	service_entity.ID = id
-	service_entity.Base = entity.BaseUpdate()
-	service_entity.Base.Is_Actived = is_active
+	service_entity.Base = entity.BaseActivate(is_active)
 
 	return s.ServiceRepository.ActiveStatus(service_entity)
 }
