@@ -32,7 +32,7 @@ func (c *CustomerRepository) GetAll() []entity.Customer {
 	var customers []entity.Customer
 	var customer entity.Customer
 
-	c.DB.Model(&customer).Preload("Addresses").Preload("ContactPeoples").Find(&customers)
+	c.DB.Model(&customer).Preload("Address").Preload("Company").Find(&customers)
 
 	return customers
 }
@@ -41,7 +41,7 @@ func (c *CustomerRepository) GetByID(id uint) entity.Customer {
 
 	var customer entity.Customer
 
-	c.DB.Where("id=?", id).Find(&customer)
+	c.DB.Where("id=?", id).Preload("Address").Preload("Company").Find(&customer)
 
 	return customer
 }

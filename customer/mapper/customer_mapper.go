@@ -16,10 +16,13 @@ func ToCustomerEntity(dto dto.Customer) entity.Customer {
 
 func ToCustomerDto(entity entity.Customer) dto.Customer {
 	return dto.Customer{
-		ID:    entity.ID,
-		Name:  entity.Name,
-		Phone: entity.Phone,
-		Email: entity.Email,
+		ID:      entity.ID,
+		Name:    entity.Name,
+		Phone:   entity.Phone,
+		Email:   entity.Email,
+		Address: ToAddressDto(entity.Address),
+		Company: ToCompanyDto(entity.Company),
+		Base:    ToBaseDto(entity.Base),
 	}
 }
 
