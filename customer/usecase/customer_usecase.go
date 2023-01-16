@@ -42,6 +42,20 @@ func ProviderCustomerUsecase(
 
 // Implementation
 
+func (c *CustomerUsecase) GetAll() []dto.Customer {
+
+	customers := c.CustomerRepository.GetAll()
+
+	return mapper.ToCustomerDtoList(customers)
+}
+
+func (c *CustomerUsecase) GetByID(id uint) dto.Customer {
+
+	customer := c.CustomerRepository.GetByID(id)
+
+	return mapper.ToCustomerDto(customer)
+}
+
 func (c *CustomerUsecase) Create(dto dto.Customer) error {
 
 	// change customer dto to entity to put on database
