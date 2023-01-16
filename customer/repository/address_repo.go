@@ -7,7 +7,8 @@ import (
 )
 
 type AddressRepositoryContract interface {
-	Create(entity.Address) (entity.Address, error)
+	Create(entity.Address) error
+	Update(entity.Address) error
 }
 
 type AddressRepository struct {
@@ -20,10 +21,18 @@ func ProviderAddressRepository(DB *gorm.DB) AddressRepository {
 
 // Implementation
 
-func (a *AddressRepository) Create(address entity.Address) (entity.Address, error) {
+func (a *AddressRepository) Create(address entity.Address) error {
 
 	// Create Address
 	err := a.DB.Create(&address).Error
 
-	return address, err
+	return err
+}
+
+func (a *AddressRepository) Update(address entity.Address) error {
+
+	// Update Address
+	err := a.DB.Model(&address).Update(&address).Error
+
+	return err
 }

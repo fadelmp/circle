@@ -5,10 +5,10 @@ import (
 	"customer/entity"
 )
 
-func ToAddressEntity(dto dto.Address) entity.Address {
+func ToAddressEntity(dto dto.Address, customer_id uint) entity.Address {
 	return entity.Address{
 		ID:         dto.ID,
-		CustomerID: dto.CustomerID,
+		CustomerID: customer_id,
 		Line:       dto.Line,
 		DistrictID: dto.DistrictID,
 		CityID:     dto.CityID,
