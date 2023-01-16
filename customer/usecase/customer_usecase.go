@@ -44,13 +44,9 @@ func ProviderCustomerUsecase(
 
 func (c *CustomerUsecase) Create(dto dto.Customer) error {
 
-	// Check Phone number first before create data, return error if phone exists
-	if !c.CheckName(dto) {
-		return errors.New(config.CustomerExists)
-	}
-
 	// change customer dto to entity to put on database
 	customer_entity := mapper.ToCustomerEntity(dto)
+	customer_entity.Base = entity.BaseCreate()
 
 	// create customer data
 	customer, err := c.CustomerRepository.Create(customer_entity)
@@ -59,33 +55,72 @@ func (c *CustomerUsecase) Create(dto dto.Customer) error {
 	}
 
 	// create address data
-	if c.AddressUsecase.Create(dto.Address, customer.ID) != nil {
+	if err := c.AddressUsecase.Create(dto.Address, customer.ID); err != nil {
 		return err
 	}
 
 	// create contact person data
-	if c.CompanyUsecase.Create(dto.Company, customer.ID) != nil {
+	if err := c.CompanyUsecase.Create(dto.Company, customer.ID); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (c *CustomerUsecase) CheckName(dto dto.Customer) bool {
+func (c *CustomerUsecase) Update(dto dto.Customer) error {
 
-	name := dto.Name
-
-	// get customer data by phone number
-	customer_data := c.CustomerRepository.GetByName(name)
-
-	// return false if data id exists, and if is_active value is true
-	if customer_data.ID != 0 &&
-		customer_data.Is_Actived &&
-		!customer_data.Is_Deleted {
-		return false
+	if !c.CheckID(dto.ID) {
+		return errors.New(config.CustomerNotFound)
 	}
 
-	return true
+	customer_entity := mapper.ToCustomerEntity(dto)
+	customer_entity.Base = entity.BaseUpdate()
+
+	// create customer data
+	err := c.CustomerRepository.Update(customer_entity)
+	if err != nil {
+		return err
+	}
+
+	// create address data
+	if err := c.AddressUsecase.Update(dto.Address, dto.ID); err != nil {
+		return err
+	}
+
+	// create contact person data
+	if err := c.CompanyUsecase.Update(dto.Company, dto.ID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *CustomerUsecase) Delete(id uint) error {
+
+	if !c.CheckID(id) {
+		return errors.New(config.CustomerNotFound)
+	}
+
+	var customer_entity entity.Customer
+
+	customer_entity.ID = id
+	customer_entity.Base = entity.BaseDelete()
+
+	return c.CustomerRepository.Delete(customer_entity)
+}
+
+func (c *CustomerUsecase) ActiveStatus(id uint, is_active bool) error {
+
+	if !c.CheckID(id) {
+		return errors.New(config.CustomerNotFound)
+	}
+
+	var customer_entity entity.Customer
+
+	customer_entity.ID = id
+	customer_entity.Base = entity.BaseActivate(is_active)
+
+	return c.CustomerRepository.ActiveStatus(customer_entity)
 }
 
 func (c *CustomerUsecase) CheckID(id uint) bool {

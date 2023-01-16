@@ -41,11 +41,11 @@ func processENV() {
 func createTable(db *gorm.DB) {
 	db.CreateTable(&entity.Customer{})
 	db.CreateTable(&entity.Address{})
-	db.CreateTable(&entity.ContactPeople{})
+	db.CreateTable(&entity.Company{})
 }
 
 func migrateDDL(db *gorm.DB) {
 	db.AutoMigrate(&entity.Customer{})
 	db.AutoMigrate(&entity.Address{})
-	db.AutoMigrate(&entity.ContactPeople{})
+	db.AutoMigrate(&entity.Company{})
 }

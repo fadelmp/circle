@@ -10,6 +10,14 @@ func CustomerRoutes(routes *echo.Echo, api controller.CustomerController) {
 
 	customer := routes.Group("/customer")
 	{
+		customer.GET("", api.GetAll)
+		customer.GET("/:id", api.GetByID)
+
 		customer.POST("", api.Create)
+		customer.PUT("", api.Update)
+		customer.DELETE("/:id", api.Delete)
+
+		customer.PATCH("/activate/:id", api.Activate)
+		customer.PATCH("/deactivate/:id", api.Deactivate)
 	}
 }

@@ -2,9 +2,21 @@ package config
 
 var BadRequest = "Bad Request"
 
-var GetCustomerSuccess = "Successfully Get Customer"
-var CustomerNotFound = "Customer You Search Not Found"
+var GetCustomerSuccess = "Berhasil Mendapatkan Data Pelanggan"
+var CustomerExists = "Nama Pelanggan Sudah Digunakan. Silahkan Gunakan Pelanggan Lain"
+var CustomerNotFound = "Pelanggan Tidak Ditemukan"
 
-var CustomerExists = "Customer Name already exists. Try with a different Name."
-var CreateCustomerSuccess = "Successfully Create Customer"
-var CreateCustomerFailed = "Failed to Create Customer"
+var CreateCustomerSuccess = "Berhasil Menambahkan Pelanggan Baru"
+var CreateCustomerFailed = "Gagal Menambahkan Pelanggan Baru"
+
+var UpdateCustomerSuccess = "Berhasil Mengubah Pelanggan"
+var UpdateCustomerFailed = "Gagal Mengubah Pelanggan"
+
+var DeleteCustomerSuccess = "Berhasil Menghapus Pelanggan"
+var DeleteCustomerFailed = "Gagal Mengubah Pelanggan"
+
+var ActivateCustomerSuccess = "Berhasil Mengaktifkan Pelanggan Kembali"
+var ActivateCustomerFailed = "Gagal Mengaktifkan Kembali Pelanggan"
+
+var DeactivateCustomerSuccess = "Berhasil Menonaktifkan Pelanggan"
+var DeactivateCustomerFailed = "Gagal Menonaktifkan Pelanggan"

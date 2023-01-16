@@ -3,22 +3,31 @@ package injection
 import (
 	"customer/controller"
 	repository "customer/repository"
-	"customer/service"
+	"customer/request"
+	"customer/usecase"
 
 	"github.com/jinzhu/gorm"
 )
 
 func CustomerInjection(db *gorm.DB) controller.CustomerController {
 
-	CustomerRepo := repository.ProviderCustomerRepository(db)
+	LocationReq := request.ProviderLocationRequest()
+
 	AddressRepo := repository.ProviderAddressRepository(db)
-	ContactPeopleRepo := repository.ProviderContactPeopleRepository(db)
+	CompanyRepo := repository.ProviderCompanyRepository(db)
+	CustomerRepo := repository.ProviderCustomerRepository(db)
 
-	AddressService := service.ProviderAddressService(AddressRepo)
-	ContactPeopleService := service.ProviderContactPeopleService(ContactPeopleRepo)
-	CustomerService := service.ProviderCustomerService(CustomerRepo, AddressService, ContactPeopleService)
+	AddressUsecase := usecase.ProviderAddressUsecase(AddressRepo)
+	CompanyUsecase := usecase.ProviderCompanyUsecase(CompanyRepo)
+	LocationUsecase := usecase.ProviderLocationUsecase(LocationReq)
 
-	CustomerController := controller.ProviderCustomerController(CustomerService)
+	CustomerUsecase := usecase.ProviderCustomerUsecase(
+		CustomerRepo,
+		LocationUsecase,
+		AddressUsecase,
+		CompanyUsecase,
+	)
+	CustomerController := controller.ProviderCustomerController(CustomerUsecase)
 
 	return CustomerController
 }
