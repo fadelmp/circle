@@ -50,6 +50,7 @@ func (s *StatusUsecase) Create(dto dto.Status) error {
 	}
 
 	status_entity := mapper.ToStatusEntity(dto)
+	status_entity.Base = entity.BaseCreate()
 
 	err := s.StatusRepository.Create(status_entity)
 
@@ -63,6 +64,7 @@ func (s *StatusUsecase) Update(dto dto.Status) error {
 	}
 
 	status_entity := mapper.ToStatusEntity(dto)
+	status_entity.Base = entity.BaseUpdate()
 
 	err := s.StatusRepository.Update(status_entity)
 
@@ -117,8 +119,7 @@ func (s *StatusUsecase) CheckID(id uint) bool {
 	status_data := s.StatusRepository.GetByID(id)
 
 	if status_data.ID == 0 ||
-		!status_data.Is_Actived ||
-		status_data.Is_Deleted {
+		status_data.Base.Is_Deleted {
 		return false
 	}
 

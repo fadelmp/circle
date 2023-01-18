@@ -96,7 +96,7 @@ func (s *StatusController) Delete(e echo.Context) error {
 
 func (s *StatusController) Activate(e echo.Context) error {
 
-	id, err := strconv.ParseUint(e.Param("ID"), 10, 64)
+	id, err := strconv.ParseUint(e.Param("id"), 10, 64)
 
 	if err != nil {
 		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
@@ -113,7 +113,7 @@ func (s *StatusController) Activate(e echo.Context) error {
 
 func (s *StatusController) Deactivate(e echo.Context) error {
 
-	id, err := strconv.ParseUint(e.Param("ID"), 10, 64)
+	id, err := strconv.ParseUint(e.Param("id"), 10, 64)
 
 	if err != nil {
 		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)

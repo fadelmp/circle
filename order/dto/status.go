@@ -4,6 +4,6 @@ package dto
 type Status struct {
 	ID          uint   `json:"id"`
 	Name        string `json:"name"`
-	Description string `json:"front_description"`
+	Description string `json:"description"`
 	Base
 }

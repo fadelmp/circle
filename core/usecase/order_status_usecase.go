@@ -48,7 +48,7 @@ func ProviderOrderStatusUsecase(
 func getOrderStatusUri() string {
 
 	uri := os.Getenv("ORDER_URI")
-	uri += "/order"
+	uri += "/order_status"
 
 	return uri
 }
@@ -86,7 +86,7 @@ func (os *OrderStatusUsecase) UpdateOrderStatus(form_data interface{}) dto.Respo
 	put_body, _ := json.Marshal(form_data)
 	request_body := bytes.NewBuffer(put_body)
 
-	return os.PostRequest.Main(uri, request_body)
+	return os.PutRequest.Main(uri, request_body)
 }
 
 func (os *OrderStatusUsecase) DeleteOrderStatus(id uint) dto.Response {

@@ -61,7 +61,7 @@ func (s *StatusRepository) Create(status entity.Status) error {
 
 func (s *StatusRepository) Update(status entity.Status) error {
 
-	err := s.DB.Model(&status).Where("id=?", status.ID).Update(&status).Error
+	err := s.DB.Model(&status).Update(&status).Error
 
 	return err
 }
