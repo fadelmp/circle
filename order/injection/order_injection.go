@@ -3,8 +3,7 @@ package injection
 import (
 	"order/controller"
 	repository "order/repository"
-	"order/request"
-	"order/service"
+	"order/usecase"
 
 	"github.com/jinzhu/gorm"
 )
@@ -12,19 +11,14 @@ import (
 func OrderInjection(db *gorm.DB) controller.OrderController {
 
 	OrderRepository := repository.ProviderOrderRepository(db)
-	ItemRepository := repository.ProviderItemRepository(db)
+	ServiceRepository := repository.ProviderServiceRepository(db)
+	ArticleRepository := repository.ProviderArticleRepository(db)
 
-	CustomerRequest := request.ProviderCustomerRequest()
-	ProductRequest := request.ProviderProductRequest()
+	ServiceUsecase := usecase.ProviderServiceUsecase(ServiceRepository)
+	ArticleUsecase := usecase.ProviderArticleUsecase(ArticleRepository, ServiceUsecase)
+	OrderUsecase := usecase.ProviderOrderUsecase(OrderRepository, ArticleUsecase)
 
-	OrderService := service.ProviderOrderService(
-		OrderRepository,
-		ItemRepository,
-		CustomerRequest,
-		ProductRequest,
-	)
-
-	OrderController := controller.ProviderOrderController(OrderService)
+	OrderController := controller.ProviderOrderController(OrderUsecase)
 
 	return OrderController
 }

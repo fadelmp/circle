@@ -15,7 +15,7 @@ type OrderRepositoryContract interface {
 	GetByDate(time.Time, time.Time) []entity.Order
 
 	Create(entity.Order) (entity.Order, error)
-	Update(entity.Order) (entity.Order, error)
+	Update(entity.Order) error
 }
 
 type OrderRepository struct {
@@ -69,9 +69,14 @@ func (o *OrderRepository) Create(order entity.Order) (entity.Order, error) {
 	return order, err
 }
 
-func (o *OrderRepository) Update(order entity.Order) (entity.Order, error) {
+func (o *OrderRepository) Update(order entity.Order) error {
 
-	err := o.DB.Model(&order).Where("id=?", order.ID).Update(&order).Error
+	// delete Service by id, by change is active value to false
+	err := o.DB.Model(&order).Where("id=?", order.ID).Updates(map[string]interface{}{
+		"status_id":  order.StatusID,
+		"updated_at": order.Base.Updated_At,
+		"updated_by": order.Base.Updated_By,
+	}).Error
 
-	return order, err
+	return err
 }

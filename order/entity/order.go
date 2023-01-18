@@ -6,8 +6,8 @@ type Order struct {
 	Number     string `gorm:"type:VARCHAR(255);NOT NULL"`
 	CustomerID uint   `gorm:"type:INT;NOT NULL;INDEX"`
 	StatusID   uint   `gorm:"type:INT;NOT NULL;INDEX"`
-	Total      int    `gorm:"type:INT;NOT NULL;default:0"`
+	Amount     int    `gorm:"type:INT;NOT NULL;default:0"`
 	Note       string `gorm:"type:VARCHAR(255)"`
-	Articles   []Article
 	Base       `gorm:"embedded"`
+	Articles   []Article
 }

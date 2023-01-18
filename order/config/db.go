@@ -42,12 +42,12 @@ func createTable(db *gorm.DB) {
 	db.CreateTable(&entity.Status{})
 	db.CreateTable(&entity.Order{})
 	db.CreateTable(&entity.Article{})
-	db.CreateTable(&entity.ArticleService{})
+	db.CreateTable(&entity.Service{})
 }
 
 func migrateDDL(db *gorm.DB) {
 	db.AutoMigrate(&entity.Status{})
 	db.AutoMigrate(&entity.Order{})
 	db.AutoMigrate(&entity.Article{})
-	db.AutoMigrate(&entity.ArticleService{})
+	db.AutoMigrate(&entity.Service{})
 }
