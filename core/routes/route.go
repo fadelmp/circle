@@ -8,17 +8,21 @@ import (
 
 func Init(routes *echo.Echo) *echo.Echo {
 
-	// location Route & Injection
+	// Location Route & Injection
 	location := injection.LocationInjection()
 	LocationRoutes(routes, location)
 
-	// customer Route & Injection
+	// Customer Route & Injection
 	customer := injection.CustomerInjection()
 	CustomerRoutes(routes, customer)
 
-	// service Route & Injection
+	// Service Route & Injection
 	service := injection.ServiceInjection()
 	ServiceRoutes(routes, service)
+
+	// Order Route & Injection
+	order_status := injection.OrderStatusInjection()
+	OrderStatusRoutes(routes, order_status)
 
 	return routes
 }

@@ -8,7 +8,7 @@ import (
 
 func StatusRoutes(routes *echo.Echo, api controller.StatusController) {
 
-	status := routes.Group("/status")
+	status := routes.Group("/order_status")
 	{
 		status.GET("", api.GetAll)
 		status.GET("/:id", api.GetByID)
