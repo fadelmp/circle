@@ -13,11 +13,8 @@ import (
 
 func main() {
 
+	config.ReadEnv()
 	route := echo.New()
-	route.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"*"},
-		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
-	}))
 
 	dbConfig := config.InitDB()
 	redisConfig := config.InitRedis()
