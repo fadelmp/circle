@@ -32,6 +32,7 @@ func ProviderOrderUsecase(
 func (o *OrderUsecase) Create(dto dto.Order) error {
 
 	dto.Number = o.GenerateOrderNumber()
+	dto.StatusID = 1
 
 	order_entity := mapper.ToOrderEntity(dto)
 	order_entity.Base = entity.BaseCreate()
