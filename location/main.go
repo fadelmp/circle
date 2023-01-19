@@ -13,6 +13,7 @@ import (
 
 func main() {
 
+	config.ReadEnv()
 	route := echo.New()
 	dbConfig := config.InitDB()
 	redisConfig := config.InitRedis()
