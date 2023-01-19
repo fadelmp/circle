@@ -11,6 +11,7 @@ func ToArticleEntity(dto dto.Article) entity.Article {
 		OrderID:    dto.OrderID,
 		Name:       dto.Name,
 		Quantity:   dto.Quantity,
+		Unit:       dto.Unit,
 		Amount:     dto.Amount,
 		Note:       dto.Note,
 		Path_Image: dto.Path_Image,
