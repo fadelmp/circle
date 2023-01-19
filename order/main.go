@@ -3,9 +3,9 @@
 package main
 
 import (
-	"os"
 	config "order/config"
 	routes2 "order/routes"
+	"os"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -13,6 +13,7 @@ import (
 
 func main() {
 
+	config.ReadEnv()
 	route := echo.New()
 	dbConfig := config.InitDB()
 	routes := routes2.Init(route, dbConfig)

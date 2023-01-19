@@ -6,12 +6,10 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
-	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
 )
 
 func InitDB() *gorm.DB {
-	processENV()
 
 	db_username := os.Getenv("DB_USERNAME")
 	db_password := os.Getenv("DB_PASSWORD")
@@ -28,14 +26,6 @@ func InitDB() *gorm.DB {
 	createTable(db)
 	migrateDDL(db)
 	return db
-}
-
-func processENV() {
-
-	err := godotenv.Load(".env")
-	if err != nil {
-		logrus.Error("Error loading env file")
-	}
 }
 
 func createTable(db *gorm.DB) {
