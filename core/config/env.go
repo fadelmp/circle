@@ -7,9 +7,14 @@ import (
 
 func ReadEnv() {
 
-	err := godotenv.Load(".env")
-	if err != nil {
-		godotenv.Load("/home/oshwinwa/circle-be/core/.env")
-		logrus.Error("Error loading env file")
+	prod_err := godotenv.Load("/home/oshwinwa/circle-be/core/.env")
+
+	if prod_err != nil {
+
+		local_err := godotenv.Load(".env")
+		if local_err != nil {
+			logrus.Error("Error loading env local file")
+		}
+
 	}
 }
