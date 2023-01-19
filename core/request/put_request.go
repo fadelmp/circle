@@ -24,11 +24,10 @@ func (p *PutRequest) Main(url string, param_body io.Reader) dto.Response {
 	var client = &http.Client{}
 
 	request, err := http.NewRequest(http.MethodPut, url, param_body)
+	request.Header.Set("Content-Type", "application/json")
 	if err != nil {
 		return dto.Response{ResponseCode: http.StatusBadGateway, ErrorMessage: err, Result: result}
 	}
-
-	request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	resp, err := client.Do(request)
 	if err != nil {

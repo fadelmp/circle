@@ -86,7 +86,7 @@ func (s *ServiceUsecase) UpdateService(form_data interface{}) dto.Response {
 	put_body, _ := json.Marshal(form_data)
 	request_body := bytes.NewBuffer(put_body)
 
-	return s.PostRequest.Main(uri, request_body)
+	return s.PutRequest.Main(uri, request_body)
 }
 
 func (s *ServiceUsecase) DeleteService(id uint) dto.Response {
