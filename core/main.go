@@ -5,6 +5,7 @@ package main
 import (
 	config "core/config"
 	routes2 "core/routes"
+	"net/http"
 	"os"
 
 	"github.com/labstack/echo"
@@ -18,6 +19,7 @@ func main() {
 	route.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"*"},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPatch, http.MethodPost, http.MethodDelete},
 	}))
 	routes := routes2.Init(route)
 
