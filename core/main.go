@@ -3,18 +3,17 @@
 package main
 
 import (
+	config "core/config"
 	routes2 "core/routes"
 	"os"
 
-	"github.com/joho/godotenv"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	"github.com/sirupsen/logrus"
 )
 
 func main() {
 
-	processENV()
+	config.ReadEnv()
 	route := echo.New()
 	route.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"*"},
@@ -35,12 +34,4 @@ func main() {
 	service_port := os.Getenv("SERVICE_PORT")
 	routes.Logger.Fatal(routes.Start(service_port))
 
-}
-
-func processENV() {
-
-	err := godotenv.Load(".env")
-	if err != nil {
-		logrus.Error("Error loading env file")
-	}
 }
