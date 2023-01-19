@@ -7,7 +7,7 @@ import (
 
 func ReadEnv() {
 
-	prod_err := godotenv.Load("/home/oshwinwa/circle-be/customer/.env")
+	prod_err := godotenv.Load("/home/oshwinwa/circle-be/service/.env")
 
 	if prod_err != nil {
 
