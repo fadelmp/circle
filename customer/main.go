@@ -13,6 +13,7 @@ import (
 
 func main() {
 
+	config.ReadEnv()
 	route := echo.New()
 	dbConfig := config.InitDB()
 	routes := routes2.Init(route, dbConfig)
