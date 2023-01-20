@@ -5,7 +5,6 @@ package main
 import (
 	config "core/config"
 	routes2 "core/routes"
-	"net/http"
 	"os"
 
 	"github.com/labstack/echo"
@@ -16,12 +15,11 @@ func main() {
 
 	config.ReadEnv()
 	route := echo.New()
-	route.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"*"},
-		// AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
-		AllowHeaders: []string{"*"},
-		AllowMethods: []string{http.MethodGet, http.MethodHead, http.MethodPut, http.MethodPatch, http.MethodPost, http.MethodDelete},
-	}))
+	// route.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+	// 	AllowOrigins: []string{"*"},
+	// 	// AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+	// 	AllowMethods: []string{http.MethodGet, http.MethodHead, http.MethodPut, http.MethodPatch, http.MethodPost, http.MethodDelete},
+	// }))
 	routes := routes2.Init(route)
 
 	// set logger
