@@ -11,7 +11,8 @@ func ServiceRoutes(routes *echo.Echo, api controller.ServiceController) {
 	service := routes.Group("/service")
 	{
 		service.GET("", api.GetServices)
-		service.GET("/:id", api.GetServiceById)
+		service.GET("/active", api.GetActiveServices)
+		service.GET("/active/:id", api.GetServiceById)
 
 		service.POST("", api.CreateService)
 		service.PUT("", api.UpdateService)

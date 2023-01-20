@@ -31,6 +31,17 @@ func (s *ServiceController) GetAll(e echo.Context) error {
 	return config.SuccessResponse(e, services, config.GetServiceSuccess)
 }
 
+func (s *ServiceController) GetActive(e echo.Context) error {
+
+	services := s.ServiceUsecase.GetActive()
+
+	if len(services) == 0 {
+		return config.SuccessResponse(e, nil, config.ServiceNotFound)
+	}
+
+	return config.SuccessResponse(e, services, config.GetServiceSuccess)
+}
+
 func (s *ServiceController) GetByID(e echo.Context) error {
 
 	id, err := strconv.ParseUint(e.Param("ID"), 10, 64)

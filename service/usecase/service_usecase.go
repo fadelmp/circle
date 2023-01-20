@@ -11,6 +11,7 @@ import (
 
 type ServiceUsecaseContract interface {
 	GetAll() []dto.Service
+	GetActive() []dto.Service
 	GetByID(uint) dto.Service
 
 	Create(entity.Service) error
@@ -34,6 +35,13 @@ func ProviderServiceUsecase(s repository.ServiceRepository) ServiceUsecase {
 func (s *ServiceUsecase) GetAll() []dto.Service {
 
 	services := s.ServiceRepository.GetAll()
+
+	return mapper.ToServiceDtoList(services)
+}
+
+func (s *ServiceUsecase) GetActive() []dto.Service {
+
+	services := s.ServiceRepository.GetActive()
 
 	return mapper.ToServiceDtoList(services)
 }

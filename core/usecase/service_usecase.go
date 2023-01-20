@@ -11,6 +11,7 @@ import (
 
 type ServiceUsecaseContract interface {
 	GetServices() dto.Response
+	GetActiveServices() dto.Response
 	GetServiceById(uint) dto.Response
 
 	CreateService(interface{}) dto.Response
@@ -61,10 +62,18 @@ func (s *ServiceUsecase) GetServices() dto.Response {
 	return s.GetRequest.Main(uri)
 }
 
+func (s *ServiceUsecase) GetActiveServices() dto.Response {
+
+	uri := getServiceUri()
+	uri += "/active"
+
+	return s.GetRequest.Main(uri)
+}
+
 func (s *ServiceUsecase) GetServiceById(id uint) dto.Response {
 
 	uri := getServiceUri()
-	uri += "/" + strconv.FormatUint(uint64(id), 10)
+	uri += "/active/" + strconv.FormatUint(uint64(id), 10)
 
 	return s.GetRequest.Main(uri)
 }

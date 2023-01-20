@@ -11,6 +11,8 @@ import (
 
 type ServiceRepositoryContract interface {
 	GetAll() []entity.Service
+	GetActive() []entity.Service
+
 	GetByID(uint) entity.Service
 	GetByName(string) entity.Service
 
@@ -42,6 +44,18 @@ func (s *ServiceRepository) GetAll() []entity.Service {
 	keys := "services"
 
 	// Get Service All
+	config.CheckRedisQuery(s.Redis, query, keys)
+
+	return services
+}
+
+func (s *ServiceRepository) GetActive() []entity.Service {
+
+	var services []entity.Service
+
+	query := s.DB.Where("is_deleted=?", false).Find(&services)
+	keys := "services_available"
+
 	config.CheckRedisQuery(s.Redis, query, keys)
 
 	return services

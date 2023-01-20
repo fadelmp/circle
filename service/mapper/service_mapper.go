@@ -22,6 +22,17 @@ func ToServiceDto(entity entity.Service) dto.Service {
 		Description: entity.Description,
 		Code:        entity.Code,
 		Price:       entity.Price,
+		IsActived:   entity.Base.Is_Actived,
+	}
+}
+
+func ToServiceDtoDetail(entity entity.Service) dto.ServiceDetail {
+	return dto.ServiceDetail{
+		ID:          entity.ID,
+		Name:        entity.Name,
+		Description: entity.Description,
+		Code:        entity.Code,
+		Price:       entity.Price,
 		Base:        ToBaseDto(entity.Base),
 	}
 }
