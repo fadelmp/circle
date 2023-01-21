@@ -40,7 +40,7 @@ func (s *ServiceRepository) GetAll() []entity.Service {
 
 	var services []entity.Service
 
-	query := s.DB.Find(&services)
+	query := s.DB.Order("id asc").Find(&services)
 	keys := "services"
 
 	// Get Service All
@@ -53,7 +53,7 @@ func (s *ServiceRepository) GetActive() []entity.Service {
 
 	var services []entity.Service
 
-	query := s.DB.Where("is_actived=?", true).Find(&services)
+	query := s.DB.Order("id asc").Where("is_actived=?", true).Find(&services)
 	keys := "services_active"
 
 	config.CheckRedisQuery(s.Redis, query, keys)
@@ -65,7 +65,7 @@ func (s *ServiceRepository) GetAvailable() []entity.Service {
 
 	var services []entity.Service
 
-	query := s.DB.Where("is_deleted=?", false).Find(&services)
+	query := s.DB.Order("id asc").Where("is_deleted=?", false).Find(&services)
 	keys := "services_available"
 
 	config.CheckRedisQuery(s.Redis, query, keys)
