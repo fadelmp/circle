@@ -13,6 +13,7 @@ type ServiceUsecaseContract interface {
 	GetServices() dto.Response
 	GetActiveServices() dto.Response
 	GetServiceById(uint) dto.Response
+	GetAvailableServices() dto.Response
 
 	CreateService(interface{}) dto.Response
 	UpdateService(interface{}) dto.Response
@@ -66,6 +67,14 @@ func (s *ServiceUsecase) GetActiveServices() dto.Response {
 
 	uri := getServiceUri()
 	uri += "/active"
+
+	return s.GetRequest.Main(uri)
+}
+
+func (s *ServiceUsecase) GetAvailableServices() dto.Response {
+
+	uri := getServiceUri()
+	uri += "/available"
 
 	return s.GetRequest.Main(uri)
 }

@@ -34,6 +34,13 @@ func (s *ServiceController) GetActiveServices(e echo.Context) error {
 	return CheckResponse(e, res)
 }
 
+func (s *ServiceController) GetAvailableServices(e echo.Context) error {
+
+	res := s.ServiceUsecase.GetAvailableServices()
+
+	return CheckResponse(e, res)
+}
+
 func (s *ServiceController) GetServiceById(e echo.Context) error {
 
 	id, err := strconv.ParseUint(e.Param("id"), 10, 64)
