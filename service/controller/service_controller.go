@@ -42,6 +42,17 @@ func (s *ServiceController) GetActive(e echo.Context) error {
 	return config.SuccessResponse(e, services, config.GetServiceSuccess)
 }
 
+func (s *ServiceController) GetAvailable(e echo.Context) error {
+
+	services := s.ServiceUsecase.GetAvailable()
+
+	if len(services) == 0 {
+		return config.SuccessResponse(e, nil, config.ServiceNotFound)
+	}
+
+	return config.SuccessResponse(e, services, config.GetServiceSuccess)
+}
+
 func (s *ServiceController) GetByID(e echo.Context) error {
 
 	id, err := strconv.ParseUint(e.Param("ID"), 10, 64)
@@ -69,11 +80,7 @@ func (s *ServiceController) Create(e echo.Context) error {
 
 	err := s.ServiceUsecase.Create(service)
 
-	if err != nil {
-		return config.ErrorResponse(e, http.StatusInternalServerError, err.Error())
-	}
-
-	return config.SuccessResponse(e, nil, config.CreateServiceSuccess)
+	return CheckResponse(e, err, config.CreateServiceSuccess)
 }
 
 func (s *ServiceController) Update(e echo.Context) error {
@@ -86,11 +93,7 @@ func (s *ServiceController) Update(e echo.Context) error {
 
 	err := s.ServiceUsecase.Update(service)
 
-	if err != nil {
-		return config.ErrorResponse(e, http.StatusInternalServerError, err.Error())
-	}
-
-	return config.SuccessResponse(e, nil, config.UpdateServiceSuccess)
+	return CheckResponse(e, err, config.UpdateServiceSuccess)
 }
 
 func (s *ServiceController) Delete(e echo.Context) error {
@@ -103,11 +106,7 @@ func (s *ServiceController) Delete(e echo.Context) error {
 
 	err = s.ServiceUsecase.Delete(uint(id))
 
-	if err != nil {
-		return config.ErrorResponse(e, http.StatusInternalServerError, err.Error())
-	}
-
-	return config.SuccessResponse(e, nil, config.DeleteServiceSuccess)
+	return CheckResponse(e, err, config.DeleteServiceSuccess)
 }
 
 func (s *ServiceController) Activate(e echo.Context) error {
@@ -120,11 +119,7 @@ func (s *ServiceController) Activate(e echo.Context) error {
 
 	err = s.ServiceUsecase.ActiveStatus(uint(id), true)
 
-	if err != nil {
-		return config.ErrorResponse(e, http.StatusInternalServerError, err.Error())
-	}
-
-	return config.SuccessResponse(e, nil, config.ActivateServiceSuccess)
+	return CheckResponse(e, err, config.ActivateServiceSuccess)
 }
 
 func (s *ServiceController) Deactivate(e echo.Context) error {
@@ -137,9 +132,5 @@ func (s *ServiceController) Deactivate(e echo.Context) error {
 
 	err = s.ServiceUsecase.ActiveStatus(uint(id), false)
 
-	if err != nil {
-		return config.ErrorResponse(e, http.StatusInternalServerError, err.Error())
-	}
-
-	return config.SuccessResponse(e, nil, config.DeactivateServiceSuccess)
+	return CheckResponse(e, err, config.DeactivateServiceSuccess)
 }

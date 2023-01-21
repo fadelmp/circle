@@ -12,6 +12,7 @@ import (
 type ServiceUsecaseContract interface {
 	GetAll() []dto.Service
 	GetActive() []dto.Service
+	GetAvailable() []dto.Service
 	GetByID(uint) dto.Service
 
 	Create(entity.Service) error
@@ -46,6 +47,13 @@ func (s *ServiceUsecase) GetActive() []dto.Service {
 	return mapper.ToServiceDtoList(services)
 }
 
+func (s *ServiceUsecase) GetAvailable() []dto.Service {
+
+	services := s.ServiceRepository.GetAvailable()
+
+	return mapper.ToServiceDtoList(services)
+}
+
 func (s *ServiceUsecase) GetByID(id uint) dto.Service {
 
 	service := s.ServiceRepository.GetByID(id)
@@ -56,7 +64,7 @@ func (s *ServiceUsecase) GetByID(id uint) dto.Service {
 func (s *ServiceUsecase) Create(dto dto.Service) error {
 
 	// check service name first, if name exists then return errors
-	if !s.CheckName(dto) {
+	if !s.CheckName(dto.Name) {
 		return errors.New(config.ServiceExists)
 	}
 
@@ -87,11 +95,10 @@ func (s *ServiceUsecase) Delete(id uint) error {
 	}
 
 	var service_entity entity.Service
-
 	service_entity.ID = id
 	service_entity.Base = entity.BaseDelete()
 
-	return s.ServiceRepository.Delete(service_entity)
+	return s.ServiceRepository.ChangeStatus(service_entity)
 }
 
 func (s *ServiceUsecase) ActiveStatus(id uint, is_active bool) error {
@@ -101,22 +108,19 @@ func (s *ServiceUsecase) ActiveStatus(id uint, is_active bool) error {
 	}
 
 	var service_entity entity.Service
-
 	service_entity.ID = id
 	service_entity.Base = entity.BaseActivate(is_active)
 
-	return s.ServiceRepository.ActiveStatus(service_entity)
+	return s.ServiceRepository.ChangeStatus(service_entity)
 }
 
-func (s *ServiceUsecase) CheckName(dto dto.Service) bool {
-
-	service_name := dto.Name
+func (s *ServiceUsecase) CheckName(name string) bool {
 
 	// get service by name
-	service := s.ServiceRepository.GetByName(service_name)
+	service := s.ServiceRepository.GetByName(name)
 
 	// return error if category exists
-	if service.ID != 0 && service.Base.Is_Actived && !service.Base.Is_Deleted {
+	if service.ID != 0 && !service.Base.Is_Deleted {
 		return false
 	}
 
