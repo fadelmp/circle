@@ -64,7 +64,7 @@ func (s *ServiceUsecase) GetByID(id uint) dto.Service {
 func (s *ServiceUsecase) Create(dto dto.Service) error {
 
 	// check service name first, if name exists then return errors
-	if !s.CheckName(dto.Name) {
+	if !s.CheckName(dto) {
 		return errors.New(config.ServiceExists)
 	}
 
@@ -80,6 +80,10 @@ func (s *ServiceUsecase) Update(dto dto.Service) error {
 
 	if !s.CheckID(dto.ID) {
 		return errors.New(config.ServiceNotFound)
+	}
+
+	if !s.CheckName(dto) {
+		return errors.New(config.ServiceExists)
 	}
 
 	service_entity := mapper.ToServiceEntity(dto)
@@ -114,13 +118,17 @@ func (s *ServiceUsecase) ActiveStatus(id uint, is_active bool) error {
 	return s.ServiceRepository.ChangeStatus(service_entity)
 }
 
-func (s *ServiceUsecase) CheckName(name string) bool {
+func (s *ServiceUsecase) CheckName(dto dto.Service) bool {
+
+	service_name := dto.Name
 
 	// get service by name
-	service := s.ServiceRepository.GetByName(name)
+	service := s.ServiceRepository.GetByName(service_name)
 
 	// return error if category exists
-	if service.ID != 0 && !service.Base.Is_Deleted {
+	if service.ID != 0 &&
+		service.ID != dto.ID &&
+		!service.Base.Is_Deleted {
 		return false
 	}
 
