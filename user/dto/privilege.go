@@ -4,4 +4,5 @@ package dto
 type Privilege struct {
 	ID   uint `json:"id"`
 	Name uint `json:"name"`
+	Base
 }

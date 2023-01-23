@@ -4,4 +4,5 @@ package dto
 type Role struct {
 	ID   uint `json:"id"`
 	Name uint `json:"name"`
+	Base
 }

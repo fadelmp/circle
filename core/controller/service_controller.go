@@ -22,21 +22,10 @@ func ProviderServiceController(s usecase.ServiceUsecase) ServiceController {
 
 func (s *ServiceController) GetServices(e echo.Context) error {
 
-	res := s.ServiceUsecase.GetServices()
+	filter := e.QueryParam("filter")
+	status := e.QueryParam("status")
 
-	return CheckResponse(e, res)
-}
-
-func (s *ServiceController) GetActiveServices(e echo.Context) error {
-
-	res := s.ServiceUsecase.GetActiveServices()
-
-	return CheckResponse(e, res)
-}
-
-func (s *ServiceController) GetAvailableServices(e echo.Context) error {
-
-	res := s.ServiceUsecase.GetAvailableServices()
+	res := s.ServiceUsecase.GetServices(filter, status)
 
 	return CheckResponse(e, res)
 }
@@ -96,26 +85,14 @@ func (s *ServiceController) DeleteService(e echo.Context) error {
 
 func (s *ServiceController) ActivateService(e echo.Context) error {
 
+	status := e.QueryParam("Status")
 	id, err := strconv.ParseUint(e.Param("id"), 10, 64)
 
 	if err != nil {
 		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
 	}
 
-	res := s.ServiceUsecase.ActivateService(uint(id))
-
-	return CheckResponse(e, res)
-}
-
-func (s *ServiceController) DeactivateService(e echo.Context) error {
-
-	id, err := strconv.ParseUint(e.Param("id"), 10, 64)
-
-	if err != nil {
-		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
-	}
-
-	res := s.ServiceUsecase.DeactivateService(uint(id))
+	res := s.ServiceUsecase.ActivateService(uint(id), status)
 
 	return CheckResponse(e, res)
 }

@@ -6,6 +6,6 @@ type User struct {
 	Name     string `json:"name"`
 	Username string `json:"username"`
 	Password string `json:"password"`
-	RoleID   uint
-	Base     `gorm:"embedded"`
+	RoleID   uint   `json:"role_id"`
+	Base
 }

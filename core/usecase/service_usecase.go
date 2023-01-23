@@ -10,17 +10,14 @@ import (
 )
 
 type ServiceUsecaseContract interface {
-	GetServices() dto.Response
-	GetActiveServices() dto.Response
+	GetServices(string, string) dto.Response
 	GetServiceById(uint) dto.Response
-	GetAvailableServices() dto.Response
 
 	CreateService(interface{}) dto.Response
 	UpdateService(interface{}) dto.Response
 	DeleteService(uint) dto.Response
 
-	ActivateService(uint) dto.Response
-	DeactivateService(uint) dto.Response
+	ActivateService(uint, string) dto.Response
 }
 
 type ServiceUsecase struct {
@@ -57,24 +54,15 @@ func getServiceUri() string {
 
 // Implementation
 
-func (s *ServiceUsecase) GetServices() dto.Response {
+func (s *ServiceUsecase) GetServices(filter string, status string) dto.Response {
 
 	uri := getServiceUri()
-	return s.GetRequest.Main(uri)
-}
 
-func (s *ServiceUsecase) GetActiveServices() dto.Response {
-
-	uri := getServiceUri()
-	uri += "/active"
-
-	return s.GetRequest.Main(uri)
-}
-
-func (s *ServiceUsecase) GetAvailableServices() dto.Response {
-
-	uri := getServiceUri()
-	uri += "/available"
+	if filter != "" {
+		uri += "?filter=" + filter
+	} else if status != "" {
+		uri += "?status=" + status
+	}
 
 	return s.GetRequest.Main(uri)
 }
@@ -115,18 +103,10 @@ func (s *ServiceUsecase) DeleteService(id uint) dto.Response {
 	return s.DeleteRequest.Main(uri)
 }
 
-func (s *ServiceUsecase) ActivateService(id uint) dto.Response {
+func (s *ServiceUsecase) ActivateService(id uint, status string) dto.Response {
 
 	uri := getServiceUri()
-	uri += "/activate/" + strconv.FormatUint(uint64(id), 10)
-
-	return s.PatchRequest.Main(uri)
-}
-
-func (s *ServiceUsecase) DeactivateService(id uint) dto.Response {
-
-	uri := getServiceUri()
-	uri += "/deactivate/" + strconv.FormatUint(uint64(id), 10)
+	uri += "/" + status + "/" + strconv.FormatUint(uint64(id), 10)
 
 	return s.PatchRequest.Main(uri)
 }
