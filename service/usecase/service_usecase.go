@@ -10,15 +10,13 @@ import (
 )
 
 type ServiceUsecaseContract interface {
-	GetAll() []dto.Service
-	GetActive() []dto.Service
-	GetAvailable() []dto.Service
+	GetAll(string, string) []dto.Service
 	GetByID(uint) dto.Service
 
 	Create(entity.Service) error
 	Update(entity.Service) error
 	Delete(uint) error
-	ActiveStatus(uint, bool) error
+	Activate(uint, string) error
 }
 
 type ServiceUsecase struct {
@@ -33,23 +31,19 @@ func ProviderServiceUsecase(s repository.ServiceRepository) ServiceUsecase {
 
 // Implementation
 
-func (s *ServiceUsecase) GetAll() []dto.Service {
+func (s *ServiceUsecase) GetAll(filter string, status string) []dto.Service {
 
-	services := s.ServiceRepository.GetAll()
+	var services []entity.Service
 
-	return mapper.ToServiceDtoList(services)
-}
-
-func (s *ServiceUsecase) GetActive() []dto.Service {
-
-	services := s.ServiceRepository.GetActive()
-
-	return mapper.ToServiceDtoList(services)
-}
-
-func (s *ServiceUsecase) GetAvailable() []dto.Service {
-
-	services := s.ServiceRepository.GetAvailable()
+	if filter != "" {
+		services = s.ServiceRepository.GetByFilter(filter)
+	} else if status == "available" {
+		services = s.ServiceRepository.GetAvailable()
+	} else if status == "active" {
+		services = s.ServiceRepository.GetActive()
+	} else {
+		services = s.ServiceRepository.GetAll()
+	}
 
 	return mapper.ToServiceDtoList(services)
 }
@@ -105,10 +99,15 @@ func (s *ServiceUsecase) Delete(id uint) error {
 	return s.ServiceRepository.ChangeStatus(service_entity)
 }
 
-func (s *ServiceUsecase) ActiveStatus(id uint, is_active bool) error {
+func (s *ServiceUsecase) Activate(id uint, status string) error {
 
 	if !s.CheckID(id) {
 		return errors.New(config.ServiceNotFound)
+	}
+
+	is_active := true
+	if status == "deactivate" {
+		is_active = false
 	}
 
 	var service_entity entity.Service

@@ -22,29 +22,10 @@ func ProviderServiceController(s usecase.ServiceUsecase) ServiceController {
 
 func (s *ServiceController) GetAll(e echo.Context) error {
 
-	services := s.ServiceUsecase.GetAll()
+	filter := e.QueryParam("filter")
+	status := e.QueryParam("status")
 
-	if len(services) == 0 {
-		return config.SuccessResponse(e, nil, config.ServiceNotFound)
-	}
-
-	return config.SuccessResponse(e, services, config.GetServiceSuccess)
-}
-
-func (s *ServiceController) GetActive(e echo.Context) error {
-
-	services := s.ServiceUsecase.GetActive()
-
-	if len(services) == 0 {
-		return config.SuccessResponse(e, nil, config.ServiceNotFound)
-	}
-
-	return config.SuccessResponse(e, services, config.GetServiceSuccess)
-}
-
-func (s *ServiceController) GetAvailable(e echo.Context) error {
-
-	services := s.ServiceUsecase.GetAvailable()
+	services := s.ServiceUsecase.GetAll(filter, status)
 
 	if len(services) == 0 {
 		return config.SuccessResponse(e, nil, config.ServiceNotFound)
@@ -111,26 +92,14 @@ func (s *ServiceController) Delete(e echo.Context) error {
 
 func (s *ServiceController) Activate(e echo.Context) error {
 
+	status := e.QueryParam("Status")
 	id, err := strconv.ParseUint(e.Param("ID"), 10, 64)
 
 	if err != nil {
 		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
 	}
 
-	err = s.ServiceUsecase.ActiveStatus(uint(id), true)
+	err = s.ServiceUsecase.Activate(uint(id), status)
 
 	return CheckResponse(e, err, config.ActivateServiceSuccess)
-}
-
-func (s *ServiceController) Deactivate(e echo.Context) error {
-
-	id, err := strconv.ParseUint(e.Param("ID"), 10, 64)
-
-	if err != nil {
-		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
-	}
-
-	err = s.ServiceUsecase.ActiveStatus(uint(id), false)
-
-	return CheckResponse(e, err, config.DeactivateServiceSuccess)
 }

@@ -16,6 +16,7 @@ type ServiceRepositoryContract interface {
 
 	GetByID(uint) entity.Service
 	GetByName(string) entity.Service
+	GetByFilter(string) []entity.Service
 
 	Create(entity.Service) error
 	Update(entity.Service) error
@@ -97,6 +98,22 @@ func (s *ServiceRepository) GetByName(name string) entity.Service {
 	config.CheckRedisQuery(s.Redis, query, keys)
 
 	return service
+}
+
+func (s *ServiceRepository) GetByFilter(filter string) []entity.Service {
+
+	var services []entity.Service
+
+	query := s.DB.Where("is_deleted=?", false).
+		Where("name LIKE ?", "%"+filter+"%").
+		Or("code LIKE ?", "%"+filter+"%").
+		Find(&services)
+	keys := "service_filter_" + filter
+
+	// Get Service by Name
+	config.CheckRedisQuery(s.Redis, query, keys)
+
+	return services
 }
 
 func (s *ServiceRepository) Create(service entity.Service) error {
