@@ -11,7 +11,9 @@ import (
 
 type CustomerUsecaseContract interface {
 	GetCustomers() dto.Response
+	GetActiveCustomers() dto.Response
 	GetCustomerById(uint) dto.Response
+	GetAvailableCustomers() dto.Response
 
 	CreateCustomer(interface{}) dto.Response
 	UpdateCustomer(interface{}) dto.Response
@@ -58,6 +60,22 @@ func getCustomerUri() string {
 func (c *CustomerUsecase) GetCustomers() dto.Response {
 
 	uri := getCustomerUri()
+	return c.GetRequest.Main(uri)
+}
+
+func (c *CustomerUsecase) GetActiveCustomers() dto.Response {
+
+	uri := getCustomerUri()
+	uri += "/active"
+
+	return c.GetRequest.Main(uri)
+}
+
+func (c *CustomerUsecase) GetAvailableCustomers() dto.Response {
+
+	uri := getCustomerUri()
+	uri += "/available"
+
 	return c.GetRequest.Main(uri)
 }
 

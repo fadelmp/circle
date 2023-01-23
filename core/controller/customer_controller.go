@@ -25,6 +25,20 @@ func (c *CustomerController) GetCustomers(e echo.Context) error {
 	return CheckResponse(e, res)
 }
 
+func (c *CustomerController) GetActiveCustomers(e echo.Context) error {
+
+	res := c.CustomerUsecase.GetActiveCustomers()
+
+	return CheckResponse(e, res)
+}
+
+func (c *CustomerController) GetAvailableCustomers(e echo.Context) error {
+
+	res := c.CustomerUsecase.GetAvailableCustomers()
+
+	return CheckResponse(e, res)
+}
+
 func (c *CustomerController) GetCustomerById(e echo.Context) error {
 
 	id, err := strconv.ParseUint(e.Param("id"), 10, 64)
