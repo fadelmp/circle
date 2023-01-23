@@ -6,16 +6,17 @@ import (
 	"customer/request"
 	"customer/usecase"
 
+	"github.com/go-redis/redis"
 	"github.com/jinzhu/gorm"
 )
 
-func CustomerInjection(db *gorm.DB) controller.CustomerController {
+func CustomerInjection(db *gorm.DB, redis *redis.Client) controller.CustomerController {
 
 	LocationReq := request.ProviderLocationRequest()
 
 	AddressRepo := repository.ProviderAddressRepository(db)
 	CompanyRepo := repository.ProviderCompanyRepository(db)
-	CustomerRepo := repository.ProviderCustomerRepository(db)
+	CustomerRepo := repository.ProviderCustomerRepository(db, redis)
 
 	AddressUsecase := usecase.ProviderAddressUsecase(AddressRepo)
 	CompanyUsecase := usecase.ProviderCompanyUsecase(CompanyRepo)

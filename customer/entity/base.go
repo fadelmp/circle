@@ -14,47 +14,37 @@ type Base struct {
 }
 
 func BaseCreate() Base {
-
-	var base Base
-
-	base.Is_Actived = true
-	base.Is_Deleted = false
-	base.Created_By = "System"
-	base.Updated_By = "System"
-	base.Created_At = time.Now()
-	base.Updated_At = time.Now()
-
-	return base
+	return Base{
+		Is_Actived: true,
+		Is_Deleted: false,
+		Created_By: "System",
+		Updated_By: "System",
+		Created_At: time.Now(),
+		Updated_At: time.Now(),
+	}
 }
 
 func BaseUpdate() Base {
-
-	var base Base
-
-	base.Updated_By = "System"
-	base.Updated_At = time.Now()
-
-	return base
+	return Base{
+		Updated_By: "System",
+		Updated_At: time.Now(),
+	}
 }
 
 func BaseDelete() Base {
-	var base Base
-
-	base.Is_Actived = false
-	base.Is_Deleted = true
-	base.Updated_By = "System"
-	base.Updated_At = time.Now()
-
-	return base
+	return Base{
+		Is_Actived: false,
+		Is_Deleted: true,
+		Updated_By: "System",
+		Updated_At: time.Now(),
+	}
 }
 
 func BaseActivate(is_active bool) Base {
-
-	var base Base
-
-	base.Is_Actived = is_active
-	base.Updated_By = "System"
-	base.Updated_At = time.Now()
-
-	return base
+	return Base{
+		Is_Actived: is_active,
+		Is_Deleted: false,
+		Updated_By: "System",
+		Updated_At: time.Now(),
+	}
 }

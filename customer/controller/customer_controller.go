@@ -30,6 +30,28 @@ func (c *CustomerController) GetAll(e echo.Context) error {
 	return config.SuccessResponse(e, customers, config.GetCustomerSuccess)
 }
 
+func (c *CustomerController) GetActive(e echo.Context) error {
+
+	customers := c.CustomerUsecase.GetActive()
+
+	if len(customers) == 0 {
+		return config.SuccessResponse(e, nil, config.CustomerNotFound)
+	}
+
+	return config.SuccessResponse(e, customers, config.GetCustomerSuccess)
+}
+
+func (c *CustomerController) GetAvailable(e echo.Context) error {
+
+	customers := c.CustomerUsecase.GetAvailable()
+
+	if len(customers) == 0 {
+		return config.SuccessResponse(e, nil, config.CustomerNotFound)
+	}
+
+	return config.SuccessResponse(e, customers, config.GetCustomerSuccess)
+}
+
 func (c *CustomerController) GetByID(e echo.Context) error {
 
 	id, err := strconv.ParseUint(e.Param("ID"), 10, 64)
@@ -57,11 +79,7 @@ func (c *CustomerController) Create(e echo.Context) error {
 
 	err := c.CustomerUsecase.Create(customer)
 
-	if err != nil {
-		return config.ErrorResponse(e, http.StatusInternalServerError, err.Error())
-	}
-
-	return config.SuccessResponse(e, nil, config.CreateCustomerSuccess)
+	return CheckResponse(e, err, config.CreateCustomerSuccess)
 }
 
 func (c *CustomerController) Update(e echo.Context) error {
@@ -74,11 +92,7 @@ func (c *CustomerController) Update(e echo.Context) error {
 
 	err := c.CustomerUsecase.Update(customer)
 
-	if err != nil {
-		return config.ErrorResponse(e, http.StatusInternalServerError, err.Error())
-	}
-
-	return config.SuccessResponse(e, nil, config.UpdateCustomerSuccess)
+	return CheckResponse(e, err, config.UpdateCustomerSuccess)
 }
 
 func (c *CustomerController) Delete(e echo.Context) error {
@@ -91,11 +105,7 @@ func (c *CustomerController) Delete(e echo.Context) error {
 
 	err = c.CustomerUsecase.Delete(uint(id))
 
-	if err != nil {
-		return config.ErrorResponse(e, http.StatusInternalServerError, err.Error())
-	}
-
-	return config.SuccessResponse(e, nil, config.DeleteCustomerSuccess)
+	return CheckResponse(e, err, config.DeleteCustomerSuccess)
 }
 
 func (c *CustomerController) Activate(e echo.Context) error {
@@ -108,11 +118,7 @@ func (c *CustomerController) Activate(e echo.Context) error {
 
 	err = c.CustomerUsecase.ActiveStatus(uint(id), true)
 
-	if err != nil {
-		return config.ErrorResponse(e, http.StatusInternalServerError, err.Error())
-	}
-
-	return config.SuccessResponse(e, nil, config.ActivateCustomerSuccess)
+	return CheckResponse(e, err, config.ActivateCustomerSuccess)
 }
 
 func (c *CustomerController) Deactivate(e echo.Context) error {
@@ -125,9 +131,5 @@ func (c *CustomerController) Deactivate(e echo.Context) error {
 
 	err = c.CustomerUsecase.ActiveStatus(uint(id), false)
 
-	if err != nil {
-		return config.ErrorResponse(e, http.StatusInternalServerError, err.Error())
-	}
-
-	return config.SuccessResponse(e, nil, config.DeactivateCustomerSuccess)
+	return CheckResponse(e, err, config.DeactivateCustomerSuccess)
 }

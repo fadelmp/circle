@@ -15,8 +15,11 @@ func main() {
 
 	config.ReadEnv()
 	route := echo.New()
+
 	dbConfig := config.InitDB()
-	routes := routes2.Init(route, dbConfig)
+	redisConfig := config.InitRedis()
+
+	routes := routes2.Init(route, dbConfig, redisConfig)
 
 	// set logger
 	routes.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
