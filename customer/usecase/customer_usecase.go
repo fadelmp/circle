@@ -10,7 +10,9 @@ import (
 )
 
 type CustomerUsecaseContract interface {
-	GetAll() []dto.Customer
+	GetAll() []dto.ShowCustomer
+	GetActive() []dto.ShowCustomer
+	GetAvailable() []dto.ShowCustomer
 	GetByID(uint) dto.Customer
 
 	Create(entity.Customer) error
@@ -42,11 +44,31 @@ func ProviderCustomerUsecase(
 
 // Implementation
 
-func (c *CustomerUsecase) GetAll() []dto.Customer {
+func (c *CustomerUsecase) GetAll() []dto.ShowCustomer {
 
 	customers := c.CustomerRepository.GetAll()
 
-	return mapper.ToCustomerDtoList(customers)
+	locations := c.LocationUsecase.CheckLocation(customers)
+
+	return mapper.ToShowCustomerDtoList(customers, locations)
+}
+
+func (c *CustomerUsecase) GetActive() []dto.ShowCustomer {
+
+	customers := c.CustomerRepository.GetActive()
+
+	locations := c.LocationUsecase.CheckLocation(customers)
+
+	return mapper.ToShowCustomerDtoList(customers, locations)
+}
+
+func (c *CustomerUsecase) GetAvailable() []dto.ShowCustomer {
+
+	customers := c.CustomerRepository.GetAvailable()
+
+	locations := c.LocationUsecase.CheckLocation(customers)
+
+	return mapper.ToShowCustomerDtoList(customers, locations)
 }
 
 func (c *CustomerUsecase) GetByID(id uint) dto.Customer {
@@ -90,18 +112,17 @@ func (c *CustomerUsecase) Update(dto dto.Customer) error {
 	customer_entity := mapper.ToCustomerEntity(dto)
 	customer_entity.Base = entity.BaseUpdate()
 
-	// create customer data
-	err := c.CustomerRepository.Update(customer_entity)
-	if err != nil {
+	// Update Customer Data
+	if err := c.CustomerRepository.Update(customer_entity); err != nil {
 		return err
 	}
 
-	// create address data
+	// Update Address Data
 	if err := c.AddressUsecase.Update(dto.Address, dto.ID); err != nil {
 		return err
 	}
 
-	// create contact person data
+	// Update Company Data
 	if err := c.CompanyUsecase.Update(dto.Company, dto.ID); err != nil {
 		return err
 	}
@@ -120,7 +141,7 @@ func (c *CustomerUsecase) Delete(id uint) error {
 	customer_entity.ID = id
 	customer_entity.Base = entity.BaseDelete()
 
-	return c.CustomerRepository.Delete(customer_entity)
+	return c.CustomerRepository.ChangeStatus(customer_entity)
 }
 
 func (c *CustomerUsecase) ActiveStatus(id uint, is_active bool) error {
@@ -134,16 +155,14 @@ func (c *CustomerUsecase) ActiveStatus(id uint, is_active bool) error {
 	customer_entity.ID = id
 	customer_entity.Base = entity.BaseActivate(is_active)
 
-	return c.CustomerRepository.ActiveStatus(customer_entity)
+	return c.CustomerRepository.ChangeStatus(customer_entity)
 }
 
 func (c *CustomerUsecase) CheckID(id uint) bool {
 
 	customer_data := c.CustomerRepository.GetByID(id)
 
-	if customer_data.ID == 0 ||
-		!customer_data.Is_Actived ||
-		customer_data.Is_Deleted {
+	if customer_data.ID == 0 || customer_data.Is_Deleted {
 		return false
 	}
 
