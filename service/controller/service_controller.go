@@ -92,7 +92,7 @@ func (s *ServiceController) Delete(e echo.Context) error {
 
 func (s *ServiceController) Activate(e echo.Context) error {
 
-	status := e.QueryParam("Status")
+	status := e.Param("Status")
 	id, err := strconv.ParseUint(e.Param("ID"), 10, 64)
 
 	if err != nil {
@@ -100,6 +100,10 @@ func (s *ServiceController) Activate(e echo.Context) error {
 	}
 
 	err = s.ServiceUsecase.Activate(uint(id), status)
+
+	if status == "deactivate" {
+		return CheckResponse(e, err, config.DeactivateServiceSuccess)
+	}
 
 	return CheckResponse(e, err, config.ActivateServiceSuccess)
 }
