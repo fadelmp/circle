@@ -70,7 +70,7 @@ func (s *ServiceUsecase) GetServices(filter string, status string) dto.Response 
 func (s *ServiceUsecase) GetServiceById(id uint) dto.Response {
 
 	uri := getServiceUri()
-	uri += "/active/" + strconv.FormatUint(uint64(id), 10)
+	uri += "/" + strconv.FormatUint(uint64(id), 10)
 
 	return s.GetRequest.Main(uri)
 }
