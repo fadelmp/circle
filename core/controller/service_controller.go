@@ -85,7 +85,7 @@ func (s *ServiceController) DeleteService(e echo.Context) error {
 
 func (s *ServiceController) ActivateService(e echo.Context) error {
 
-	status := e.QueryParam("Status")
+	status := e.Param("status")
 	id, err := strconv.ParseUint(e.Param("id"), 10, 64)
 
 	if err != nil {
