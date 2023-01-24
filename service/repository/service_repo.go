@@ -104,7 +104,8 @@ func (s *ServiceRepository) GetByFilter(filter string) []entity.Service {
 
 	var services []entity.Service
 
-	query := s.DB.Where("is_deleted=?", false).
+	query := s.DB.Order("id asc").
+		Where("is_deleted=?", false).
 		Where("name LIKE ?", "%"+filter+"%").
 		Or("code LIKE ?", "%"+filter+"%").
 		Find(&services)
