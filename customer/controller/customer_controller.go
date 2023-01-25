@@ -21,29 +21,10 @@ func ProviderCustomerController(c usecase.CustomerUsecase) CustomerController {
 
 func (c *CustomerController) GetAll(e echo.Context) error {
 
-	customers := c.CustomerUsecase.GetAll()
+	filter := e.QueryParam("filter")
+	status := e.QueryParam("status")
 
-	if len(customers) == 0 {
-		return config.SuccessResponse(e, nil, config.CustomerNotFound)
-	}
-
-	return config.SuccessResponse(e, customers, config.GetCustomerSuccess)
-}
-
-func (c *CustomerController) GetActive(e echo.Context) error {
-
-	customers := c.CustomerUsecase.GetActive()
-
-	if len(customers) == 0 {
-		return config.SuccessResponse(e, nil, config.CustomerNotFound)
-	}
-
-	return config.SuccessResponse(e, customers, config.GetCustomerSuccess)
-}
-
-func (c *CustomerController) GetAvailable(e echo.Context) error {
-
-	customers := c.CustomerUsecase.GetAvailable()
+	customers := c.CustomerUsecase.GetAll(filter, status)
 
 	if len(customers) == 0 {
 		return config.SuccessResponse(e, nil, config.CustomerNotFound)
@@ -110,26 +91,18 @@ func (c *CustomerController) Delete(e echo.Context) error {
 
 func (c *CustomerController) Activate(e echo.Context) error {
 
+	status := e.Param("Status")
 	id, err := strconv.ParseUint(e.Param("ID"), 10, 64)
 
 	if err != nil {
 		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
 	}
 
-	err = c.CustomerUsecase.ActiveStatus(uint(id), true)
+	err = c.CustomerUsecase.Activate(uint(id), status)
+
+	if status == "deactivate" {
+		return CheckResponse(e, err, config.DeactivateCustomerSuccess)
+	}
 
 	return CheckResponse(e, err, config.ActivateCustomerSuccess)
-}
-
-func (c *CustomerController) Deactivate(e echo.Context) error {
-
-	id, err := strconv.ParseUint(e.Param("ID"), 10, 64)
-
-	if err != nil {
-		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
-	}
-
-	err = c.CustomerUsecase.ActiveStatus(uint(id), false)
-
-	return CheckResponse(e, err, config.DeactivateCustomerSuccess)
 }

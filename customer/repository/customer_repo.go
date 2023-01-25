@@ -16,6 +16,7 @@ type CustomerRepositoryContract interface {
 
 	GetByID(uint) entity.Customer
 	GetByName(string) entity.Customer
+	GetByFilter(string) []entity.Customer
 
 	Create(entity.Customer) (entity.Customer, error)
 	Update(entity.Customer) error
@@ -40,7 +41,9 @@ func (c *CustomerRepository) GetAll() []entity.Customer {
 
 	var customers []entity.Customer
 
-	query := c.DB.Model(&entity.Customer{}).Order("id asc").Preload("Address").Preload("Company").Find(&customers)
+	query := c.DB.Model(&entity.Customer{}).
+		Preload("Address").Preload("Company").
+		Order("id asc").Find(&customers)
 	keys := "customers"
 
 	// Get Service All
@@ -54,9 +57,9 @@ func (c *CustomerRepository) GetActive() []entity.Customer {
 	var customers []entity.Customer
 
 	query := c.DB.Model(&entity.Customer{}).
-		Where("is_actived=?", true).
-		Order("id asc").Find(&customers).
-		Preload("Address").Preload("Company")
+		Where("customers.is_actived=?", true).
+		Preload("Address").Preload("Company").
+		Order("id asc").Find(&customers)
 	keys := "customers_active"
 
 	// Get Service All
@@ -71,8 +74,8 @@ func (c *CustomerRepository) GetAvailable() []entity.Customer {
 
 	query := c.DB.Model(&entity.Customer{}).
 		Where("is_deleted=?", false).
-		Order("id asc").Find(&customers).
-		Preload("Address").Preload("Company")
+		Preload("Address").Preload("Company").
+		Order("id asc").Find(&customers)
 	keys := "customers_available"
 
 	config.CheckRedisQuery(c.Redis, query, keys)
@@ -97,10 +100,30 @@ func (c *CustomerRepository) GetByName(name string) entity.Customer {
 
 	var customer entity.Customer
 
-	// Find All Province
-	c.DB.Model(&customer).Where("name=?", name).Find(&customer)
+	query := c.DB.Where("name=?", name).Find(&customer)
+	keys := "customer_name_" + name
+
+	// Get Service by Name
+	config.CheckRedisQuery(c.Redis, query, keys)
 
 	return customer
+}
+
+func (c *CustomerRepository) GetByFilter(filter string) []entity.Customer {
+
+	var customers []entity.Customer
+
+	query := c.DB.Order("id asc").
+		Where("is_deleted=?", false).
+		Where("name LIKE ?", "%"+filter+"%").
+		Preload("Address").Preload("Company").
+		Find(&customers)
+	keys := "service_filter_" + filter
+
+	// Get Service by Name
+	config.CheckRedisQuery(c.Redis, query, keys)
+
+	return customers
 }
 
 func (c *CustomerRepository) Create(customer entity.Customer) (entity.Customer, error) {

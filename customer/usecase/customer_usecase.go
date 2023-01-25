@@ -10,15 +10,13 @@ import (
 )
 
 type CustomerUsecaseContract interface {
-	GetAll() []dto.ShowCustomer
-	GetActive() []dto.ShowCustomer
-	GetAvailable() []dto.ShowCustomer
+	GetAll(string, string) []dto.ShowCustomer
 	GetByID(uint) dto.Customer
 
 	Create(entity.Customer) error
 	Update(entity.Customer) error
-	Delete(entity.Customer) error
-	ActiveStatus(entity.Customer) error
+	Delete(uint) error
+	Activate(uint, string) error
 }
 
 type CustomerUsecase struct {
@@ -44,27 +42,19 @@ func ProviderCustomerUsecase(
 
 // Implementation
 
-func (c *CustomerUsecase) GetAll() []dto.ShowCustomer {
+func (c *CustomerUsecase) GetAll(filter string, status string) []dto.ShowCustomer {
 
-	customers := c.CustomerRepository.GetAll()
+	var customers []entity.Customer
 
-	locations := c.LocationUsecase.CheckLocation(customers)
-
-	return mapper.ToShowCustomerDtoList(customers, locations)
-}
-
-func (c *CustomerUsecase) GetActive() []dto.ShowCustomer {
-
-	customers := c.CustomerRepository.GetActive()
-
-	locations := c.LocationUsecase.CheckLocation(customers)
-
-	return mapper.ToShowCustomerDtoList(customers, locations)
-}
-
-func (c *CustomerUsecase) GetAvailable() []dto.ShowCustomer {
-
-	customers := c.CustomerRepository.GetAvailable()
+	if filter != "" {
+		customers = c.CustomerRepository.GetByFilter(filter)
+	} else if status == "available" {
+		customers = c.CustomerRepository.GetAvailable()
+	} else if status == "active" {
+		customers = c.CustomerRepository.GetActive()
+	} else {
+		customers = c.CustomerRepository.GetAll()
+	}
 
 	locations := c.LocationUsecase.CheckLocation(customers)
 
@@ -144,10 +134,15 @@ func (c *CustomerUsecase) Delete(id uint) error {
 	return c.CustomerRepository.ChangeStatus(customer_entity)
 }
 
-func (c *CustomerUsecase) ActiveStatus(id uint, is_active bool) error {
+func (c *CustomerUsecase) Activate(id uint, status string) error {
 
 	if !c.CheckID(id) {
 		return errors.New(config.CustomerNotFound)
+	}
+
+	is_active := true
+	if status == "deactivate" {
+		is_active = false
 	}
 
 	var customer_entity entity.Customer
