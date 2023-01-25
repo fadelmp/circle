@@ -13,13 +13,20 @@ type OrderController struct {
 	OrderUsecase usecase.OrderUsecase
 }
 
-func ProviderOrderController(s usecase.OrderUsecase) OrderController {
+func ProviderOrderController(o usecase.OrderUsecase) OrderController {
 	return OrderController{
-		OrderUsecase: s,
+		OrderUsecase: o,
 	}
 }
 
-func (s *OrderController) CreateOrder(e echo.Context) error {
+func (o *OrderController) GetOrders(e echo.Context) error {
+
+	res := o.OrderUsecase.GetOrders()
+
+	return CheckResponse(e, res)
+}
+
+func (o *OrderController) CreateOrder(e echo.Context) error {
 
 	var request interface{}
 
@@ -27,7 +34,7 @@ func (s *OrderController) CreateOrder(e echo.Context) error {
 		return config.ErrorResponse(e, http.StatusInternalServerError, config.BadRequest)
 	}
 
-	res := s.OrderUsecase.CreateOrder(request)
+	res := o.OrderUsecase.CreateOrder(request)
 
 	return CheckResponse(e, res)
 }

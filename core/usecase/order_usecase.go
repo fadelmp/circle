@@ -9,6 +9,7 @@ import (
 )
 
 type OrderUsecaseContract interface {
+	GetOrders() dto.Response
 	CreateOrder(interface{}) dto.Response
 }
 
@@ -39,6 +40,13 @@ func getOrderUri() string {
 }
 
 // Implementation
+
+func (os *OrderUsecase) GetOrders() dto.Response {
+
+	uri := getOrderUri()
+
+	return os.GetRequest.Main(uri)
+}
 
 func (os *OrderUsecase) CreateOrder(form_data interface{}) dto.Response {
 
