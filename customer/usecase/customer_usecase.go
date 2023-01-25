@@ -23,20 +23,17 @@ type CustomerUsecase struct {
 	CustomerRepository repository.CustomerRepository
 	LocationUsecase    LocationUsecase
 	AddressUsecase     AddressUsecase
-	CompanyUsecase     CompanyUsecase
 }
 
 func ProviderCustomerUsecase(
 	c repository.CustomerRepository,
 	l LocationUsecase,
 	a AddressUsecase,
-	cp CompanyUsecase,
 ) CustomerUsecase {
 	return CustomerUsecase{
 		CustomerRepository: c,
 		LocationUsecase:    l,
 		AddressUsecase:     a,
-		CompanyUsecase:     cp,
 	}
 }
 
@@ -85,11 +82,6 @@ func (c *CustomerUsecase) Create(dto dto.Customer) error {
 		return err
 	}
 
-	// create contact person data
-	if err := c.CompanyUsecase.Create(dto.Company, customer.ID); err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -109,11 +101,6 @@ func (c *CustomerUsecase) Update(dto dto.Customer) error {
 
 	// Update Address Data
 	if err := c.AddressUsecase.Update(dto.Address, dto.ID); err != nil {
-		return err
-	}
-
-	// Update Company Data
-	if err := c.CompanyUsecase.Update(dto.Company, dto.ID); err != nil {
 		return err
 	}
 

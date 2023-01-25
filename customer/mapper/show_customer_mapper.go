@@ -7,14 +7,13 @@ import (
 
 func ToShowCustomerDto(entity entity.Customer, location string) dto.ShowCustomer {
 	return dto.ShowCustomer{
-		ID:           entity.ID,
-		Name:         entity.Name,
-		Phone:        entity.Phone,
-		Email:        entity.Email,
-		AddressLine:  location,
-		CompanyName:  entity.Company.Name,
-		CompanyPhone: entity.Company.Phone,
-		IsActived:    entity.Base.Is_Actived,
+		ID:          entity.ID,
+		Name:        entity.Name,
+		Phone:       entity.Phone,
+		OtherPhone:  entity.OtherPhone,
+		Email:       entity.Email,
+		AddressLine: location,
+		IsActived:   entity.Base.Is_Actived,
 	}
 }
 

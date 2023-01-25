@@ -7,22 +7,23 @@ import (
 
 func ToCustomerEntity(dto dto.Customer) entity.Customer {
 	return entity.Customer{
-		ID:    dto.ID,
-		Name:  dto.Name,
-		Phone: dto.Phone,
-		Email: dto.Email,
+		ID:         dto.ID,
+		Name:       dto.Name,
+		Phone:      dto.Phone,
+		OtherPhone: dto.OtherPhone,
+		Email:      dto.Email,
 	}
 }
 
 func ToCustomerDto(entity entity.Customer) dto.Customer {
 	return dto.Customer{
-		ID:      entity.ID,
-		Name:    entity.Name,
-		Phone:   entity.Phone,
-		Email:   entity.Email,
-		Address: ToAddressDto(entity.Address),
-		Company: ToCompanyDto(entity.Company),
-		Base:    ToBaseDto(entity.Base),
+		ID:         entity.ID,
+		Name:       entity.Name,
+		Phone:      entity.Phone,
+		OtherPhone: entity.OtherPhone,
+		Email:      entity.Email,
+		Address:    ToAddressDto(entity.Address),
+		Base:       ToBaseDto(entity.Base),
 	}
 }
 
