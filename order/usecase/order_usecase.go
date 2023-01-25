@@ -10,6 +10,7 @@ import (
 )
 
 type OrderUsecaseContract interface {
+	GetAll() []dto.ShowOrder
 	Create(entity.Order) (entity.Order, error)
 	Update(entity.Order) error
 }
@@ -27,6 +28,13 @@ func ProviderOrderUsecase(
 		OrderRepository: o,
 		ArticleUsecase:  a,
 	}
+}
+
+func (o *OrderUsecase) GetAll() []dto.ShowOrder {
+
+	orders := o.OrderRepository.GetAll()
+
+	return mapper.ToShowOrderDtoList(orders)
 }
 
 func (o *OrderUsecase) Create(dto dto.Order) error {

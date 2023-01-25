@@ -19,6 +19,17 @@ func ProviderOrderController(o usecase.OrderUsecase) OrderController {
 	}
 }
 
+func (o *OrderController) GetAll(e echo.Context) error {
+
+	orders := o.OrderUsecase.GetAll()
+
+	if len(orders) == 0 {
+		return config.SuccessResponse(e, nil, config.OrderNotFound)
+	}
+
+	return config.SuccessResponse(e, orders, config.GetOrderSuccess)
+}
+
 func (o *OrderController) Create(e echo.Context) error {
 
 	var order dto.Order

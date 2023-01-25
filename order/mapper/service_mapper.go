@@ -7,9 +7,10 @@ import (
 
 func ToServiceEntity(dto dto.Service) entity.Service {
 	return entity.Service{
-		ID:        dto.ID,
-		ArticleID: dto.ArticleID,
-		ServiceID: dto.ServiceID,
-		Amount:    dto.Amount,
+		ID:          dto.ID,
+		ArticleID:   dto.ArticleID,
+		ServiceID:   dto.ServiceID,
+		ServiceName: dto.ServiceName,
+		Amount:      dto.Amount,
 	}
 }
