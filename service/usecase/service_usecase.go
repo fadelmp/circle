@@ -13,10 +13,10 @@ type ServiceUsecaseContract interface {
 	GetAll(string, string) []dto.Service
 	GetByID(uint) dto.Service
 
-	Create(entity.Service) error
-	Update(entity.Service) error
-	Delete(uint) error
-	Activate(uint, string) error
+	Create(entity.Service) (error, int)
+	Update(entity.Service) (error, int)
+	Delete(uint) (error, int)
+	Activate(uint, string) (error, int)
 }
 
 type ServiceUsecase struct {
@@ -55,11 +55,11 @@ func (s *ServiceUsecase) GetByID(id uint) dto.Service {
 	return mapper.ToServiceDto(service)
 }
 
-func (s *ServiceUsecase) Create(dto dto.Service) error {
+func (s *ServiceUsecase) Create(dto dto.Service) (error, int) {
 
 	// check service name first, if name exists then return errors
 	if !s.CheckName(dto) {
-		return errors.New(config.ServiceExists)
+		return errors.New(config.ServiceExists), 2
 	}
 
 	// map dto to entity
@@ -67,42 +67,42 @@ func (s *ServiceUsecase) Create(dto dto.Service) error {
 	service_entity.Base = entity.BaseCreate()
 
 	// create service
-	return s.ServiceRepository.Create(service_entity)
+	return s.ServiceRepository.Create(service_entity), 0
 }
 
-func (s *ServiceUsecase) Update(dto dto.Service) error {
+func (s *ServiceUsecase) Update(dto dto.Service) (error, int) {
 
 	if !s.CheckID(dto.ID) {
-		return errors.New(config.ServiceNotFound)
+		return errors.New(config.ServiceNotFound), 1
 	}
 
 	if !s.CheckName(dto) {
-		return errors.New(config.ServiceExists)
+		return errors.New(config.ServiceExists), 2
 	}
 
 	service_entity := mapper.ToServiceEntity(dto)
 	service_entity.Base = entity.BaseUpdate()
 
-	return s.ServiceRepository.Update(service_entity)
+	return s.ServiceRepository.Update(service_entity), 0
 }
 
-func (s *ServiceUsecase) Delete(id uint) error {
+func (s *ServiceUsecase) Delete(id uint) (error, int) {
 
 	if !s.CheckID(id) {
-		return errors.New(config.ServiceNotFound)
+		return errors.New(config.ServiceNotFound), 1
 	}
 
 	var service_entity entity.Service
 	service_entity.ID = id
 	service_entity.Base = entity.BaseDelete()
 
-	return s.ServiceRepository.ChangeStatus(service_entity)
+	return s.ServiceRepository.ChangeStatus(service_entity), 0
 }
 
-func (s *ServiceUsecase) Activate(id uint, status string) error {
+func (s *ServiceUsecase) Activate(id uint, status string) (error, int) {
 
 	if !s.CheckID(id) {
-		return errors.New(config.ServiceNotFound)
+		return errors.New(config.ServiceNotFound), 1
 	}
 
 	is_active := true
@@ -114,7 +114,7 @@ func (s *ServiceUsecase) Activate(id uint, status string) error {
 	service_entity.ID = id
 	service_entity.Base = entity.BaseActivate(is_active)
 
-	return s.ServiceRepository.ChangeStatus(service_entity)
+	return s.ServiceRepository.ChangeStatus(service_entity), 0
 }
 
 func (s *ServiceUsecase) CheckName(dto dto.Service) bool {

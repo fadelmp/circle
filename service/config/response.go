@@ -8,7 +8,8 @@ type SuccessResp struct {
 }
 
 type ErrorResp struct {
-	Messages interface{}
+	Messages  interface{}
+	ErrorCode int
 }
 
 func SuccessResponse(c echo.Context, data interface{}, message interface{}) error {
@@ -22,12 +23,13 @@ func SuccessResponse(c echo.Context, data interface{}, message interface{}) erro
 	return c.JSONPretty(200, resp, "  ")
 }
 
-func ErrorResponse(c echo.Context, errorCode int, messages interface{}) error {
+func ErrorResponse(c echo.Context, httpErrorCode int, error_code int, messages interface{}) error {
 	resp := &ErrorResp{
-		Messages: messages,
+		Messages:  messages,
+		ErrorCode: error_code,
 	}
-	c.Response().WriteHeader(errorCode)
+	c.Response().WriteHeader(httpErrorCode)
 	c.Response().Header().Set(echo.HeaderContentType, echo.MIMEApplicationJSONCharsetUTF8)
 	c.Response().Header().Set("Access-Control-Allow-Origin", "*")
-	return c.JSONPretty(errorCode, resp, "  ")
+	return c.JSONPretty(httpErrorCode, resp, "  ")
 }

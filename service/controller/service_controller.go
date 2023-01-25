@@ -39,7 +39,7 @@ func (s *ServiceController) GetByID(e echo.Context) error {
 	id, err := strconv.ParseUint(e.Param("ID"), 10, 64)
 
 	if err != nil {
-		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
+		return config.ErrorResponse(e, http.StatusBadRequest, 3, config.BadRequest)
 	}
 
 	service := s.ServiceUsecase.GetByID(uint(id))
@@ -56,12 +56,12 @@ func (s *ServiceController) Create(e echo.Context) error {
 	var service dto.Service
 
 	if e.Bind(&service) != nil {
-		return config.ErrorResponse(e, http.StatusInternalServerError, config.BadRequest)
+		return config.ErrorResponse(e, http.StatusInternalServerError, 3, config.BadRequest)
 	}
 
-	err := s.ServiceUsecase.Create(service)
+	err, err_code := s.ServiceUsecase.Create(service)
 
-	return CheckResponse(e, err, config.CreateServiceSuccess)
+	return CheckResponse(e, err, err_code, config.CreateServiceSuccess)
 }
 
 func (s *ServiceController) Update(e echo.Context) error {
@@ -69,12 +69,12 @@ func (s *ServiceController) Update(e echo.Context) error {
 	var service dto.Service
 
 	if e.Bind(&service) != nil {
-		return config.ErrorResponse(e, http.StatusInternalServerError, config.BadRequest)
+		return config.ErrorResponse(e, http.StatusInternalServerError, 3, config.BadRequest)
 	}
 
-	err := s.ServiceUsecase.Update(service)
+	err, err_code := s.ServiceUsecase.Update(service)
 
-	return CheckResponse(e, err, config.UpdateServiceSuccess)
+	return CheckResponse(e, err, err_code, config.UpdateServiceSuccess)
 }
 
 func (s *ServiceController) Delete(e echo.Context) error {
@@ -82,12 +82,12 @@ func (s *ServiceController) Delete(e echo.Context) error {
 	id, err := strconv.ParseUint(e.Param("ID"), 10, 64)
 
 	if err != nil {
-		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
+		return config.ErrorResponse(e, http.StatusBadRequest, 3, config.BadRequest)
 	}
 
-	err = s.ServiceUsecase.Delete(uint(id))
+	err, err_code := s.ServiceUsecase.Delete(uint(id))
 
-	return CheckResponse(e, err, config.DeleteServiceSuccess)
+	return CheckResponse(e, err, err_code, config.DeleteServiceSuccess)
 }
 
 func (s *ServiceController) Activate(e echo.Context) error {
@@ -96,14 +96,14 @@ func (s *ServiceController) Activate(e echo.Context) error {
 	id, err := strconv.ParseUint(e.Param("ID"), 10, 64)
 
 	if err != nil {
-		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
+		return config.ErrorResponse(e, http.StatusBadRequest, 3, config.BadRequest)
 	}
 
-	err = s.ServiceUsecase.Activate(uint(id), status)
+	err, err_code := s.ServiceUsecase.Activate(uint(id), status)
 
 	if status == "deactivate" {
-		return CheckResponse(e, err, config.DeactivateServiceSuccess)
+		return CheckResponse(e, err, err_code, config.DeactivateServiceSuccess)
 	}
 
-	return CheckResponse(e, err, config.ActivateServiceSuccess)
+	return CheckResponse(e, err, err_code, config.ActivateServiceSuccess)
 }
