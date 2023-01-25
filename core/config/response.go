@@ -12,7 +12,8 @@ type SuccessResp struct {
 }
 
 type ErrorResp struct {
-	Messages interface{}
+	ErrorCode interface{}
+	Messages  interface{}
 }
 
 func SuccessResponse(c echo.Context, result dto.Result) error {
@@ -25,11 +26,12 @@ func SuccessResponse(c echo.Context, result dto.Result) error {
 	return c.JSONPretty(200, resp, "  ")
 }
 
-func ErrorResponse(c echo.Context, errorCode int, Messages interface{}) error {
+func ErrorResponse(c echo.Context, httpErrorCode int, ErrorCode interface{}, Messages interface{}) error {
 	resp := &ErrorResp{
-		Messages: Messages,
+		Messages:  Messages,
+		ErrorCode: ErrorCode,
 	}
-	c.Response().WriteHeader(errorCode)
+	c.Response().WriteHeader(httpErrorCode)
 	c.Response().Header().Set(echo.HeaderContentType, echo.MIMEApplicationJSONCharsetUTF8)
-	return c.JSONPretty(errorCode, resp, "  ")
+	return c.JSONPretty(httpErrorCode, resp, "  ")
 }

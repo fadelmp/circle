@@ -7,6 +7,7 @@ type Response struct {
 }
 
 type Result struct {
-	Messages interface{}
-	Data     interface{}
+	ErrorCode interface{}
+	Messages  interface{}
+	Data      interface{}
 }

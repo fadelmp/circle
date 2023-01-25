@@ -30,7 +30,7 @@ func (l *LocationController) GetCountryByID(e echo.Context) error {
 	id, err := strconv.ParseUint(e.Param("id"), 10, 64)
 
 	if err != nil {
-		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
+		return config.ErrorResponse(e, http.StatusBadRequest, 3, config.BadRequest)
 	}
 
 	res := l.LocationUsecase.GetCountryByID(uint(id))
@@ -50,7 +50,7 @@ func (l *LocationController) GetProvinceByID(e echo.Context) error {
 	id, err := strconv.ParseUint(e.Param("id"), 10, 64)
 
 	if err != nil {
-		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
+		return config.ErrorResponse(e, http.StatusBadRequest, 3, config.BadRequest)
 	}
 
 	res := l.LocationUsecase.GetProvinceByID(uint(id))
@@ -63,7 +63,7 @@ func (l *LocationController) GetProvinceByCountryID(e echo.Context) error {
 	id, err := strconv.ParseUint(e.Param("country_id"), 10, 64)
 
 	if err != nil {
-		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
+		return config.ErrorResponse(e, http.StatusBadRequest, 3, config.BadRequest)
 	}
 
 	res := l.LocationUsecase.GetProvinceByCountryID(uint(id))
@@ -83,7 +83,7 @@ func (l *LocationController) GetCityByID(e echo.Context) error {
 	id, err := strconv.ParseUint(e.Param("id"), 10, 64)
 
 	if err != nil {
-		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
+		return config.ErrorResponse(e, http.StatusBadRequest, 3, config.BadRequest)
 	}
 
 	res := l.LocationUsecase.GetCityByID(uint(id))
@@ -96,7 +96,7 @@ func (l *LocationController) GetCityByProvinceID(e echo.Context) error {
 	id, err := strconv.ParseUint(e.Param("province_id"), 10, 64)
 
 	if err != nil {
-		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
+		return config.ErrorResponse(e, http.StatusBadRequest, 3, config.BadRequest)
 	}
 
 	res := l.LocationUsecase.GetCityByProvinceID(uint(id))

@@ -32,7 +32,7 @@ func (s *OrderStatusController) GetOrderStatusById(e echo.Context) error {
 	id, err := strconv.ParseUint(e.Param("id"), 10, 64)
 
 	if err != nil {
-		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
+		return config.ErrorResponse(e, http.StatusBadRequest, 3, config.BadRequest)
 	}
 
 	res := s.OrderStatusUsecase.GetOrderStatusById(uint(id))
@@ -45,7 +45,7 @@ func (s *OrderStatusController) CreateOrderStatus(e echo.Context) error {
 	var request interface{}
 
 	if e.Bind(&request) != nil {
-		return config.ErrorResponse(e, http.StatusInternalServerError, config.BadRequest)
+		return config.ErrorResponse(e, http.StatusInternalServerError, 3, config.BadRequest)
 	}
 
 	res := s.OrderStatusUsecase.CreateOrderStatus(request)
@@ -58,7 +58,7 @@ func (s *OrderStatusController) UpdateOrderStatus(e echo.Context) error {
 	var request interface{}
 
 	if e.Bind(&request) != nil {
-		return config.ErrorResponse(e, http.StatusInternalServerError, config.BadRequest)
+		return config.ErrorResponse(e, http.StatusInternalServerError, 3, config.BadRequest)
 	}
 
 	res := s.OrderStatusUsecase.UpdateOrderStatus(request)
@@ -72,7 +72,7 @@ func (s *OrderStatusController) DeleteOrderStatus(e echo.Context) error {
 	id, err := strconv.ParseUint(e.Param("id"), 10, 64)
 
 	if err != nil {
-		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
+		return config.ErrorResponse(e, http.StatusBadRequest, 3, config.BadRequest)
 	}
 
 	res := s.OrderStatusUsecase.DeleteOrderStatus(uint(id))
@@ -85,7 +85,7 @@ func (s *OrderStatusController) ActivateOrderStatus(e echo.Context) error {
 	id, err := strconv.ParseUint(e.Param("id"), 10, 64)
 
 	if err != nil {
-		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
+		return config.ErrorResponse(e, http.StatusBadRequest, 3, config.BadRequest)
 	}
 
 	res := s.OrderStatusUsecase.ActivateOrderStatus(uint(id))
@@ -98,7 +98,7 @@ func (s *OrderStatusController) DeactivateOrderStatus(e echo.Context) error {
 	id, err := strconv.ParseUint(e.Param("id"), 10, 64)
 
 	if err != nil {
-		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
+		return config.ErrorResponse(e, http.StatusBadRequest, 3, config.BadRequest)
 	}
 
 	res := s.OrderStatusUsecase.DeactivateOrderStatus(uint(id))

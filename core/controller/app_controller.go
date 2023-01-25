@@ -12,11 +12,11 @@ import (
 func CheckResponse(e echo.Context, response dto.Response) error {
 
 	if response.ErrorMessage != nil {
-		return config.ErrorResponse(e, http.StatusInternalServerError, response.ErrorMessage)
+		return config.ErrorResponse(e, http.StatusInternalServerError, response.Result.ErrorCode, response.ErrorMessage)
 	}
 
 	if response.ResponseCode != 200 {
-		return config.ErrorResponse(e, response.ResponseCode, response.Result.Messages)
+		return config.ErrorResponse(e, response.ResponseCode, response.Result.ErrorCode, response.Result.Messages)
 	}
 
 	return config.SuccessResponse(e, response.Result)

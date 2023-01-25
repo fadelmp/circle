@@ -33,7 +33,7 @@ func (c *CustomerController) GetCustomerById(e echo.Context) error {
 	id, err := strconv.ParseUint(e.Param("id"), 10, 64)
 
 	if err != nil {
-		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
+		return config.ErrorResponse(e, http.StatusBadRequest, 3, config.BadRequest)
 	}
 
 	res := c.CustomerUsecase.GetCustomerById(uint(id))
@@ -46,7 +46,7 @@ func (c *CustomerController) CreateCustomer(e echo.Context) error {
 	var request interface{}
 
 	if e.Bind(&request) != nil {
-		return config.ErrorResponse(e, http.StatusInternalServerError, config.BadRequest)
+		return config.ErrorResponse(e, http.StatusInternalServerError, 3, config.BadRequest)
 	}
 
 	res := c.CustomerUsecase.CreateCustomer(request)
@@ -59,7 +59,7 @@ func (c *CustomerController) UpdateCustomer(e echo.Context) error {
 	var request interface{}
 
 	if e.Bind(&request) != nil {
-		return config.ErrorResponse(e, http.StatusInternalServerError, config.BadRequest)
+		return config.ErrorResponse(e, http.StatusInternalServerError, 3, config.BadRequest)
 	}
 
 	res := c.CustomerUsecase.UpdateCustomer(request)
@@ -73,7 +73,7 @@ func (c *CustomerController) DeleteCustomer(e echo.Context) error {
 	id, err := strconv.ParseUint(e.Param("id"), 10, 64)
 
 	if err != nil {
-		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
+		return config.ErrorResponse(e, http.StatusBadRequest, 3, config.BadRequest)
 	}
 
 	res := c.CustomerUsecase.DeleteCustomer(uint(id))
@@ -87,7 +87,7 @@ func (c *CustomerController) ActivateCustomer(e echo.Context) error {
 	id, err := strconv.ParseUint(e.Param("id"), 10, 64)
 
 	if err != nil {
-		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
+		return config.ErrorResponse(e, http.StatusBadRequest, 3, config.BadRequest)
 	}
 
 	res := c.CustomerUsecase.ActivateCustomer(uint(id), status)

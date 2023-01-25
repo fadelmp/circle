@@ -31,7 +31,7 @@ func (o *OrderController) CreateOrder(e echo.Context) error {
 	var request interface{}
 
 	if e.Bind(&request) != nil {
-		return config.ErrorResponse(e, http.StatusInternalServerError, config.BadRequest)
+		return config.ErrorResponse(e, http.StatusInternalServerError, 3, config.BadRequest)
 	}
 
 	res := o.OrderUsecase.CreateOrder(request)

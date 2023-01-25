@@ -35,7 +35,7 @@ func (s *ServiceController) GetServiceById(e echo.Context) error {
 	id, err := strconv.ParseUint(e.Param("id"), 10, 64)
 
 	if err != nil {
-		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
+		return config.ErrorResponse(e, http.StatusBadRequest, 3, config.BadRequest)
 	}
 
 	res := s.ServiceUsecase.GetServiceById(uint(id))
@@ -48,7 +48,7 @@ func (s *ServiceController) CreateService(e echo.Context) error {
 	var request interface{}
 
 	if e.Bind(&request) != nil {
-		return config.ErrorResponse(e, http.StatusInternalServerError, config.BadRequest)
+		return config.ErrorResponse(e, http.StatusInternalServerError, 3, config.BadRequest)
 	}
 
 	res := s.ServiceUsecase.CreateService(request)
@@ -61,7 +61,7 @@ func (s *ServiceController) UpdateService(e echo.Context) error {
 	var request interface{}
 
 	if e.Bind(&request) != nil {
-		return config.ErrorResponse(e, http.StatusInternalServerError, config.BadRequest)
+		return config.ErrorResponse(e, http.StatusInternalServerError, 3, config.BadRequest)
 	}
 
 	res := s.ServiceUsecase.UpdateService(request)
@@ -75,7 +75,7 @@ func (s *ServiceController) DeleteService(e echo.Context) error {
 	id, err := strconv.ParseUint(e.Param("id"), 10, 64)
 
 	if err != nil {
-		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
+		return config.ErrorResponse(e, http.StatusBadRequest, 3, config.BadRequest)
 	}
 
 	res := s.ServiceUsecase.DeleteService(uint(id))
@@ -89,7 +89,7 @@ func (s *ServiceController) ActivateService(e echo.Context) error {
 	id, err := strconv.ParseUint(e.Param("id"), 10, 64)
 
 	if err != nil {
-		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
+		return config.ErrorResponse(e, http.StatusBadRequest, 3, config.BadRequest)
 	}
 
 	res := s.ServiceUsecase.ActivateService(uint(id), status)
