@@ -10,17 +10,14 @@ import (
 )
 
 type CustomerUsecaseContract interface {
-	GetCustomers() dto.Response
-	GetActiveCustomers() dto.Response
+	GetCustomers(string, string) dto.Response
 	GetCustomerById(uint) dto.Response
-	GetAvailableCustomers() dto.Response
 
 	CreateCustomer(interface{}) dto.Response
 	UpdateCustomer(interface{}) dto.Response
 	DeleteCustomer(uint) dto.Response
 
-	ActivateCustomer(uint) dto.Response
-	DeactivateCustomer(uint) dto.Response
+	ActivateCustomer(uint, string) dto.Response
 }
 
 type CustomerUsecase struct {
@@ -57,24 +54,15 @@ func getCustomerUri() string {
 
 // Implementation
 
-func (c *CustomerUsecase) GetCustomers() dto.Response {
+func (c *CustomerUsecase) GetCustomers(filter string, status string) dto.Response {
 
 	uri := getCustomerUri()
-	return c.GetRequest.Main(uri)
-}
 
-func (c *CustomerUsecase) GetActiveCustomers() dto.Response {
-
-	uri := getCustomerUri()
-	uri += "/active"
-
-	return c.GetRequest.Main(uri)
-}
-
-func (c *CustomerUsecase) GetAvailableCustomers() dto.Response {
-
-	uri := getCustomerUri()
-	uri += "/available"
+	if filter != "" {
+		uri += "?filter=" + filter
+	} else if status != "" {
+		uri += "?status=" + status
+	}
 
 	return c.GetRequest.Main(uri)
 }
@@ -115,18 +103,10 @@ func (c *CustomerUsecase) DeleteCustomer(id uint) dto.Response {
 	return c.DeleteRequest.Main(uri)
 }
 
-func (c *CustomerUsecase) ActivateCustomer(id uint) dto.Response {
+func (c *CustomerUsecase) ActivateCustomer(id uint, status string) dto.Response {
 
 	uri := getCustomerUri()
-	uri += "/activate/" + strconv.FormatUint(uint64(id), 10)
-
-	return c.PatchRequest.Main(uri)
-}
-
-func (c *CustomerUsecase) DeactivateCustomer(id uint) dto.Response {
-
-	uri := getCustomerUri()
-	uri += "/deactivate/" + strconv.FormatUint(uint64(id), 10)
+	uri += "/" + status + "/" + strconv.FormatUint(uint64(id), 10)
 
 	return c.PatchRequest.Main(uri)
 }

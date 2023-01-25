@@ -20,21 +20,10 @@ func ProviderCustomerController(c usecase.CustomerUsecase) CustomerController {
 
 func (c *CustomerController) GetCustomers(e echo.Context) error {
 
-	res := c.CustomerUsecase.GetCustomers()
+	filter := e.QueryParam("filter")
+	status := e.QueryParam("status")
 
-	return CheckResponse(e, res)
-}
-
-func (c *CustomerController) GetActiveCustomers(e echo.Context) error {
-
-	res := c.CustomerUsecase.GetActiveCustomers()
-
-	return CheckResponse(e, res)
-}
-
-func (c *CustomerController) GetAvailableCustomers(e echo.Context) error {
-
-	res := c.CustomerUsecase.GetAvailableCustomers()
+	res := c.CustomerUsecase.GetCustomers(filter, status)
 
 	return CheckResponse(e, res)
 }
@@ -94,26 +83,14 @@ func (c *CustomerController) DeleteCustomer(e echo.Context) error {
 
 func (c *CustomerController) ActivateCustomer(e echo.Context) error {
 
+	status := e.Param("status")
 	id, err := strconv.ParseUint(e.Param("id"), 10, 64)
 
 	if err != nil {
 		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
 	}
 
-	res := c.CustomerUsecase.ActivateCustomer(uint(id))
-
-	return CheckResponse(e, res)
-}
-
-func (c *CustomerController) DeactivateCustomer(e echo.Context) error {
-
-	id, err := strconv.ParseUint(e.Param("id"), 10, 64)
-
-	if err != nil {
-		return config.ErrorResponse(e, http.StatusBadRequest, config.BadRequest)
-	}
-
-	res := c.CustomerUsecase.DeactivateCustomer(uint(id))
+	res := c.CustomerUsecase.ActivateCustomer(uint(id), status)
 
 	return CheckResponse(e, res)
 }
