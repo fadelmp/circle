@@ -103,3 +103,69 @@ func (l *LocationController) GetCityByProvinceID(e echo.Context) error {
 
 	return CheckResponse(e, res)
 }
+
+func (l *LocationController) GetAllDistrict(e echo.Context) error {
+
+	res := l.LocationUsecase.GetAllDistrict()
+
+	return CheckResponse(e, res)
+}
+
+func (l *LocationController) GetDistrictByID(e echo.Context) error {
+
+	id, err := strconv.ParseUint(e.Param("id"), 10, 64)
+
+	if err != nil {
+		return config.ErrorResponse(e, http.StatusBadRequest, 3, config.BadRequest)
+	}
+
+	res := l.LocationUsecase.GetDistrictByID(uint(id))
+
+	return CheckResponse(e, res)
+}
+
+func (l *LocationController) GetDistrictByCityID(e echo.Context) error {
+
+	id, err := strconv.ParseUint(e.Param("city_id"), 10, 64)
+
+	if err != nil {
+		return config.ErrorResponse(e, http.StatusBadRequest, 3, config.BadRequest)
+	}
+
+	res := l.LocationUsecase.GetDistrictByCityID(uint(id))
+
+	return CheckResponse(e, res)
+}
+
+func (l *LocationController) GetAllSubDistrict(e echo.Context) error {
+
+	res := l.LocationUsecase.GetAllSubDistrict()
+
+	return CheckResponse(e, res)
+}
+
+func (l *LocationController) GetSubDistrictByID(e echo.Context) error {
+
+	id, err := strconv.ParseUint(e.Param("id"), 10, 64)
+
+	if err != nil {
+		return config.ErrorResponse(e, http.StatusBadRequest, 3, config.BadRequest)
+	}
+
+	res := l.LocationUsecase.GetSubDistrictByID(uint(id))
+
+	return CheckResponse(e, res)
+}
+
+func (l *LocationController) GetSubDistrictByDistrictID(e echo.Context) error {
+
+	id, err := strconv.ParseUint(e.Param("district_id"), 10, 64)
+
+	if err != nil {
+		return config.ErrorResponse(e, http.StatusBadRequest, 3, config.BadRequest)
+	}
+
+	res := l.LocationUsecase.GetSubDistrictByDistrictID(uint(id))
+
+	return CheckResponse(e, res)
+}

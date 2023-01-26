@@ -18,6 +18,14 @@ type LocationUsecaseContract interface {
 	GetAllCity() dto.Response
 	GetCityByID(uint) dto.Response
 	GetCityByProvinceID(uint) dto.Response
+
+	GetAllDistrict() dto.Response
+	GetDistrictByID(uint) dto.Response
+	GetCityByDistrictID(uint) dto.Response
+
+	GetAllSubDistrict() dto.Response
+	GetSubDistrictByID(uint) dto.Response
+	GetSubDistrictByDistrictID(uint) dto.Response
 }
 
 type LocationUsecase struct {
@@ -99,6 +107,58 @@ func (l *LocationUsecase) GetCityByProvinceID(province_id uint) dto.Response {
 	uri := getUri()
 	uri += "/city/province/"
 	uri += strconv.FormatUint(uint64(province_id), 10)
+
+	return l.GetRequest.Main(uri)
+}
+
+func (l *LocationUsecase) GetAllDistrict() dto.Response {
+
+	uri := getUri()
+	uri += "/district"
+
+	return l.GetRequest.Main(uri)
+}
+
+func (l *LocationUsecase) GetDistrictByID(id uint) dto.Response {
+
+	uri := getUri()
+	uri += "/district/"
+	uri += strconv.FormatUint(uint64(id), 10)
+
+	return l.GetRequest.Main(uri)
+}
+
+func (l *LocationUsecase) GetDistrictByCityID(city_id uint) dto.Response {
+
+	uri := getUri()
+	uri += "/district/city/"
+	uri += strconv.FormatUint(uint64(city_id), 10)
+
+	return l.GetRequest.Main(uri)
+}
+
+func (l *LocationUsecase) GetAllSubDistrict() dto.Response {
+
+	uri := getUri()
+	uri += "/sub_district"
+
+	return l.GetRequest.Main(uri)
+}
+
+func (l *LocationUsecase) GetSubDistrictByID(id uint) dto.Response {
+
+	uri := getUri()
+	uri += "/sub_district/"
+	uri += strconv.FormatUint(uint64(id), 10)
+
+	return l.GetRequest.Main(uri)
+}
+
+func (l *LocationUsecase) GetSubDistrictByDistrictID(district_id uint) dto.Response {
+
+	uri := getUri()
+	uri += "/sub_district/district/"
+	uri += strconv.FormatUint(uint64(district_id), 10)
 
 	return l.GetRequest.Main(uri)
 }

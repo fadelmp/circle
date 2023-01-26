@@ -27,4 +27,18 @@ func LocationRoutes(routes *echo.Echo, api controller.LocationController) {
 		city.GET("/:id", api.GetCityByID)
 		city.GET("/province/:province_id", api.GetCityByProvinceID)
 	}
+
+	district := routes.Group("/district")
+	{
+		district.GET("", api.GetAllDistrict)
+		district.GET("", api.GetDistrictByID)
+		district.GET("/city/:city_id", api.GetDistrictByCityID)
+	}
+
+	sub_district := routes.Group("/sub_district")
+	{
+		sub_district.GET("", api.GetAllSubDistrict)
+		sub_district.GET("", api.GetSubDistrictByID)
+		sub_district.GET("/district/:district_id", api.GetSubDistrictByDistrictID)
+	}
 }
