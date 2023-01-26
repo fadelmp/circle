@@ -22,5 +22,13 @@ func Init(routes *echo.Echo, db *gorm.DB, redis *redis.Client) *echo.Echo {
 	city := injection.CityInjection(db, redis)
 	CityRoutes(routes, city)
 
+	// district Route & Injection
+	district := injection.DistrictInjection(db, redis)
+	DistrictRoutes(routes, district)
+
+	// sub district Route & Injection
+	sub_district := injection.SubDistrictInjection(db, redis)
+	SubDistrictRoutes(routes, sub_district)
+
 	return routes
 }

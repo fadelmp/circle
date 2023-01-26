@@ -32,7 +32,7 @@ func (c *CityRepository) GetAll() []entity.City {
 	var city entity.City
 
 	query := c.DB.Model(&city).Preload("Province").Find(&cities)
-	keys := "countries"
+	keys := "cities"
 
 	// Find All Province
 	config.CheckRedisQuery(c.Redis, query, keys)
