@@ -37,7 +37,7 @@ func ProviderLocationUsecase(g request.GetRequest) LocationUsecase {
 }
 
 func getUri() string {
-	return os.Getenv("LOCATION_Usecase_URI")
+	return os.Getenv("LOCATION_URI")
 }
 
 // Implementation
