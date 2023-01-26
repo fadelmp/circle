@@ -8,7 +8,7 @@ import (
 
 func DistrictRoutes(routes *echo.Echo, api controller.DistrictController) {
 
-	district := routes.Group("/District")
+	district := routes.Group("/district")
 	{
 		district.GET("", api.GetAll)
 		district.GET("/:id", api.GetByID)

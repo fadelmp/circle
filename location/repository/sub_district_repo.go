@@ -30,7 +30,7 @@ func (sd *SubDistrictRepository) GetAll() []entity.SubDistrict {
 
 	var sub_districts []entity.SubDistrict
 
-	query := sd.DB.Model(&sub_districts).Preload("Province").Find(&sub_districts)
+	query := sd.DB.Model(&entity.SubDistrict{}).Preload("District").Find(&sub_districts)
 	keys := "sub_districts"
 
 	// Find All Province
