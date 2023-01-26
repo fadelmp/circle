@@ -10,6 +10,7 @@ type LocationUsecaseContract interface {
 	GetProvince(uint) string
 	GetCity(uint) string
 	GetDistrict(uint) string
+	GetSubDistrict(uint) string
 
 	CheckLocation(entity.Customer) []string
 }
@@ -54,6 +55,13 @@ func (l *LocationUsecase) GetDistrict(id uint) string {
 	return l.CheckValue(district)
 }
 
+func (l *LocationUsecase) GetSubDistrict(id uint) string {
+
+	sub_district := l.LocationRequest.GetSubDistrict(id)
+
+	return l.CheckValue(sub_district)
+}
+
 func (l *LocationUsecase) CheckValue(entity entity.Response) string {
 
 	if entity.Result.Data.ID != 0 {
@@ -73,9 +81,11 @@ func (l *LocationUsecase) CheckLocation(entity []entity.Customer) []string {
 		province := l.GetProvince(value.Address.ProvinceID)
 		city := l.GetCity(value.Address.CityID)
 		district := l.GetDistrict(value.Address.DistrictID)
+		sub_district := l.GetSubDistrict(value.Address.SubDistrictID)
 
-		address_line := value.Address.Line + ", " + district + ", " +
-			city + ", " + province + ", " + country + ", " + value.Address.PostalCode
+		address_line := value.Address.Line + ", " +
+			sub_district + ", " + district + ", " + city + ", " +
+			province + ", " + country + ", " + value.Address.PostalCode
 		addresses = append(addresses, address_line)
 	}
 

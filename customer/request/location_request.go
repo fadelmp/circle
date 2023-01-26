@@ -11,6 +11,7 @@ type LocationRequestContract interface {
 	GetProvince(uint) entity.Response
 	GetCity(uint) entity.Response
 	GetDistrict(uint) entity.Response
+	GetSubDistrict(uint) entity.Response
 }
 
 type LocationRequest struct {
@@ -51,6 +52,15 @@ func (l *LocationRequest) GetDistrict(district_id uint) entity.Response {
 	uri := os.Getenv("LOCATION_SERVICE_URI")
 	uri += "/district/"
 	uri += strconv.FormatUint(uint64(district_id), 10)
+
+	return l.HTTPRequest.Get(uri)
+}
+
+func (l *LocationRequest) GetSubDistrict(sub_district_id uint) entity.Response {
+
+	uri := os.Getenv("LOCATION_SERVICE_URI")
+	uri += "/sub_district/"
+	uri += strconv.FormatUint(uint64(sub_district_id), 10)
 
 	return l.HTTPRequest.Get(uri)
 }
