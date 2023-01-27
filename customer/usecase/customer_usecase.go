@@ -64,6 +64,11 @@ func (c *CustomerUsecase) GetByID(id uint) dto.Customer {
 
 func (c *CustomerUsecase) Create(dto dto.Customer) (error, int) {
 
+	// check phone whether customer exists
+	if !c.CheckPhone(dto) {
+		return errors.New(config.CustomerExists), 2
+	}
+
 	// change customer dto to entity to put on database
 	customer_entity := mapper.ToCustomerEntity(dto, entity.BaseCreate())
 
@@ -75,6 +80,11 @@ func (c *CustomerUsecase) Update(dto dto.Customer) (error, int) {
 
 	if !c.CheckID(dto.ID) {
 		return errors.New(config.CustomerNotFound), 1
+	}
+
+	// check phone whether customer exists
+	if !c.CheckPhone(dto) {
+		return errors.New(config.CustomerExists), 2
 	}
 
 	customer_entity := mapper.ToCustomerEntity(dto, entity.BaseUpdate())
@@ -103,6 +113,18 @@ func (c *CustomerUsecase) Activate(dto dto.Customer) (error, int) {
 	customer_entity := mapper.ToCustomerEntity(dto, entity.BaseActivate(dto.Is_Actived))
 
 	return c.CustomerRepository.ChangeStatus(customer_entity), 0
+}
+
+func (c *CustomerUsecase) CheckPhone(dto dto.Customer) bool {
+
+	customer := c.CustomerRepository.GetByPhone(dto.Phone)
+
+	if customer.ID != 0 && customer.ID != dto.ID &&
+		!customer.Base.Is_Deleted {
+		return false
+	}
+
+	return true
 }
 
 func (c *CustomerUsecase) CheckID(id uint) bool {

@@ -15,7 +15,7 @@ type CustomerRepositoryContract interface {
 	GetAvailable() []entity.Customer
 
 	GetByID(uint) entity.Customer
-	GetByName(string) entity.Customer
+	GetByPhone(string) entity.Customer
 	GetByFilter(string) []entity.Customer
 
 	Create(entity.Customer) error
@@ -56,8 +56,7 @@ func (c *CustomerRepository) GetActive() []entity.Customer {
 
 	query := c.DB.Model(&entity.Customer{}).
 		Where("customers.is_actived=?", true).
-		Preload("Address").
-		Order("id asc").Find(&customers)
+		Preload("Address").Order("id asc").Find(&customers)
 	keys := "customers_active"
 
 	// Get Service All
@@ -93,14 +92,14 @@ func (c *CustomerRepository) GetByID(id uint) entity.Customer {
 	return customer
 }
 
-func (c *CustomerRepository) GetByName(name string) entity.Customer {
+func (c *CustomerRepository) GetByPhone(phone string) entity.Customer {
 
 	var customer entity.Customer
 
-	query := c.DB.Where("name=?", name).Find(&customer)
-	keys := "customer_name_" + name
+	query := c.DB.Where("phone=?", phone).Find(&customer)
+	keys := "customer_phone_" + phone
 
-	// Get Service by Name
+	// Get Customer by Phone
 	config.CheckRedisQuery(c.Redis, query, keys)
 
 	return customer
