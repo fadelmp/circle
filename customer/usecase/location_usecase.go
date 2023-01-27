@@ -10,7 +10,7 @@ type LocationUsecaseContract interface {
 	GetProvince(uint) string
 	GetCity(uint) string
 	GetDistrict(uint) string
-	GetSubDistrict(uint) string
+	GetSubDistrict(uint64) string
 
 	CheckLocation(entity.Customer) []string
 }
@@ -55,7 +55,7 @@ func (l *LocationUsecase) GetDistrict(id uint) string {
 	return l.CheckValue(district)
 }
 
-func (l *LocationUsecase) GetSubDistrict(id uint) string {
+func (l *LocationUsecase) GetSubDistrict(id uint64) string {
 
 	sub_district := l.LocationRequest.GetSubDistrict(id)
 
