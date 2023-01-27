@@ -5,6 +5,19 @@ import (
 	"customer/entity"
 )
 
+func Tes(dto dto.Address) entity.Address {
+	return entity.Address{
+		ID:            dto.ID,
+		Line:          dto.Line,
+		SubDistrictID: dto.SubDistrictID,
+		DistrictID:    dto.DistrictID,
+		CityID:        dto.CityID,
+		ProvinceID:    dto.ProvinceID,
+		CountryID:     dto.CountryID,
+		PostalCode:    dto.PostalCode,
+	}
+}
+
 func ToAddressEntity(dto dto.Address, customer_id uint) entity.Address {
 	return entity.Address{
 		ID:            dto.ID,

@@ -18,7 +18,7 @@ type CustomerRepositoryContract interface {
 	GetByName(string) entity.Customer
 	GetByFilter(string) []entity.Customer
 
-	Create(entity.Customer) (entity.Customer, error)
+	Create(entity.Customer) error
 	Update(entity.Customer) error
 	ChangeStatus(entity.Customer) error
 }
@@ -122,12 +122,12 @@ func (c *CustomerRepository) GetByFilter(filter string) []entity.Customer {
 	return customers
 }
 
-func (c *CustomerRepository) Create(customer entity.Customer) (entity.Customer, error) {
+func (c *CustomerRepository) Create(customer entity.Customer) error {
 
 	// Create Customer Data
 	err := c.DB.Create(&customer).Error
 
-	return customer, err
+	return err
 }
 
 func (c *CustomerRepository) Update(customer entity.Customer) error {

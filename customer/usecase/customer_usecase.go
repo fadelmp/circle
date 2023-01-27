@@ -72,17 +72,7 @@ func (c *CustomerUsecase) Create(dto dto.Customer) error {
 	customer_entity.Base = entity.BaseCreate()
 
 	// create customer data
-	customer, err := c.CustomerRepository.Create(customer_entity)
-	if err != nil {
-		return err
-	}
-
-	// create address data
-	if err := c.AddressUsecase.Create(dto.Address, customer.ID); err != nil {
-		return err
-	}
-
-	return nil
+	return c.CustomerRepository.Create(customer_entity)
 }
 
 func (c *CustomerUsecase) Update(dto dto.Customer) error {
@@ -95,16 +85,9 @@ func (c *CustomerUsecase) Update(dto dto.Customer) error {
 	customer_entity.Base = entity.BaseUpdate()
 
 	// Update Customer Data
-	if err := c.CustomerRepository.Update(customer_entity); err != nil {
-		return err
-	}
+	err := c.CustomerRepository.Update(customer_entity)
 
-	// Update Address Data
-	if err := c.AddressUsecase.Update(dto.Address, dto.ID); err != nil {
-		return err
-	}
-
-	return nil
+	return err
 }
 
 func (c *CustomerUsecase) Delete(id uint) error {
