@@ -3,7 +3,7 @@ package routes
 import (
 	"customer/controller"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 func CustomerRoutes(routes *echo.Echo, api controller.CustomerController) {
@@ -11,12 +11,12 @@ func CustomerRoutes(routes *echo.Echo, api controller.CustomerController) {
 	customer := routes.Group("/customer")
 	{
 		customer.GET("", api.GetAll)
-		customer.GET("/:ID", api.GetByID)
+		customer.GET("/:id", api.GetByID)
 
 		customer.POST("", api.Create)
 		customer.PUT("", api.Update)
-		customer.DELETE("/:ID", api.Delete)
+		customer.DELETE("/:id", api.Delete)
 
-		customer.PATCH("/:Status/:ID", api.Activate)
+		customer.PATCH("/:id/:is_actived", api.Activate)
 	}
 }

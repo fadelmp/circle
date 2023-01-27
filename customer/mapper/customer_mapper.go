@@ -5,7 +5,7 @@ import (
 	"customer/entity"
 )
 
-func ToCustomerEntity(dto dto.Customer) entity.Customer {
+func ToCustomerEntity(dto dto.Customer, base entity.Base) entity.Customer {
 	return entity.Customer{
 		ID:         dto.ID,
 		Name:       dto.Name,
@@ -13,6 +13,7 @@ func ToCustomerEntity(dto dto.Customer) entity.Customer {
 		OtherPhone: dto.OtherPhone,
 		Email:      dto.Email,
 		Address:    Tes(dto.Address),
+		Base:       base,
 	}
 }
 

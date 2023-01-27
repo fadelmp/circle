@@ -125,28 +125,22 @@ func (c *CustomerRepository) GetByFilter(filter string) []entity.Customer {
 func (c *CustomerRepository) Create(customer entity.Customer) error {
 
 	// Create Customer Data
-	err := c.DB.Create(&customer).Error
-
-	return err
+	return c.DB.Create(&customer).Error
 }
 
 func (c *CustomerRepository) Update(customer entity.Customer) error {
 
 	// update Service by id
-	err := c.DB.Model(&customer).Update(&customer).Error
-
-	return err
+	return c.DB.Model(&customer).Update(&customer).Error
 }
 
 func (c *CustomerRepository) ChangeStatus(customer entity.Customer) error {
 
 	// delete Service by id, by change is active value to false
-	err := c.DB.Model(&customer).Where("id=?", customer.ID).Updates(map[string]interface{}{
+	return c.DB.Model(&customer).Where("id=?", customer.ID).Updates(map[string]interface{}{
 		"is_actived": customer.Base.Is_Actived,
 		"is_deleted": customer.Base.Is_Deleted,
 		"updated_at": customer.Base.Updated_At,
 		"updated_by": customer.Base.Updated_By,
 	}).Error
-
-	return err
 }

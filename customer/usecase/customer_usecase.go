@@ -10,50 +10,47 @@ import (
 )
 
 type CustomerUsecaseContract interface {
-	GetAll(string, string) []dto.ShowCustomer
+	GetAll(dto.QueryParam) []dto.ShowCustomer
 	GetByID(uint) dto.Customer
 
-	Create(entity.Customer) error
-	Update(entity.Customer) error
-	Delete(uint) error
-	Activate(uint, string) error
+	Create(entity.Customer) (error, int)
+	Update(entity.Customer) (error, int)
+	Delete(entity.Customer) (error, int)
+	Activate(entity.Customer) (error, int)
 }
 
 type CustomerUsecase struct {
 	CustomerRepository repository.CustomerRepository
-	LocationUsecase    LocationUsecase
 	AddressUsecase     AddressUsecase
 }
 
 func ProviderCustomerUsecase(
 	c repository.CustomerRepository,
-	l LocationUsecase,
 	a AddressUsecase,
 ) CustomerUsecase {
 	return CustomerUsecase{
 		CustomerRepository: c,
-		LocationUsecase:    l,
 		AddressUsecase:     a,
 	}
 }
 
 // Implementation
 
-func (c *CustomerUsecase) GetAll(filter string, status string) []dto.ShowCustomer {
+func (c *CustomerUsecase) GetAll(dto dto.QueryParam) []dto.ShowCustomer {
 
 	var customers []entity.Customer
 
-	if filter != "" {
-		customers = c.CustomerRepository.GetByFilter(filter)
-	} else if status == "available" {
+	if dto.Filter != "" {
+		customers = c.CustomerRepository.GetByFilter(dto.Filter)
+	} else if dto.Status == "available" {
 		customers = c.CustomerRepository.GetAvailable()
-	} else if status == "active" {
+	} else if dto.Status == "active" {
 		customers = c.CustomerRepository.GetActive()
 	} else {
 		customers = c.CustomerRepository.GetAll()
 	}
 
-	locations := c.LocationUsecase.CheckLocation(customers)
+	locations := c.AddressUsecase.Check(customers)
 
 	return mapper.ToShowCustomerDtoList(customers, locations)
 }
@@ -65,62 +62,47 @@ func (c *CustomerUsecase) GetByID(id uint) dto.Customer {
 	return mapper.ToCustomerDto(customer)
 }
 
-func (c *CustomerUsecase) Create(dto dto.Customer) error {
+func (c *CustomerUsecase) Create(dto dto.Customer) (error, int) {
 
 	// change customer dto to entity to put on database
-	customer_entity := mapper.ToCustomerEntity(dto)
-	customer_entity.Base = entity.BaseCreate()
+	customer_entity := mapper.ToCustomerEntity(dto, entity.BaseCreate())
 
 	// create customer data
-	return c.CustomerRepository.Create(customer_entity)
+	return c.CustomerRepository.Create(customer_entity), 0
 }
 
-func (c *CustomerUsecase) Update(dto dto.Customer) error {
+func (c *CustomerUsecase) Update(dto dto.Customer) (error, int) {
 
 	if !c.CheckID(dto.ID) {
-		return errors.New(config.CustomerNotFound)
+		return errors.New(config.CustomerNotFound), 1
 	}
 
-	customer_entity := mapper.ToCustomerEntity(dto)
-	customer_entity.Base = entity.BaseUpdate()
+	customer_entity := mapper.ToCustomerEntity(dto, entity.BaseUpdate())
 
 	// Update Customer Data
-	err := c.CustomerRepository.Update(customer_entity)
-
-	return err
+	return c.CustomerRepository.Update(customer_entity), 0
 }
 
-func (c *CustomerUsecase) Delete(id uint) error {
+func (c *CustomerUsecase) Delete(dto dto.Customer) (error, int) {
 
-	if !c.CheckID(id) {
-		return errors.New(config.CustomerNotFound)
+	if !c.CheckID(dto.ID) {
+		return errors.New(config.CustomerNotFound), 1
 	}
 
-	var customer_entity entity.Customer
+	customer_entity := mapper.ToCustomerEntity(dto, entity.BaseDelete())
 
-	customer_entity.ID = id
-	customer_entity.Base = entity.BaseDelete()
-
-	return c.CustomerRepository.ChangeStatus(customer_entity)
+	return c.CustomerRepository.ChangeStatus(customer_entity), 2
 }
 
-func (c *CustomerUsecase) Activate(id uint, status string) error {
+func (c *CustomerUsecase) Activate(dto dto.Customer) (error, int) {
 
-	if !c.CheckID(id) {
-		return errors.New(config.CustomerNotFound)
+	if !c.CheckID(dto.ID) {
+		return errors.New(config.CustomerNotFound), 1
 	}
 
-	is_active := true
-	if status == "deactivate" {
-		is_active = false
-	}
+	customer_entity := mapper.ToCustomerEntity(dto, entity.BaseActivate(dto.Is_Actived))
 
-	var customer_entity entity.Customer
-
-	customer_entity.ID = id
-	customer_entity.Base = entity.BaseActivate(is_active)
-
-	return c.CustomerRepository.ChangeStatus(customer_entity)
+	return c.CustomerRepository.ChangeStatus(customer_entity), 0
 }
 
 func (c *CustomerUsecase) CheckID(id uint) bool {
