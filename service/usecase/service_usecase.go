@@ -10,13 +10,13 @@ import (
 )
 
 type ServiceUsecaseContract interface {
-	GetAll(string, string) []dto.Service
+	GetAll(dto.QueryParam) []dto.Service
 	GetByID(uint) dto.Service
 
 	Create(entity.Service) (error, int)
 	Update(entity.Service) (error, int)
-	Delete(uint) (error, int)
-	Activate(uint, string) (error, int)
+	Delete(entity.Service) (error, int)
+	Activate(entity.Service) (error, int)
 }
 
 type ServiceUsecase struct {
@@ -31,15 +31,15 @@ func ProviderServiceUsecase(s repository.ServiceRepository) ServiceUsecase {
 
 // Implementation
 
-func (s *ServiceUsecase) GetAll(filter string, status string) []dto.Service {
+func (s *ServiceUsecase) GetAll(dto dto.QueryParam) []dto.Service {
 
 	var services []entity.Service
 
-	if filter != "" {
-		services = s.ServiceRepository.GetByFilter(filter)
-	} else if status == "available" {
+	if dto.Filter != "" {
+		services = s.ServiceRepository.GetByFilter(dto.Filter)
+	} else if dto.Status == "available" {
 		services = s.ServiceRepository.GetAvailable()
-	} else if status == "active" {
+	} else if dto.Status == "active" {
 		services = s.ServiceRepository.GetActive()
 	} else {
 		services = s.ServiceRepository.GetAll()
@@ -57,76 +57,72 @@ func (s *ServiceUsecase) GetByID(id uint) dto.Service {
 
 func (s *ServiceUsecase) Create(dto dto.Service) (error, int) {
 
-	// check service name first, if name exists then return errors
+	// check name whether name exists
 	if !s.CheckName(dto) {
 		return errors.New(config.ServiceExists), 2
 	}
 
-	// map dto to entity
-	service_entity := mapper.ToServiceEntity(dto)
-	service_entity.Base = entity.BaseCreate()
+	// map service dto to service entity
+	service_entity := mapper.ToServiceEntity(dto, entity.BaseCreate())
 
-	// create service
+	// create service and return
 	return s.ServiceRepository.Create(service_entity), 0
 }
 
 func (s *ServiceUsecase) Update(dto dto.Service) (error, int) {
 
+	// check id whether service not found
 	if !s.CheckID(dto.ID) {
 		return errors.New(config.ServiceNotFound), 1
 	}
 
+	// check name whether service name exists
 	if !s.CheckName(dto) {
 		return errors.New(config.ServiceExists), 2
 	}
 
-	service_entity := mapper.ToServiceEntity(dto)
-	service_entity.Base = entity.BaseUpdate()
+	// map service dto to service entity
+	service_entity := mapper.ToServiceEntity(dto, entity.BaseUpdate())
 
+	// update service and return
 	return s.ServiceRepository.Update(service_entity), 0
 }
 
-func (s *ServiceUsecase) Delete(id uint) (error, int) {
+func (s *ServiceUsecase) Delete(dto dto.Service) (error, int) {
 
-	if !s.CheckID(id) {
+	// check id whether service not exists
+	if !s.CheckID(dto.ID) {
 		return errors.New(config.ServiceNotFound), 1
 	}
 
-	var service_entity entity.Service
-	service_entity.ID = id
-	service_entity.Base = entity.BaseDelete()
+	// map service dto to service entity
+	service_entity := mapper.ToServiceEntity(dto, entity.BaseDelete())
 
+	// delete service and return
 	return s.ServiceRepository.ChangeStatus(service_entity), 0
 }
 
-func (s *ServiceUsecase) Activate(id uint, status string) (error, int) {
+func (s *ServiceUsecase) Activate(dto dto.Service) (error, int) {
 
-	if !s.CheckID(id) {
+	// check id whether service not found
+	if !s.CheckID(dto.ID) {
 		return errors.New(config.ServiceNotFound), 1
 	}
 
-	is_active := true
-	if status == "deactivate" {
-		is_active = false
-	}
+	// map service dto to service entity
+	service_entity := mapper.ToServiceEntity(dto, entity.BaseActivate(dto.IsActived))
 
-	var service_entity entity.Service
-	service_entity.ID = id
-	service_entity.Base = entity.BaseActivate(is_active)
-
+	// change service active status and return
 	return s.ServiceRepository.ChangeStatus(service_entity), 0
 }
 
 func (s *ServiceUsecase) CheckName(dto dto.Service) bool {
 
-	service_name := dto.Name
-
 	// get service by name
-	service := s.ServiceRepository.GetByName(service_name)
+	service := s.ServiceRepository.GetByName(dto.Name)
 
 	// return error if category exists
-	if service.ID != 0 &&
-		service.ID != dto.ID &&
+	if service.ID != 0 && service.ID != dto.ID &&
 		!service.Base.Is_Deleted {
 		return false
 	}
@@ -136,8 +132,10 @@ func (s *ServiceUsecase) CheckName(dto dto.Service) bool {
 
 func (s *ServiceUsecase) CheckID(id uint) bool {
 
+	// get service by id
 	service := s.ServiceRepository.GetByID(id)
 
+	// if service not found return false
 	if service.ID == 0 || service.Base.Is_Deleted {
 		return false
 	}

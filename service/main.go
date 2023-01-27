@@ -7,8 +7,8 @@ import (
 	config "service/config"
 	routes2 "service/routes"
 
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 func main() {

@@ -5,13 +5,14 @@ import (
 	"service/entity"
 )
 
-func ToServiceEntity(dto dto.Service) entity.Service {
+func ToServiceEntity(dto dto.Service, base entity.Base) entity.Service {
 	return entity.Service{
 		ID:          dto.ID,
 		Name:        dto.Name,
 		Description: dto.Description,
 		Price:       dto.Price,
 		Code:        dto.Code,
+		Base:        base,
 	}
 }
 

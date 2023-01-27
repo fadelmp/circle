@@ -40,9 +40,10 @@ func BaseDelete() Base {
 	}
 }
 
-func BaseActivate(is_active bool) Base {
+func BaseActivate(is_actived bool) Base {
+
 	return Base{
-		Is_Actived: is_active,
+		Is_Actived: is_actived,
 		Is_Deleted: false,
 		Updated_By: "System",
 		Updated_At: time.Now(),

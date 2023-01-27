@@ -7,7 +7,7 @@ import (
 	"service/usecase"
 	"strconv"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 type ServiceController struct {
@@ -22,33 +22,36 @@ func ProviderServiceController(s usecase.ServiceUsecase) ServiceController {
 
 func (s *ServiceController) GetAll(e echo.Context) error {
 
-	filter := e.QueryParam("filter")
-	status := e.QueryParam("status")
+	var query_param dto.QueryParam
 
-	services := s.ServiceUsecase.GetAll(filter, status)
-
-	if len(services) == 0 {
-		return config.SuccessResponse(e, nil, config.ServiceNotFound)
+	if e.Bind(&query_param) != nil {
+		return ErrorResponse(e, http.StatusInternalServerError, 3, config.BadRequest)
 	}
 
-	return config.SuccessResponse(e, services, config.GetServiceSuccess)
+	services := s.ServiceUsecase.GetAll(query_param)
+
+	if len(services) == 0 {
+		return SuccessResponse(e, nil, config.ServiceNotFound)
+	}
+
+	return SuccessResponse(e, services, config.GetServiceSuccess)
 }
 
 func (s *ServiceController) GetByID(e echo.Context) error {
 
-	id, err := strconv.ParseUint(e.Param("ID"), 10, 64)
+	id, err := strconv.ParseUint(e.Param("id"), 10, 64)
 
 	if err != nil {
-		return config.ErrorResponse(e, http.StatusBadRequest, 3, config.BadRequest)
+		return ErrorResponse(e, http.StatusBadRequest, 3, config.BadRequest)
 	}
 
 	service := s.ServiceUsecase.GetByID(uint(id))
 
 	if service.ID == 0 {
-		return config.SuccessResponse(e, nil, config.ServiceNotFound)
+		return SuccessResponse(e, nil, config.ServiceNotFound)
 	}
 
-	return config.SuccessResponse(e, service, config.GetServiceSuccess)
+	return SuccessResponse(e, service, config.GetServiceSuccess)
 }
 
 func (s *ServiceController) Create(e echo.Context) error {
@@ -56,7 +59,7 @@ func (s *ServiceController) Create(e echo.Context) error {
 	var service dto.Service
 
 	if e.Bind(&service) != nil {
-		return config.ErrorResponse(e, http.StatusInternalServerError, 3, config.BadRequest)
+		return ErrorResponse(e, http.StatusInternalServerError, 3, config.BadRequest)
 	}
 
 	err, err_code := s.ServiceUsecase.Create(service)
@@ -69,7 +72,7 @@ func (s *ServiceController) Update(e echo.Context) error {
 	var service dto.Service
 
 	if e.Bind(&service) != nil {
-		return config.ErrorResponse(e, http.StatusInternalServerError, 3, config.BadRequest)
+		return ErrorResponse(e, http.StatusInternalServerError, 3, config.BadRequest)
 	}
 
 	err, err_code := s.ServiceUsecase.Update(service)
@@ -79,29 +82,28 @@ func (s *ServiceController) Update(e echo.Context) error {
 
 func (s *ServiceController) Delete(e echo.Context) error {
 
-	id, err := strconv.ParseUint(e.Param("ID"), 10, 64)
+	var service dto.Service
 
-	if err != nil {
-		return config.ErrorResponse(e, http.StatusBadRequest, 3, config.BadRequest)
+	if e.Bind(&service) != nil {
+		return ErrorResponse(e, http.StatusBadRequest, 3, config.BadRequest)
 	}
 
-	err, err_code := s.ServiceUsecase.Delete(uint(id))
+	err, err_code := s.ServiceUsecase.Delete(service)
 
 	return CheckResponse(e, err, err_code, config.DeleteServiceSuccess)
 }
 
 func (s *ServiceController) Activate(e echo.Context) error {
 
-	status := e.Param("Status")
-	id, err := strconv.ParseUint(e.Param("ID"), 10, 64)
+	var service dto.Service
 
-	if err != nil {
-		return config.ErrorResponse(e, http.StatusBadRequest, 3, config.BadRequest)
+	if e.Bind(&service) != nil {
+		return ErrorResponse(e, http.StatusBadRequest, 3, config.BadRequest)
 	}
 
-	err, err_code := s.ServiceUsecase.Activate(uint(id), status)
+	err, err_code := s.ServiceUsecase.Activate(service)
 
-	if status == "deactivate" {
+	if !service.IsActived {
 		return CheckResponse(e, err, err_code, config.DeactivateServiceSuccess)
 	}
 

@@ -120,28 +120,22 @@ func (s *ServiceRepository) GetByFilter(filter string) []entity.Service {
 func (s *ServiceRepository) Create(service entity.Service) error {
 
 	// Create Service
-	err := s.DB.Create(&service).Error
-
-	return err
+	return s.DB.Create(&service).Error
 }
 
 func (s *ServiceRepository) Update(service entity.Service) error {
 
 	// update Service by id
-	err := s.DB.Model(&service).Update(&service).Error
-
-	return err
+	return s.DB.Model(&service).Update(&service).Error
 }
 
 func (s *ServiceRepository) ChangeStatus(service entity.Service) error {
 
-	// delete Service by id, by change is active value to false
-	err := s.DB.Model(&service).Where("id=?", service.ID).Updates(map[string]interface{}{
+	// change is actived and is deleted value
+	return s.DB.Model(&service).Where("id=?", service.ID).Updates(map[string]interface{}{
 		"is_actived": service.Base.Is_Actived,
 		"is_deleted": service.Base.Is_Deleted,
 		"updated_at": service.Base.Updated_At,
 		"updated_by": service.Base.Updated_By,
 	}).Error
-
-	return err
 }
