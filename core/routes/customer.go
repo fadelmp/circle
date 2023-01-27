@@ -17,7 +17,7 @@ func CustomerRoutes(routes *echo.Echo, api controller.CustomerController) {
 		customer.PUT("", api.UpdateCustomer)
 		customer.DELETE("/:id", api.DeleteCustomer)
 
-		customer.PATCH("/:status/:id", api.ActivateCustomer)
+		customer.PATCH("/:id/:status", api.ActivateCustomer)
 	}
 
 }

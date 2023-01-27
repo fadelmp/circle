@@ -106,7 +106,7 @@ func (c *CustomerUsecase) DeleteCustomer(id uint) dto.Response {
 func (c *CustomerUsecase) ActivateCustomer(id uint, status string) dto.Response {
 
 	uri := getCustomerUri()
-	uri += "/" + status + "/" + strconv.FormatUint(uint64(id), 10)
+	uri += "/" + strconv.FormatUint(uint64(id), 10) + "/" + status
 
 	return c.PatchRequest.Main(uri)
 }
