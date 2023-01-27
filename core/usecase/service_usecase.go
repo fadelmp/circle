@@ -106,7 +106,7 @@ func (s *ServiceUsecase) DeleteService(id uint) dto.Response {
 func (s *ServiceUsecase) ActivateService(id uint, status string) dto.Response {
 
 	uri := getServiceUri()
-	uri += "/" + status + "/" + strconv.FormatUint(uint64(id), 10)
+	uri += "/" + strconv.FormatUint(uint64(id), 10) + "/" + status
 
 	return s.PatchRequest.Main(uri)
 }
