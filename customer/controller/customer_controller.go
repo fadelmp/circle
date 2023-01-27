@@ -4,8 +4,6 @@ import (
 	"customer/config"
 	"customer/dto"
 	"customer/usecase"
-	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -58,11 +56,6 @@ func (c *CustomerController) GetByID(e echo.Context) error {
 func (c *CustomerController) Create(e echo.Context) error {
 
 	var customer dto.Customer
-
-	requestData := make(map[string]interface{})
-	_ = json.NewDecoder(e.Request().Body).Decode(&requestData)
-	fmt.Print(requestData)
-	fmt.Print(e.Response())
 
 	if e.Bind(&customer) != nil {
 		return ErrorResponse(e, http.StatusInternalServerError, 3, config.BadRequest)
