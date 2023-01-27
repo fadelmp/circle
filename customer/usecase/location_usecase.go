@@ -70,24 +70,3 @@ func (l *LocationUsecase) CheckValue(entity entity.Response) string {
 
 	return ""
 }
-
-func (l *LocationUsecase) CheckLocation(entity []entity.Customer) []string {
-
-	var addresses []string
-
-	for _, value := range entity {
-
-		country := l.GetCountry(value.Address.CountryID)
-		province := l.GetProvince(value.Address.ProvinceID)
-		city := l.GetCity(value.Address.CityID)
-		district := l.GetDistrict(value.Address.DistrictID)
-		sub_district := l.GetSubDistrict(value.Address.SubDistrictID)
-
-		address_line := value.Address.Line + ", " +
-			sub_district + ", " + district + ", " + city + ", " +
-			province + ", " + country + ", " + value.Address.PostalCode
-		addresses = append(addresses, address_line)
-	}
-
-	return addresses
-}
