@@ -38,7 +38,7 @@ func (c *CustomerController) GetAll(e echo.Context) error {
 
 func (c *CustomerController) GetByID(e echo.Context) error {
 
-	id, err := strconv.ParseUint(e.Param("ID"), 10, 64)
+	id, err := strconv.ParseUint(e.Param("id"), 10, 64)
 
 	if err != nil {
 		return ErrorResponse(e, http.StatusBadRequest, 3, config.BadRequest)
