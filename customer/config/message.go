@@ -3,7 +3,7 @@ package config
 var BadRequest = "Bad Request"
 
 var GetCustomerSuccess = "Berhasil Mendapatkan Data Pelanggan"
-var CustomerExists = "Nama Pelanggan Sudah Digunakan. Silahkan Gunakan Pelanggan Lain"
+var CustomerExists = "Nomor Telfon Sudah Terdaftar. Silahkan Gunakan Nomer Pelanggan Lain"
 var CustomerNotFound = "Pelanggan Tidak Ditemukan"
 
 var CreateCustomerSuccess = "Berhasil Menambahkan Pelanggan Baru"

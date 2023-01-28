@@ -10,7 +10,7 @@ import (
 )
 
 type CustomerUsecaseContract interface {
-	GetAll(dto.QueryParam) []dto.ShowCustomer
+	GetAll(dto.QueryParam) []dto.Customer
 	GetByID(uint) dto.Customer
 
 	Create(entity.Customer) (error, int)
@@ -36,7 +36,7 @@ func ProviderCustomerUsecase(
 
 // Implementation
 
-func (c *CustomerUsecase) GetAll(dto dto.QueryParam) []dto.ShowCustomer {
+func (c *CustomerUsecase) GetAll(dto dto.QueryParam) []dto.Customer {
 
 	var customers []entity.Customer
 
@@ -52,14 +52,14 @@ func (c *CustomerUsecase) GetAll(dto dto.QueryParam) []dto.ShowCustomer {
 
 	locations := c.AddressUsecase.Check(customers)
 
-	return mapper.ToShowCustomerDtoList(customers, locations)
+	return mapper.ToCustomerDtoList(customers, locations)
 }
 
 func (c *CustomerUsecase) GetByID(id uint) dto.Customer {
 
 	customer := c.CustomerRepository.GetByID(id)
 
-	return mapper.ToCustomerDto(customer)
+	return mapper.ToCustomerDto(customer, "")
 }
 
 func (c *CustomerUsecase) Create(dto dto.Customer) (error, int) {

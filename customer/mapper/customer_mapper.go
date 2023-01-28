@@ -17,23 +17,24 @@ func ToCustomerEntity(dto dto.Customer, base entity.Base) entity.Customer {
 	}
 }
 
-func ToCustomerDto(entity entity.Customer) dto.Customer {
+func ToCustomerDto(entity entity.Customer, location string) dto.Customer {
 	return dto.Customer{
-		ID:         entity.ID,
-		Name:       entity.Name,
-		Phone:      entity.Phone,
-		OtherPhone: entity.OtherPhone,
-		Email:      entity.Email,
-		Address:    ToAddressDto(entity.Address),
-		Base:       ToBaseDto(entity.Base),
+		ID:          entity.ID,
+		Name:        entity.Name,
+		Phone:       entity.Phone,
+		OtherPhone:  entity.OtherPhone,
+		Email:       entity.Email,
+		AddressLine: location,
+		Address:     ToAddressDto(entity.Address),
+		Base:        ToBaseDto(entity.Base),
 	}
 }
 
-func ToCustomerDtoList(entity []entity.Customer) []dto.Customer {
+func ToCustomerDtoList(entity []entity.Customer, location []string) []dto.Customer {
 	countries := make([]dto.Customer, len(entity))
 
 	for i, value := range entity {
-		countries[i] = ToCustomerDto(value)
+		countries[i] = ToCustomerDto(value, location[i])
 	}
 
 	return countries
