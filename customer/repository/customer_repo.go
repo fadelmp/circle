@@ -110,7 +110,7 @@ func (c *CustomerRepository) GetByFilter(filter string) []entity.Customer {
 	var customers []entity.Customer
 
 	query := c.DB.Order("id asc").
-		Where("is_deleted=?", false).
+		Where("is_actived=?", true).
 		Where("name LIKE ?", "%"+filter+"%").
 		Or("phone LIKE ?", "%"+filter+"%").
 		Or("other_phone LIKE ?", "%"+filter+"%").
