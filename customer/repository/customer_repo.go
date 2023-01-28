@@ -111,11 +111,12 @@ func (c *CustomerRepository) GetByFilter(filter string) []entity.Customer {
 
 	query := c.DB.Order("id asc").
 		Where("is_actived=?", true).
-		Where("name LIKE ?", "%"+filter+"%").
-		Or("phone LIKE ?", "%"+filter+"%").
-		Or("other_phone LIKE ?", "%"+filter+"%").
-		Or("email LIKE ?", "%"+filter+"%").
-		Preload("Address").Find(&customers)
+		Where(
+			c.DB.Where("name LIKE ?", "%"+filter+"%").
+				Or("phone LIKE ?", "%"+filter+"%").
+				Or("other_phone LIKE ?", "%"+filter+"%").
+				Or("email LIKE ?", "%"+filter+"%").Find(&customers),
+		).Preload("Address").Find(&customers)
 	keys := "customer_filter_" + filter
 
 	// Get Service by Name
