@@ -54,7 +54,7 @@ func (os *OrderUsecase) GetOrders() dto.Response {
 func (os *OrderUsecase) GetOrderByCustomer(customer_id uint) dto.Response {
 
 	uri := getOrderUri()
-	uri += "/" + strconv.FormatUint(uint64(customer_id), 10)
+	uri += "/customer/" + strconv.FormatUint(uint64(customer_id), 10)
 
 	return os.GetRequest.Main(uri)
 }
