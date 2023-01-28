@@ -12,7 +12,7 @@ func ToCustomerEntity(dto dto.Customer, base entity.Base) entity.Customer {
 		Phone:      dto.Phone,
 		OtherPhone: dto.OtherPhone,
 		Email:      dto.Email,
-		Address:    Tes(dto.Address),
+		Address:    ToAddressEntity(dto.Address),
 		Base:       base,
 	}
 }
