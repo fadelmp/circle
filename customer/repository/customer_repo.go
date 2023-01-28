@@ -121,6 +121,7 @@ func (c *CustomerRepository) GetByFilter(filter string) []entity.Customer {
 	// Get Service by Name
 	config.CheckRedisQuery(c.Redis, query, keys)
 
+	// return customer data
 	return customers
 }
 
