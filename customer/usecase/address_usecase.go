@@ -5,7 +5,8 @@ import (
 )
 
 type AddressUsecaseContract interface {
-	Check([]entity.Customer) []string
+	Check(entity.Customer) string
+	CheckList([]entity.Customer) []string
 }
 
 type AddressUsecase struct {
@@ -20,27 +21,33 @@ func ProviderAddressUsecase(l LocationUsecase) AddressUsecase {
 
 // Implementation
 
-func (a *AddressUsecase) Check(entity []entity.Customer) []string {
+func (a *AddressUsecase) Check(entity entity.Customer) string {
+
+	country := a.LocationUsecase.GetCountry(entity.Address.CountryID)
+	province := a.LocationUsecase.GetProvince(entity.Address.ProvinceID)
+	city := a.LocationUsecase.GetCity(entity.Address.CityID)
+	district := a.LocationUsecase.GetDistrict(entity.Address.DistrictID)
+	sub_district := a.LocationUsecase.GetSubDistrict(entity.Address.SubDistrictID)
+
+	address_line := entity.Address.Line
+
+	address_line += a.CheckComa(sub_district)
+	address_line += a.CheckComa(district)
+	address_line += a.CheckComa(city)
+	address_line += a.CheckComa(province)
+	address_line += a.CheckComa(country)
+	address_line += a.CheckComa(entity.Address.PostalCode)
+
+	return address_line
+}
+
+func (a *AddressUsecase) CheckList(entity []entity.Customer) []string {
 
 	var addresses []string
 
 	for _, value := range entity {
 
-		country := a.LocationUsecase.GetCountry(value.Address.CountryID)
-		province := a.LocationUsecase.GetProvince(value.Address.ProvinceID)
-		city := a.LocationUsecase.GetCity(value.Address.CityID)
-		district := a.LocationUsecase.GetDistrict(value.Address.DistrictID)
-		sub_district := a.LocationUsecase.GetSubDistrict(value.Address.SubDistrictID)
-
-		address_line := value.Address.Line
-
-		address_line += a.CheckComa(sub_district)
-		address_line += a.CheckComa(district)
-		address_line += a.CheckComa(city)
-		address_line += a.CheckComa(province)
-		address_line += a.CheckComa(country)
-		address_line += a.CheckComa(value.Address.PostalCode)
-
+		address_line := a.Check(value)
 		addresses = append(addresses, address_line)
 	}
 

@@ -83,7 +83,7 @@ func (c *CustomerRepository) GetByID(id uint) entity.Customer {
 
 	var customer entity.Customer
 
-	query := c.DB.Where("id=?", id).Preload("Address").Find(&customer)
+	query := c.DB.Where("id=?", id).Where("is_actived=?", true).Preload("Address").Find(&customer)
 	keys := "customer_id_" + strconv.FormatUint(uint64(id), 10)
 
 	// Get Service By Id

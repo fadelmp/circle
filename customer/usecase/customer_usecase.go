@@ -50,7 +50,7 @@ func (c *CustomerUsecase) GetAll(dto dto.QueryParam) []dto.Customer {
 		customers = c.CustomerRepository.GetAll()
 	}
 
-	locations := c.AddressUsecase.Check(customers)
+	locations := c.AddressUsecase.CheckList(customers)
 
 	return mapper.ToCustomerDtoList(customers, locations)
 }
@@ -59,7 +59,9 @@ func (c *CustomerUsecase) GetByID(id uint) dto.Customer {
 
 	customer := c.CustomerRepository.GetByID(id)
 
-	return mapper.ToCustomerDto(customer, "")
+	location := c.AddressUsecase.Check(customer)
+
+	return mapper.ToCustomerDto(customer, location)
 }
 
 func (c *CustomerUsecase) Create(dto dto.Customer) (error, int) {
