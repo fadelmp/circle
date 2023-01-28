@@ -8,6 +8,9 @@ import (
 
 type OrderRepositoryContract interface {
 	GetAll() []entity.Order
+	GetByID(uint) entity.Order
+
+	GetByCustomerID(uint) []entity.Order
 
 	Create(entity.Order) error
 	Update(entity.Order) error
@@ -25,7 +28,25 @@ func (o *OrderRepository) GetAll() []entity.Order {
 
 	var orders []entity.Order
 
-	o.DB.Model(&entity.Order{}).Preload("Articles").Preload("Status").Find(&orders)
+	o.DB.Model(&entity.Order{}).Order("id asc").Preload("Articles").Preload("Status").Find(&orders)
+
+	return orders
+}
+
+func (o *OrderRepository) GetByID(id uint) entity.Order {
+
+	var order entity.Order
+
+	o.DB.Where("id=?", id).Order("id asc").Preload("Articles").Preload("Status").Find(&order)
+
+	return order
+}
+
+func (o *OrderRepository) GetByCustomerID(customer_id uint) []entity.Order {
+
+	var orders []entity.Order
+
+	o.DB.Where("customer_id=?", customer_id).Order("id asc").Preload("Articles").Preload("Status").Find(&orders)
 
 	return orders
 }

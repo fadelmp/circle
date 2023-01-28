@@ -5,6 +5,7 @@ import (
 	"order/config"
 	"order/dto"
 	"order/usecase"
+	"strconv"
 
 	"github.com/labstack/echo"
 )
@@ -28,6 +29,20 @@ func (o *OrderController) GetAll(e echo.Context) error {
 	}
 
 	return config.SuccessResponse(e, orders, config.GetOrderSuccess)
+}
+
+func (o *OrderController) GetByCustomerID(e echo.Context) error {
+
+	customer_id, _ := strconv.ParseUint(e.Param("customer_id"), 10, 32)
+
+	orders := o.OrderUsecase.GetByCustomerID(uint(customer_id))
+
+	if len(orders) == 0 {
+		return config.SuccessResponse(e, nil, config.OrderNotFound)
+	}
+
+	return config.SuccessResponse(e, orders, config.GetOrderSuccess)
+
 }
 
 func (o *OrderController) Create(e echo.Context) error {
