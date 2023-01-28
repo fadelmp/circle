@@ -6,10 +6,13 @@ import (
 	request "core/request"
 	"encoding/json"
 	"os"
+	"strconv"
 )
 
 type OrderUsecaseContract interface {
 	GetOrders() dto.Response
+	GetOrderByCustomer(uint) dto.Response
+
 	CreateOrder(interface{}) dto.Response
 }
 
@@ -44,6 +47,14 @@ func getOrderUri() string {
 func (os *OrderUsecase) GetOrders() dto.Response {
 
 	uri := getOrderUri()
+
+	return os.GetRequest.Main(uri)
+}
+
+func (os *OrderUsecase) GetOrderByCustomer(customer_id uint) dto.Response {
+
+	uri := getOrderUri()
+	uri += "/" + strconv.FormatUint(uint64(customer_id), 10)
 
 	return os.GetRequest.Main(uri)
 }
