@@ -112,8 +112,11 @@ func (c *CustomerRepository) GetByFilter(filter string) []entity.Customer {
 	query := c.DB.Order("id asc").
 		Where("is_deleted=?", false).
 		Where("name LIKE ?", "%"+filter+"%").
+		Or("phone LIKE ?", "%"+filter+"%").
+		Or("other_phone LIKE ?", "%"+filter+"%").
+		Or("email LIKE ?", "%"+filter+"%").
 		Preload("Address").Find(&customers)
-	keys := "service_filter_" + filter
+	keys := "customer_filter_" + filter
 
 	// Get Service by Name
 	config.CheckRedisQuery(c.Redis, query, keys)

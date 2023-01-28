@@ -110,7 +110,7 @@ func (c *CustomerUsecase) Activate(dto dto.Customer) (error, int) {
 		return errors.New(config.CustomerNotFound), 1
 	}
 
-	customer_entity := mapper.ToCustomerEntity(dto, entity.BaseActivate(dto.Is_Actived))
+	customer_entity := mapper.ToCustomerEntity(dto, entity.BaseActivate(dto.IsActived))
 
 	return c.CustomerRepository.ChangeStatus(customer_entity), 0
 }

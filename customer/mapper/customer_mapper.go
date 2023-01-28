@@ -26,7 +26,6 @@ func ToCustomerDto(entity entity.Customer, location string) dto.Customer {
 		Email:       entity.Email,
 		AddressLine: location,
 		Address:     ToAddressDto(entity.Address),
-		Base:        ToBaseDto(entity.Base),
 	}
 }
 
