@@ -14,6 +14,7 @@ func ToOrderEntity(dto dto.Order) entity.Order {
 		CustomerName: dto.CustomerName,
 		Amount:       dto.Amount,
 		Note:         dto.Note,
+		Articles:     ToArticleEntityList(dto.Articles),
 	}
 }
 

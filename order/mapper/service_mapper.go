@@ -14,3 +14,15 @@ func ToServiceEntity(dto dto.Service) entity.Service {
 		Amount:      dto.Amount,
 	}
 }
+
+func ToServiceEntityList(dto []dto.Service) []entity.Service {
+
+	services := make([]entity.Service, len(dto))
+
+	for i, value := range dto {
+		services[i] = ToServiceEntity(value)
+	}
+
+	return services
+
+}

@@ -11,13 +11,7 @@ import (
 func OrderInjection(db *gorm.DB) controller.OrderController {
 
 	OrderRepository := repository.ProviderOrderRepository(db)
-	ServiceRepository := repository.ProviderServiceRepository(db)
-	ArticleRepository := repository.ProviderArticleRepository(db)
-
-	ServiceUsecase := usecase.ProviderServiceUsecase(ServiceRepository)
-	ArticleUsecase := usecase.ProviderArticleUsecase(ArticleRepository, ServiceUsecase)
-	OrderUsecase := usecase.ProviderOrderUsecase(OrderRepository, ArticleUsecase)
-
+	OrderUsecase := usecase.ProviderOrderUsecase(OrderRepository)
 	OrderController := controller.ProviderOrderController(OrderUsecase)
 
 	return OrderController
