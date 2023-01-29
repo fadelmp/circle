@@ -16,5 +16,10 @@ func Init(routes *echo.Echo, db *gorm.DB) *echo.Echo {
 	// Order Route & Injection
 	order := injection.OrderInjection(db)
 	OrderRoutes(routes, order)
+
+	// Article Route & Injection
+	article := injection.ArticleInjection(db)
+	ArticleRoutes(routes, article)
+
 	return routes
 }
