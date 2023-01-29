@@ -31,12 +31,12 @@ func (a *AddressUsecase) Check(entity entity.Customer) string {
 
 	address_line := entity.Address.Line
 
-	address_line += a.CheckComa(sub_district)
-	address_line += a.CheckComa(district)
-	address_line += a.CheckComa(city)
-	address_line += a.CheckComa(province)
-	address_line += a.CheckComa(country)
-	address_line += a.CheckComa(entity.Address.PostalCode)
+	address_line += a.CheckComa(sub_district, "Kel. ")
+	address_line += a.CheckComa(district, "Kec. ")
+	address_line += a.CheckComa(city, "")
+	address_line += a.CheckComa(province, "")
+	address_line += a.CheckComa(country, "")
+	address_line += a.CheckComa(entity.Address.PostalCode, "")
 
 	return address_line
 }
@@ -54,12 +54,16 @@ func (a *AddressUsecase) CheckList(entity []entity.Customer) []string {
 	return addresses
 }
 
-func (a *AddressUsecase) CheckComa(loc string) string {
+func (a *AddressUsecase) CheckComa(loc string, header string) string {
+
+	loc = ""
 
 	if loc != "" {
+
 		loc = ", " + loc
-	} else {
-		loc = ""
+		if header != "" {
+			loc = ", " + header + loc
+		}
 	}
 
 	return loc
