@@ -135,7 +135,8 @@ func (c *CustomerRepository) Create(customer entity.Customer) error {
 func (c *CustomerRepository) Update(customer entity.Customer) error {
 
 	// update Service by id
-	return c.DB.Model(&customer).Update(&customer).Update(&customer.Address).Error
+	return c.DB.Model(&entity.Customer{}).Update(&customer).
+		Association("Address").Replace(&customer.Address).Error
 }
 
 func (c *CustomerRepository) ChangeStatus(customer entity.Customer) error {
