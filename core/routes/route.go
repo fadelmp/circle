@@ -20,13 +20,17 @@ func Init(routes *echo.Echo) *echo.Echo {
 	service := injection.ServiceInjection()
 	ServiceRoutes(routes, service)
 
+	// Order Route & Injection
+	order := injection.OrderInjection()
+	OrderRoutes(routes, order)
+
 	// Order Status Route & Injection
 	order_status := injection.OrderStatusInjection()
 	OrderStatusRoutes(routes, order_status)
 
-	// Order Route & Injection
-	order := injection.OrderInjection()
-	OrderRoutes(routes, order)
+	// Ordeer Article & Injection
+	order_article := injection.OrderArticleInjection()
+	OrderArticleRoutes(routes, order_article)
 
 	return routes
 }
