@@ -21,7 +21,6 @@ func ToAddressEntity(dto dto.Address) entity.Address {
 func ToAddressDto(entity entity.Address) dto.Address {
 	return dto.Address{
 		ID:            entity.ID,
-		CustomerID:    entity.CustomerID,
 		Line:          entity.Line,
 		SubDistrictID: entity.SubDistrictID,
 		DistrictID:    entity.DistrictID,
