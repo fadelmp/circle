@@ -9,7 +9,6 @@ import (
 type OrderRepositoryContract interface {
 	GetAll() []entity.Order
 	GetByID(uint) entity.Order
-
 	GetByCustomerID(uint) []entity.Order
 
 	Create(entity.Order) error

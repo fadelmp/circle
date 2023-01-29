@@ -2,8 +2,6 @@ package config
 
 var BadRequest = "Bad Request"
 
-var OrderNotFound = "Data Pemesanan Tidak Ditemukan"
-
 var GetStatusSuccess = "Berhasil Mendapatkan Status Pemesanan"
 var StatusExists = "Nama Status Pemesanan Sudah Digunakan. Silahkan Gunakan Nama Lain"
 var StatusNotFound = "Status Pemesanan Tidak Ditemukan"
@@ -23,8 +21,11 @@ var ActivateStatusFailed = "Gagal Mengaktifkan Kembali Status Pemesanan"
 var DeactivateStatusSuccess = "Berhasil Menonaktifkan Status Pemesanan"
 var DeactivateStatusFailed = "Gagal Menonaktifkan Status Pemesanan"
 
-var GetOrderSuccess = "Berhasil Mendapatkan Status Pemesanan"
-var OrderExists = "Nama Status Pemesanan Sudah Digunakan. Silahkan Gunakan Nama Lain"
+var GetOrderSuccess = "Berhasil Mendapatkan Data Pemesanan"
+var OrderNotFound = "Data Pemesanan Tidak Ditemukan"
+
+var GetArticleSuccess = "Berhasil Mendapatkan Data Artikel"
+var ArticleNotFound = "Data Artikel Tidak Ditemukan"
 
 var CreateOrderSuccess = "Berhasil Menambahkan Pesanan"
 var CreateOrderFailed = "Gagal Menambahkan Pesanan"

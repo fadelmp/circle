@@ -10,6 +10,7 @@ type Article struct {
 	Amount     int    `json:"amount"`
 	Note       string `json:"note"`
 	Path_Image string `json:"path_image"`
-	Status     bool   `json:"status"`
+	StatusID   uint   `json:"status_id"`
+	StatusName string `json:"status_name"`
 	Services   []Service
 }
