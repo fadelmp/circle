@@ -25,4 +25,5 @@ type ShowOrder struct {
 	Note         string    `json:"note"`
 	OrderDate    time.Time `json:"order_date"`
 	OrderBy      string    `json:"order_by"`
+	Articles     []Article
 }

@@ -29,6 +29,7 @@ func ToShowOrderDto(entity entity.Order) dto.ShowOrder {
 		Note:         entity.Note,
 		OrderDate:    entity.Base.Created_At,
 		OrderBy:      entity.Base.Created_By,
+		Articles:     ToArticleDtoList(entity.Articles),
 	}
 }
 
