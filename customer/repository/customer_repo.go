@@ -110,7 +110,7 @@ func (c *CustomerRepository) GetByName(name string) []entity.Customer {
 
 	var customers []entity.Customer
 
-	query := c.DB.Where("name=?", name).Find(&customers)
+	query := c.DB.Where("name LIKE ?", "%"+name+"%").Where("is_actived=true").Find(&customers)
 	keys := "customer_name_" + name
 
 	config.CheckRedisQuery(c.Redis, query, keys)
@@ -123,7 +123,7 @@ func (c *CustomerRepository) GetByFilter(filter string) []entity.Customer {
 	var customers []entity.Customer
 
 	query := c.DB.Order("id asc").
-		Where("is_actived=?", true).
+		Where("is_actived=true").
 		Where("name LIKE ?", "%"+filter+"%").
 		Or("phone LIKE ?", "%"+filter+"%").
 		Or("email LIKE ?", "%"+filter+"%").
