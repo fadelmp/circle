@@ -22,8 +22,9 @@ func (c *CustomerController) GetCustomers(e echo.Context) error {
 
 	filter := e.QueryParam("filter")
 	status := e.QueryParam("status")
+	name := e.QueryParam("name")
 
-	res := c.CustomerUsecase.GetCustomers(filter, status)
+	res := c.CustomerUsecase.GetCustomers(filter, status, name)
 
 	return CheckResponse(e, res)
 }

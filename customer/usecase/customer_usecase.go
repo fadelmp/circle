@@ -42,6 +42,8 @@ func (c *CustomerUsecase) GetAll(dto dto.QueryParam) []dto.Customer {
 
 	if dto.Filter != "" {
 		customers = c.CustomerRepository.GetByFilter(dto.Filter)
+	} else if dto.Name != "" {
+		customers = c.CustomerRepository.GetByName(dto.Name)
 	} else if dto.Status == "available" {
 		customers = c.CustomerRepository.GetAvailable()
 	} else if dto.Status == "active" {

@@ -10,7 +10,7 @@ import (
 )
 
 type CustomerUsecaseContract interface {
-	GetCustomers(string, string) dto.Response
+	GetCustomers(string, string, string) dto.Response
 	GetCustomerById(uint) dto.Response
 
 	CreateCustomer(interface{}) dto.Response
@@ -54,12 +54,14 @@ func getCustomerUri() string {
 
 // Implementation
 
-func (c *CustomerUsecase) GetCustomers(filter string, status string) dto.Response {
+func (c *CustomerUsecase) GetCustomers(filter string, status string, name string) dto.Response {
 
 	uri := getCustomerUri()
 
 	if filter != "" {
 		uri += "?filter=" + filter
+	} else if name != "" {
+		uri += "?name=" + name
 	} else if status != "" {
 		uri += "?status=" + status
 	}

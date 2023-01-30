@@ -57,7 +57,6 @@ func (a *AddressUsecase) CheckList(entity []entity.Customer) []string {
 func (a *AddressUsecase) CheckComa(loc string, header string) string {
 
 	loc = ""
-
 	if loc != "" {
 
 		loc = ", " + loc

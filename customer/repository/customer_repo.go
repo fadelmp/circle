@@ -15,6 +15,7 @@ type CustomerRepositoryContract interface {
 	GetAvailable() []entity.Customer
 
 	GetByID(uint) entity.Customer
+	GetByName(string) []entity.Customer
 	GetByPhone(string) entity.Customer
 	GetByFilter(string) []entity.Customer
 
@@ -105,6 +106,18 @@ func (c *CustomerRepository) GetByPhone(phone string) entity.Customer {
 	return customer
 }
 
+func (c *CustomerRepository) GetByName(name string) []entity.Customer {
+
+	var customers []entity.Customer
+
+	query := c.DB.Where("name=?", name).Find(&customers)
+	keys := "customer_name_" + name
+
+	config.CheckRedisQuery(c.Redis, query, keys)
+
+	return customers
+}
+
 func (c *CustomerRepository) GetByFilter(filter string) []entity.Customer {
 
 	var customers []entity.Customer
@@ -115,7 +128,7 @@ func (c *CustomerRepository) GetByFilter(filter string) []entity.Customer {
 			c.DB.Where("name LIKE ?", "%"+filter+"%").
 				Or("phone LIKE ?", "%"+filter+"%").
 				Or("other_phone LIKE ?", "%"+filter+"%").
-				Or("email LIKE ?", "%"+filter+"%").Find(&customers),
+				Or("email LIKE ?", "%"+filter+"%"),
 		).Preload("Address").Find(&customers)
 	keys := "customer_filter_" + filter
 
