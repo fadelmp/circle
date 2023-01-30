@@ -53,7 +53,47 @@ func (o *OrderUsecase) Create(dto dto.Order) error {
 
 func (o *OrderUsecase) GenerateOrderNumber() string {
 
-	t := time.Now()
-	return strconv.FormatInt(t.UnixNano(), 10)
+	date := GetDate()
+	today := time.Now()
+	tomorrow := today.AddDate(0, 0, 1)
 
+	orders := o.OrderRepository.GetByDate(Bod(today), Bod(tomorrow))
+	count := len(orders) + 1
+	number_str := strconv.FormatUint(uint64(count), 10)
+
+	if len(number_str) == 1 {
+		number_str = "000" + number_str
+	} else if len(number_str) == 2 {
+		number_str = "00" + number_str
+	} else if (len(number_str)) == 3 {
+		number_str = "0" + number_str
+	} else {
+		number_str = "" + number_str
+	}
+
+	return date + number_str
+}
+
+func GetDate() string {
+
+	t := time.Now()
+
+	day := t.Day()
+	month := t.Month()
+	year := t.Year() % 1e2
+
+	day_str := strconv.FormatUint(uint64(day), 10)
+	month_str := strconv.FormatUint(uint64(month), 10)
+	year_str := strconv.FormatUint(uint64(year), 10)
+
+	if month < 10 {
+		month_str = "0" + strconv.FormatUint(uint64(month), 10)
+	}
+
+	return day_str + month_str + year_str
+}
+
+func Bod(t time.Time) time.Time {
+	year, month, day := t.Date()
+	return time.Date(year, month, day, 0, 0, 0, 0, t.Location())
 }
