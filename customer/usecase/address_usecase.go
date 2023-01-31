@@ -31,8 +31,8 @@ func (a *AddressUsecase) Check(entity entity.Customer) string {
 
 	address_line := entity.Address.Line
 
-	address_line += a.CheckComa(sub_district, "Kel. ")
-	address_line += a.CheckComa(district, "Kec. ")
+	address_line += a.CheckComa(sub_district, "Kelurahan ")
+	address_line += a.CheckComa(district, "Kecamatan ")
 	address_line += a.CheckComa(city, "")
 	address_line += a.CheckComa(province, "")
 	address_line += a.CheckComa(country, "")
