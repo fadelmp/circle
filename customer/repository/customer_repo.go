@@ -110,7 +110,8 @@ func (c *CustomerRepository) GetByName(name string) []entity.Customer {
 
 	var customers []entity.Customer
 
-	query := c.DB.Where("name LIKE ?", "%"+name+"%").Where("is_actived=true").Find(&customers)
+	query := c.DB.Where("name LIKE ?", "%"+name+"%").
+		Where("is_actived=true").Preload("Address").Find(&customers)
 	keys := "customer_name_" + name
 
 	config.CheckRedisQuery(c.Redis, query, keys)
