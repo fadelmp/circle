@@ -8,15 +8,9 @@ import (
 
 func UnitRoutes(routes *echo.Echo, api controller.UnitController) {
 
-	Unit := routes.Group("/Unit")
+	Unit := routes.Group("/order_unit")
 	{
 		Unit.GET("", api.GetAll)
 		Unit.GET("/:id", api.GetByID)
-
-		Unit.POST("", api.Create)
-		Unit.PUT("", api.Update)
-		Unit.DELETE("/:id", api.Delete)
-
-		Unit.PATCH("/:id/:is_actived", api.Activate)
 	}
 }

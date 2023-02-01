@@ -11,7 +11,7 @@ import (
 func Init(routes *echo.Echo, db *gorm.DB, redis *redis.Client) *echo.Echo {
 
 	// Status Route & Injection
-	status := injection.StatusInjection(db)
+	status := injection.StatusInjection(db, redis)
 	StatusRoutes(routes, status)
 
 	// Unit Route & Injection
