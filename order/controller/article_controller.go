@@ -23,10 +23,10 @@ func (a *ArticleController) GetAll(e echo.Context) error {
 	articles := a.ArticleUsecase.GetAll()
 
 	if len(articles) == 0 {
-		return config.SuccessResponse(e, nil, config.ArticleNotFound)
+		return SuccessResponse(e, nil, config.ArticleNotFound)
 	}
 
-	return config.SuccessResponse(e, articles, config.GetArticleSuccess)
+	return SuccessResponse(e, articles, config.GetArticleSuccess)
 }
 
 func (a *ArticleController) GetByID(e echo.Context) error {
@@ -36,8 +36,8 @@ func (a *ArticleController) GetByID(e echo.Context) error {
 	article := a.ArticleUsecase.GetByID(uint(id))
 
 	if article.ID == 0 {
-		return config.SuccessResponse(e, nil, config.ArticleNotFound)
+		return SuccessResponse(e, nil, config.ArticleNotFound)
 	}
 
-	return config.SuccessResponse(e, article, config.GetArticleSuccess)
+	return SuccessResponse(e, article, config.GetArticleSuccess)
 }

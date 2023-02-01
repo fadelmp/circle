@@ -11,6 +11,7 @@ import (
 
 type OrderUsecaseContract interface {
 	GetAll() []dto.ShowOrder
+	GetByOrderNumber(string) dto.ShowOrderDetail
 	GetByCustomer(uint) []dto.ShowOrder
 
 	Create(entity.Order) error
@@ -32,6 +33,13 @@ func (o *OrderUsecase) GetAll() []dto.ShowOrder {
 	orders := o.OrderRepository.GetAll()
 
 	return mapper.ToShowOrderDtoList(orders)
+}
+
+func (o *OrderUsecase) GetByOrderNumber(order_number string) dto.ShowOrderDetail {
+
+	order := o.OrderRepository.GetByOrderNumber(order_number)
+
+	return mapper.ToShowOrderDetailDto(order)
 }
 
 func (o *OrderUsecase) GetByCustomerID(customer_id uint) []dto.ShowOrder {

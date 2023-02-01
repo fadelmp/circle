@@ -10,7 +10,7 @@ import (
 type OrderRepositoryContract interface {
 	GetAll() []entity.Order
 
-	GetByID(uint) entity.Order
+	GetByOrderNumber(string) entity.Order
 	GetByCustomerID(uint) []entity.Order
 	GetByDate(time.Time, time.Time) []entity.Order
 
@@ -36,12 +36,13 @@ func (o *OrderRepository) GetAll() []entity.Order {
 	return orders
 }
 
-func (o *OrderRepository) GetByID(id uint) entity.Order {
+func (o *OrderRepository) GetByOrderNumber(order_number string) entity.Order {
 
 	var order entity.Order
 
-	o.DB.Where("id=?", id).Order("id asc").
-		Preload("Articles").Preload("Status").Find(&order)
+	o.DB.Where("number=?", order_number).Preload("Status").
+		Preload("Articles").Preload("Articles.Services").
+		Find(&order)
 
 	return order
 }

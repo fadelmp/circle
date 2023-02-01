@@ -24,13 +24,12 @@ func ToArticleDto(entity entity.Article) dto.Article {
 		OrderID:    entity.OrderID,
 		Name:       entity.Name,
 		Quantity:   entity.Quantity,
-		UnitID:     entity.UnitID,
 		UnitName:   entity.Unit.Name,
 		Amount:     entity.Amount,
 		Note:       entity.Note,
 		Path_Image: entity.Path_Image,
-		StatusID:   entity.StatusID,
 		StatusName: entity.Status.Name,
+		Services:   ToServiceDtoList(entity.Services),
 	}
 }
 

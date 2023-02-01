@@ -25,10 +25,10 @@ func (o *OrderController) GetAll(e echo.Context) error {
 	orders := o.OrderUsecase.GetAll()
 
 	if len(orders) == 0 {
-		return config.SuccessResponse(e, nil, config.OrderNotFound)
+		return SuccessResponse(e, nil, config.OrderNotFound)
 	}
 
-	return config.SuccessResponse(e, orders, config.GetOrderSuccess)
+	return SuccessResponse(e, orders, config.GetOrderSuccess)
 }
 
 func (o *OrderController) GetByCustomerID(e echo.Context) error {
@@ -38,11 +38,24 @@ func (o *OrderController) GetByCustomerID(e echo.Context) error {
 	orders := o.OrderUsecase.GetByCustomerID(uint(customer_id))
 
 	if len(orders) == 0 {
-		return config.SuccessResponse(e, nil, config.OrderNotFound)
+		return SuccessResponse(e, nil, config.OrderNotFound)
 	}
 
-	return config.SuccessResponse(e, orders, config.GetOrderSuccess)
+	return SuccessResponse(e, orders, config.GetOrderSuccess)
 
+}
+
+func (o *OrderController) GetByOrderNumber(e echo.Context) error {
+
+	order_number := e.Param("order_number")
+
+	order := o.OrderUsecase.GetByOrderNumber(order_number)
+
+	if order.ID == 0 {
+		return SuccessResponse(e, nil, config.GetOrderSuccess)
+	}
+
+	return SuccessResponse(e, order, config.GetOrderSuccess)
 }
 
 func (o *OrderController) Create(e echo.Context) error {
@@ -50,14 +63,14 @@ func (o *OrderController) Create(e echo.Context) error {
 	var order dto.Order
 
 	if e.Bind(&order) != nil {
-		return config.ErrorResponse(e, http.StatusInternalServerError, config.BadRequest)
+		return ErrorResponse(e, http.StatusInternalServerError, 3, config.BadRequest)
 	}
 
 	err := o.OrderUsecase.Create(order)
 
 	if err != nil {
-		return config.ErrorResponse(e, http.StatusInternalServerError, err.Error())
+		return ErrorResponse(e, http.StatusInternalServerError, 3, err.Error())
 	}
 
-	return config.SuccessResponse(e, nil, config.CreateOrderSuccess)
+	return SuccessResponse(e, nil, config.CreateOrderSuccess)
 }

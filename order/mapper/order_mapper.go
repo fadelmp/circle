@@ -7,14 +7,17 @@ import (
 
 func ToOrderEntity(dto dto.Order) entity.Order {
 	return entity.Order{
-		ID:           dto.ID,
-		Number:       dto.Number,
-		StatusID:     dto.StatusID,
-		CustomerID:   dto.CustomerID,
-		CustomerName: dto.CustomerName,
-		Amount:       dto.Amount,
-		Note:         dto.Note,
-		Articles:     ToArticleEntityList(dto.Articles),
+		ID:            dto.ID,
+		Number:        dto.Number,
+		StatusID:      dto.StatusID,
+		CustomerID:    dto.CustomerID,
+		CustomerName:  dto.CustomerName,
+		Amount:        dto.Amount,
+		Date:          dto.Date,
+		Type:          dto.Type,
+		DeliveryOrder: dto.DeliveryOrder,
+		Note:          dto.Note,
+		Articles:      ToArticleEntityList(dto.Articles),
 	}
 }
 
@@ -26,8 +29,22 @@ func ToShowOrderDto(entity entity.Order) dto.ShowOrder {
 		StatusName:   entity.Status.Name,
 		Amount:       entity.Amount,
 		ArticleCount: len(entity.Articles),
-		Note:         entity.Note,
-		OrderDate:    entity.Base.Created_At,
+		Date:         entity.Date,
+		Type:         entity.Type,
+		OrderBy:      entity.Base.Created_By,
+	}
+}
+
+func ToShowOrderDetailDto(entity entity.Order) dto.ShowOrderDetail {
+	return dto.ShowOrderDetail{
+		ID:           entity.ID,
+		Number:       entity.Number,
+		CustomerName: entity.CustomerName,
+		StatusName:   entity.Status.Name,
+		Amount:       entity.Amount,
+		ArticleCount: len(entity.Articles),
+		Date:         entity.Date,
+		Type:         entity.Type,
 		OrderBy:      entity.Base.Created_By,
 		Articles:     ToArticleDtoList(entity.Articles),
 	}
