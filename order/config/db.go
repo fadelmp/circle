@@ -30,6 +30,7 @@ func InitDB() *gorm.DB {
 
 func createTable(db *gorm.DB) {
 	db.CreateTable(&entity.Status{})
+	db.CreateTable(&entity.Unit{})
 	db.CreateTable(&entity.Order{})
 	db.CreateTable(&entity.Article{})
 	db.CreateTable(&entity.Service{})
@@ -37,6 +38,7 @@ func createTable(db *gorm.DB) {
 
 func migrateDDL(db *gorm.DB) {
 	db.AutoMigrate(&entity.Status{})
+	db.CreateTable(&entity.Unit{})
 	db.AutoMigrate(&entity.Order{})
 	db.AutoMigrate(&entity.Article{})
 	db.AutoMigrate(&entity.Service{})

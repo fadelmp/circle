@@ -9,6 +9,7 @@ import (
 
 type OrderRepositoryContract interface {
 	GetAll() []entity.Order
+
 	GetByID(uint) entity.Order
 	GetByCustomerID(uint) []entity.Order
 	GetByDate(time.Time, time.Time) []entity.Order

@@ -3,7 +3,7 @@ package routes
 import (
 	"order/controller"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 func StatusRoutes(routes *echo.Echo, api controller.StatusController) {

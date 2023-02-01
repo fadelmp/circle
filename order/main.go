@@ -7,16 +7,19 @@ import (
 	routes2 "order/routes"
 	"os"
 
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
 
 	config.ReadEnv()
 	route := echo.New()
+
 	dbConfig := config.InitDB()
-	routes := routes2.Init(route, dbConfig)
+	redisConfig := config.InitRedis()
+
+	routes := routes2.Init(route, dbConfig, redisConfig)
 
 	// set logger
 	routes.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
