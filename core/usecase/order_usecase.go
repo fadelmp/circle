@@ -11,6 +11,7 @@ import (
 
 type OrderUsecaseContract interface {
 	GetOrders() dto.Response
+	GetOrderByOrderNumber(string) dto.Response
 	GetOrderByCustomer(uint) dto.Response
 
 	CreateOrder(interface{}) dto.Response
@@ -44,27 +45,35 @@ func getOrderUri() string {
 
 // Implementation
 
-func (os *OrderUsecase) GetOrders() dto.Response {
+func (o *OrderUsecase) GetOrders() dto.Response {
 
 	uri := getOrderUri()
 
-	return os.GetRequest.Main(uri)
+	return o.GetRequest.Main(uri)
 }
 
-func (os *OrderUsecase) GetOrderByCustomer(customer_id uint) dto.Response {
+func (o *OrderUsecase) GetOrderByOrderNumber(number string) dto.Response {
+
+	uri := getOrderUri()
+	uri += "/number/" + number
+
+	return o.GetRequest.Main(uri)
+}
+
+func (o *OrderUsecase) GetOrderByCustomer(customer_id uint) dto.Response {
 
 	uri := getOrderUri()
 	uri += "/customer/" + strconv.FormatUint(uint64(customer_id), 10)
 
-	return os.GetRequest.Main(uri)
+	return o.GetRequest.Main(uri)
 }
 
-func (os *OrderUsecase) CreateOrder(form_data interface{}) dto.Response {
+func (o *OrderUsecase) CreateOrder(form_data interface{}) dto.Response {
 
 	uri := getOrderUri()
 
 	post_body, _ := json.Marshal(form_data)
 	request_body := bytes.NewBuffer(post_body)
 
-	return os.PostRequest.Main(uri, request_body)
+	return o.PostRequest.Main(uri, request_body)
 }

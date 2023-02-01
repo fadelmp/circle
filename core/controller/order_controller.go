@@ -27,6 +27,15 @@ func (o *OrderController) GetOrders(e echo.Context) error {
 	return CheckResponse(e, res)
 }
 
+func (o *OrderController) GetOrderByNumber(e echo.Context) error {
+
+	number := e.Param("number")
+
+	res := o.OrderUsecase.GetOrderByOrderNumber(number)
+
+	return CheckResponse(e, res)
+}
+
 func (o *OrderController) GetOrderByCustomer(e echo.Context) error {
 
 	id, err := strconv.ParseUint(e.Param("customer_id"), 10, 64)
