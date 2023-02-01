@@ -9,19 +9,7 @@ import (
 func OrderStatusInjection() controller.OrderStatusController {
 
 	GetRequest := request.ProviderGetRequest()
-	PutRequest := request.ProviderPutRequest()
-	PostRequest := request.ProviderPostRequest()
-	PatchRequest := request.ProviderPatchRequest()
-	DeleteRequest := request.ProviderDeleteRequest()
-
-	OrderStatusUsecase := usecase.ProviderOrderStatusUsecase(
-		GetRequest,
-		PutRequest,
-		PostRequest,
-		PatchRequest,
-		DeleteRequest,
-	)
-
+	OrderStatusUsecase := usecase.ProviderOrderStatusUsecase(GetRequest)
 	OrderStatusController := controller.ProviderOrderStatusController(OrderStatusUsecase)
 
 	return OrderStatusController
