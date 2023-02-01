@@ -11,8 +11,10 @@ type Order struct {
 	StatusID     uint   `json:"status_id"`
 	Amount       int    `json:"amount"`
 	Note         string `json:"note"`
+	OrderType    string `json:"type"`
+	OrderDate    string `json:"date"`
+	Articles     []Article
 	Base
-	Articles []Article
 }
 
 type ShowOrder struct {

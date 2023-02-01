@@ -6,7 +6,7 @@ type Article struct {
 	OrderID    uint   `gorm:"type:INT;NOT NULL;INDEX"`
 	Name       string `gorm:"type:VARCHAR(255);NOT NULL;INDEX"`
 	Quantity   int    `gorm:"type:INT;NOT NULL"`
-	Unit       string `gorm:"type:VARCHAR(255)"`
+	UnitID     uint   `gorm:"type:INT"`
 	Amount     int    `gorm:"type:INT;NOT NULL"`
 	Note       string `gorm:"type:VARCHAR(255)"`
 	Path_Image string `gorm:"type:VARCHAR(255)"`
@@ -14,4 +14,5 @@ type Article struct {
 	Services   []Service
 	Status     Status
 	Order      Order
+	Unit       Unit
 }

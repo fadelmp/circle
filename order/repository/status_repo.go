@@ -30,7 +30,7 @@ func (s *StatusRepository) GetAll() []entity.Status {
 
 	var statuses []entity.Status
 
-	s.DB.Order("id asc").Find(&statuses)
+	s.DB.Order("id asc").Preload("Orders").Find(&statuses)
 
 	return statuses
 }

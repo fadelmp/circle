@@ -10,6 +10,7 @@ func ToStatusDto(entity entity.Status) dto.Status {
 		ID:          entity.ID,
 		Name:        entity.Name,
 		Description: entity.Description,
+		Total:       len(entity.Orders),
 	}
 }
 
