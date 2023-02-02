@@ -31,15 +31,14 @@ type ShowOrder struct {
 }
 
 type ShowOrderDetail struct {
-	ID           uint
-	Number       string
-	CustomerName string
-	StatusName   string
-	ArticleCount int
-	Amount       int
-	Type         string
-	Date         time.Time
-	OrderBy      string
-	Articles     []Article
-	Services     []Service
+	ID           uint      `json:"id"`
+	Number       string    `json:"number"`
+	CustomerName string    `json:"customer_name"`
+	StatusName   string    `json:"status_name"`
+	ArticleCount int       `json:"article_count"`
+	Amount       int       `json:"amount"`
+	Type         string    `json:"type"`
+	Date         time.Time `json:"date"`
+	OrderBy      string    `json:"order_by"`
+	Articles     []Article `json:"articles"`
 }
