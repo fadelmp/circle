@@ -52,6 +52,7 @@ func (o *OrderUsecase) GetByCustomerID(customer_id uint) []dto.ShowOrder {
 func (o *OrderUsecase) Create(dto dto.Order) error {
 
 	dto.Number = o.GenerateOrderNumber()
+	dto.StatusID = 1
 
 	order_entity := mapper.ToOrderEntity(dto)
 	order_entity.Base = entity.BaseCreate()
@@ -64,6 +65,10 @@ func (o *OrderUsecase) GenerateOrderNumber() string {
 	date := GetDate()
 	today := time.Now()
 	tomorrow := today.AddDate(0, 0, 1)
+
+	if len(date) == 5 {
+		date = "0" + date
+	}
 
 	orders := o.OrderRepository.GetByDate(Bod(today), Bod(tomorrow))
 	count := len(orders) + 1
