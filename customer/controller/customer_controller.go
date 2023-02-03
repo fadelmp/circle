@@ -61,9 +61,9 @@ func (c *CustomerController) Create(e echo.Context) error {
 		return ErrorResponse(e, http.StatusInternalServerError, 3, config.BadRequest)
 	}
 
-	err, err_code := c.CustomerUsecase.Create(customer)
+	customer, err, err_code := c.CustomerUsecase.Create(customer)
 
-	return CheckResponse(e, err, err_code, config.CreateCustomerSuccess)
+	return CheckResponse(e, customer, err, err_code, config.CreateCustomerSuccess)
 }
 
 func (c *CustomerController) Update(e echo.Context) error {
@@ -76,7 +76,7 @@ func (c *CustomerController) Update(e echo.Context) error {
 
 	err, err_code := c.CustomerUsecase.Update(customer)
 
-	return CheckResponse(e, err, err_code, config.UpdateCustomerSuccess)
+	return CheckResponse(e, "", err, err_code, config.UpdateCustomerSuccess)
 }
 
 func (c *CustomerController) Delete(e echo.Context) error {
@@ -89,7 +89,7 @@ func (c *CustomerController) Delete(e echo.Context) error {
 
 	err, err_code := c.CustomerUsecase.Delete(customer)
 
-	return CheckResponse(e, err, err_code, config.DeleteCustomerSuccess)
+	return CheckResponse(e, "", err, err_code, config.DeleteCustomerSuccess)
 }
 
 func (c *CustomerController) Activate(e echo.Context) error {
@@ -103,8 +103,8 @@ func (c *CustomerController) Activate(e echo.Context) error {
 	err, err_code := c.CustomerUsecase.Activate(customer)
 
 	if !customer.IsActived {
-		return CheckResponse(e, err, err_code, config.DeactivateCustomerSuccess)
+		return CheckResponse(e, "", err, err_code, config.DeactivateCustomerSuccess)
 	}
 
-	return CheckResponse(e, err, err_code, config.ActivateCustomerSuccess)
+	return CheckResponse(e, "", err, err_code, config.ActivateCustomerSuccess)
 }

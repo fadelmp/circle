@@ -13,7 +13,7 @@ type CustomerUsecaseContract interface {
 	GetAll(dto.QueryParam) []dto.Customer
 	GetByID(uint) dto.Customer
 
-	Create(entity.Customer) (error, int)
+	Create(entity.Customer) (dto.Customer, error, int)
 	Update(entity.Customer) (error, int)
 	Delete(entity.Customer) (error, int)
 	Activate(entity.Customer) (error, int)
@@ -66,18 +66,22 @@ func (c *CustomerUsecase) GetByID(id uint) dto.Customer {
 	return mapper.ToCustomerDto(customer, location)
 }
 
-func (c *CustomerUsecase) Create(dto dto.Customer) (error, int) {
+func (c *CustomerUsecase) Create(dto dto.Customer) (dto.Customer, error, int) {
 
 	// check phone whether customer exists
 	if !c.CheckPhone(dto) {
-		return errors.New(config.CustomerExists), 2
+		return dto, errors.New(config.CustomerExists), 2
 	}
 
 	// change customer dto to entity to put on database
 	customer_entity := mapper.ToCustomerEntity(dto, entity.BaseCreate())
 
 	// create customer data
-	return c.CustomerRepository.Create(customer_entity), 0
+	customer, err := c.CustomerRepository.Create(customer_entity)
+
+	dto_customer := mapper.ToCustomerDto(customer, "")
+
+	return dto_customer, err, 0
 }
 
 func (c *CustomerUsecase) Update(dto dto.Customer) (error, int) {

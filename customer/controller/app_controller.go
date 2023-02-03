@@ -39,11 +39,11 @@ func ErrorResponse(c echo.Context, httpErrorCode int, error_code int, messages i
 	return c.JSONPretty(httpErrorCode, resp, "  ")
 }
 
-func CheckResponse(e echo.Context, err error, err_code int, message string) error {
+func CheckResponse(e echo.Context, data interface{}, err error, err_code int, message string) error {
 
 	if err != nil {
 		return ErrorResponse(e, http.StatusInternalServerError, err_code, err.Error())
 	}
 
-	return SuccessResponse(e, nil, message)
+	return SuccessResponse(e, data, message)
 }
