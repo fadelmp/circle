@@ -30,8 +30,8 @@ func (o *OrderRepository) GetAll() []entity.Order {
 
 	var orders []entity.Order
 
-	o.DB.Model(&entity.Order{}).Order("id asc").
-		Preload("Articles").Preload("Status").Find(&orders)
+	o.DB.Model(&entity.Order{}).Order("id asc").Preload("Status").
+		Preload("Articles").Find(&orders)
 
 	return orders
 }

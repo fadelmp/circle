@@ -15,6 +15,6 @@ type Order struct {
 	DeliveryOrder string    `gorm:"type:VARCHAR(255)"`
 	Note          string    `gorm:"type:VARCHAR(255)"`
 	Base          `gorm:"embedded"`
-	Articles      []Article
 	Status        Status
+	Articles      []Article
 }
