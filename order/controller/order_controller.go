@@ -45,6 +45,19 @@ func (o *OrderController) GetByCustomerID(e echo.Context) error {
 
 }
 
+func (o *OrderController) GetByStatusID(e echo.Context) error {
+
+	status_id, _ := strconv.ParseUint(e.Param("status_id"), 10, 32)
+
+	orders := o.OrderUsecase.GetByStatusID(uint(status_id))
+
+	if len(orders) == 0 {
+		return SuccessResponse(e, nil, config.OrderNotFound)
+	}
+
+	return SuccessResponse(e, orders, config.GetOrderSuccess)
+}
+
 func (o *OrderController) GetByOrderNumber(e echo.Context) error {
 
 	order_number := e.Param("order_number")

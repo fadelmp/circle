@@ -13,6 +13,7 @@ func OrderRoutes(routes *echo.Echo, api controller.OrderController) {
 		order.GET("", api.GetAll)
 		order.GET("/number/:order_number", api.GetByOrderNumber)
 		order.GET("/customer/:customer_id", api.GetByCustomerID)
+		order.GET("/status/:status_id", api.GetByStatusID)
 
 		order.POST("", api.Create)
 	}

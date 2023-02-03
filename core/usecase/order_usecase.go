@@ -13,6 +13,7 @@ type OrderUsecaseContract interface {
 	GetOrders() dto.Response
 	GetOrderByOrderNumber(string) dto.Response
 	GetOrderByCustomer(uint) dto.Response
+	GetOrderByStatus(uint) dto.Response
 
 	CreateOrder(interface{}) dto.Response
 }
@@ -64,6 +65,14 @@ func (o *OrderUsecase) GetOrderByCustomer(customer_id uint) dto.Response {
 
 	uri := getOrderUri()
 	uri += "/customer/" + strconv.FormatUint(uint64(customer_id), 10)
+
+	return o.GetRequest.Main(uri)
+}
+
+func (o *OrderUsecase) GetOrderByStatus(status_id uint) dto.Response {
+
+	uri := getOrderUri()
+	uri += "/status/" + strconv.FormatUint(uint64(status_id), 10)
 
 	return o.GetRequest.Main(uri)
 }

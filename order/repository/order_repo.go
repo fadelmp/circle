@@ -12,6 +12,7 @@ type OrderRepositoryContract interface {
 
 	GetByOrderNumber(string) entity.Order
 	GetByCustomerID(uint) []entity.Order
+	GetByStatusID(uint) []entity.Order
 	GetByDate(time.Time, time.Time) []entity.Order
 
 	Create(entity.Order) error
@@ -52,6 +53,16 @@ func (o *OrderRepository) GetByCustomerID(customer_id uint) []entity.Order {
 	var orders []entity.Order
 
 	o.DB.Where("customer_id=?", customer_id).Order("id asc").
+		Preload("Articles").Preload("Status").Find(&orders)
+
+	return orders
+}
+
+func (o *OrderRepository) GetByStatusID(status_id uint) []entity.Order {
+
+	var orders []entity.Order
+
+	o.DB.Where("status_id=?", status_id).Order("id asc").
 		Preload("Articles").Preload("Status").Find(&orders)
 
 	return orders

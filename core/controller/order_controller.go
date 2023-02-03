@@ -49,6 +49,19 @@ func (o *OrderController) GetOrderByCustomer(e echo.Context) error {
 	return CheckResponse(e, res)
 }
 
+func (o *OrderController) GetOrderByStatus(e echo.Context) error {
+
+	id, err := strconv.ParseUint(e.Param("status_id"), 10, 64)
+
+	if err != nil {
+		return config.ErrorResponse(e, http.StatusBadRequest, 3, config.BadRequest)
+	}
+
+	res := o.OrderUsecase.GetOrderByStatus(uint(id))
+
+	return CheckResponse(e, res)
+}
+
 func (o *OrderController) CreateOrder(e echo.Context) error {
 
 	var request interface{}
