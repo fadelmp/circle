@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"os"
 	"strconv"
+	"strings"
 )
 
 type CustomerUsecaseContract interface {
@@ -66,7 +67,9 @@ func (c *CustomerUsecase) GetCustomers(filter string, status string, name string
 		uri += "?status=" + status
 	}
 
-	return c.GetRequest.Main(uri)
+	new_uri := strings.Replace(uri, " ", "%20", 3)
+
+	return c.GetRequest.Main(new_uri)
 }
 
 func (c *CustomerUsecase) GetCustomerById(id uint) dto.Response {
