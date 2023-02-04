@@ -33,6 +33,7 @@ type ShowOrder struct {
 type ShowOrderDetail struct {
 	ID           uint      `json:"id"`
 	Number       string    `json:"number"`
+	CustomerID   uint      `json:"customer_id"`
 	CustomerName string    `json:"customer_name"`
 	StatusName   string    `json:"status_name"`
 	ArticleCount int       `json:"article_count"`

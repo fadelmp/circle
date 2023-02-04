@@ -39,6 +39,7 @@ func ToShowOrderDetailDto(entity entity.Order) dto.ShowOrderDetail {
 	return dto.ShowOrderDetail{
 		ID:           entity.ID,
 		Number:       entity.Number,
+		CustomerID:   entity.CustomerID,
 		CustomerName: entity.CustomerName,
 		StatusName:   entity.Status.Name,
 		Amount:       entity.Amount,
