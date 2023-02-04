@@ -18,7 +18,7 @@ type ServiceRepositoryContract interface {
 	GetByName(string) entity.Service
 	GetByFilter(string) []entity.Service
 
-	Create(entity.Service) error
+	Create(entity.Service) (entity.Service, error)
 	Update(entity.Service) error
 	ChangeStatus(entity.Service) error
 }
@@ -117,10 +117,12 @@ func (s *ServiceRepository) GetByFilter(filter string) []entity.Service {
 	return services
 }
 
-func (s *ServiceRepository) Create(service entity.Service) error {
+func (s *ServiceRepository) Create(service entity.Service) (entity.Service, error) {
 
 	// Create Service
-	return s.DB.Create(&service).Error
+	err := s.DB.Create(&service).Error
+
+	return service, err
 }
 
 func (s *ServiceRepository) Update(service entity.Service) error {

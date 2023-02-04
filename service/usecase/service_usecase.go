@@ -13,7 +13,7 @@ type ServiceUsecaseContract interface {
 	GetAll(dto.QueryParam) []dto.Service
 	GetByID(uint) dto.Service
 
-	Create(entity.Service) (error, int)
+	Create(entity.Service) (entity.Service, error, int)
 	Update(entity.Service) (error, int)
 	Delete(entity.Service) (error, int)
 	Activate(entity.Service) (error, int)
@@ -55,18 +55,20 @@ func (s *ServiceUsecase) GetByID(id uint) dto.Service {
 	return mapper.ToServiceDto(service)
 }
 
-func (s *ServiceUsecase) Create(dto dto.Service) (error, int) {
+func (s *ServiceUsecase) Create(dto dto.Service) (dto.Service, error, int) {
 
 	// check name whether name exists
 	if !s.CheckName(dto) {
-		return errors.New(config.ServiceExists), 2
+		return dto, errors.New(config.ServiceExists), 2
 	}
 
 	// map service dto to service entity
 	service_entity := mapper.ToServiceEntity(dto, entity.BaseCreate())
 
 	// create service and return
-	return s.ServiceRepository.Create(service_entity), 0
+	service, err := s.ServiceRepository.Create(service_entity)
+
+	return mapper.ToServiceDto(service), err, 0
 }
 
 func (s *ServiceUsecase) Update(dto dto.Service) (error, int) {

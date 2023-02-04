@@ -8,4 +8,5 @@ type User struct {
 	Password string `gorm:"type:VARCHAR(255)"`
 	RoleID   uint
 	Base     `gorm:"embedded"`
+	Role     Role
 }

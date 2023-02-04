@@ -15,7 +15,7 @@ type OrderRepositoryContract interface {
 	GetByStatusID(uint) []entity.Order
 	GetByDate(time.Time, time.Time) []entity.Order
 
-	Create(entity.Order) error
+	Create(entity.Order) (entity.Order, error)
 	Update(entity.Order) error
 }
 
@@ -77,9 +77,11 @@ func (o *OrderRepository) GetByDate(first_date time.Time, last_date time.Time) [
 	return orders
 }
 
-func (o *OrderRepository) Create(order entity.Order) error {
+func (o *OrderRepository) Create(order entity.Order) (entity.Order, error) {
 
-	return o.DB.Create(&order).Error
+	err := o.DB.Create(&order).Error
+
+	return order, err
 }
 
 func (o *OrderRepository) Update(order entity.Order) error {

@@ -17,7 +17,6 @@ type UserRepositoryContract interface {
 	Create(entity.User) error
 	Update(entity.User) error
 	Delete(entity.User) error
-	ActiveStatus(entity.User) error
 }
 
 type UserRepository struct {

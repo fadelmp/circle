@@ -62,9 +62,9 @@ func (s *ServiceController) Create(e echo.Context) error {
 		return ErrorResponse(e, http.StatusInternalServerError, 3, config.BadRequest)
 	}
 
-	err, err_code := s.ServiceUsecase.Create(service)
+	service_dto, err, err_code := s.ServiceUsecase.Create(service)
 
-	return CheckResponse(e, err, err_code, config.CreateServiceSuccess)
+	return CheckCreateResponse(e, service_dto, err, err_code, config.CreateServiceSuccess)
 }
 
 func (s *ServiceController) Update(e echo.Context) error {
