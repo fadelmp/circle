@@ -19,6 +19,7 @@ func ToServiceDto(entity entity.Service) dto.Service {
 	return dto.Service{
 		ID:          entity.ID,
 		ServiceName: entity.ServiceName,
+		Amount:      entity.Amount,
 	}
 }
 

@@ -10,6 +10,7 @@ import (
 type OrderRepositoryContract interface {
 	GetAll() []entity.Order
 
+	GetByFilter(string, uint, time.Time, time.Time)
 	GetByOrderNumber(string) entity.Order
 	GetByCustomerID(uint) []entity.Order
 	GetByStatusID(uint) []entity.Order
@@ -37,12 +38,41 @@ func (o *OrderRepository) GetAll() []entity.Order {
 	return orders
 }
 
+func (o *OrderRepository) GetByFilter(
+	search string,
+	status_id uint,
+	from time.Time,
+	to time.Time,
+) []entity.Order {
+
+	var orders []entity.Order
+
+	data := o.DB.Model(&entity.Order{})
+
+	if search != "" {
+		data = data.Where("number=?", search).Or("customer_name=?", search)
+	}
+
+	if status_id != 0 {
+		data = data.Where("status_id=?", status_id)
+	}
+
+	if from.IsZero() && to.IsZero() {
+		data = data.Where("created_at BETWEEN ? AND ?", from, to)
+	}
+
+	data.Order("id ASC").Preload("Status").Preload("Articles").Find(&orders)
+
+	return orders
+}
+
 func (o *OrderRepository) GetByOrderNumber(order_number string) entity.Order {
 
 	var order entity.Order
 
 	o.DB.Where("number=?", order_number).Preload("Status").
 		Preload("Articles").Preload("Articles.Services").
+		Preload("Articles.Unit").Preload("Articles.Status").
 		Find(&order)
 
 	return order
