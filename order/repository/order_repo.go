@@ -8,16 +8,17 @@ import (
 )
 
 type OrderRepositoryContract interface {
-	GetAll() []entity.Order
-
-	GetByFilter(string, uint, time.Time, time.Time)
-	GetByOrderNumber(string) entity.Order
-	GetByCustomerID(uint) []entity.Order
-	GetByStatusID(uint) []entity.Order
-	GetByDate(time.Time, time.Time) []entity.Order
-
+	GetByNumber(string) entity.Order
 	Create(entity.Order) error
 	Update(entity.Order) error
+	ChangeStatus(entity.Order) error
+
+	Filter() *gorm.DB
+	FilterSearch(*gorm.DB, string) *gorm.DB
+	FilterStatus(*gorm.DB, uint) *gorm.DB
+	FilterCustomer(*gorm.DB, uint) *gorm.DB
+	FilterTime(*gorm.DB, time.Time, time.Time) *gorm.DB
+	Exec(*gorm.DB) []entity.Order
 }
 
 type OrderRepository struct {
@@ -32,41 +33,13 @@ func (o *OrderRepository) GetAll() []entity.Order {
 
 	var orders []entity.Order
 
-	o.DB.Model(&entity.Order{}).Order("id asc").Preload("Status").
-		Preload("Articles").Find(&orders)
+	o.DB.Model(&entity.Order{}).Order("id asc").
+		Preload("Status").Preload("Articles").Find(&orders)
 
 	return orders
 }
 
-func (o *OrderRepository) GetByFilter(
-	search string,
-	status_id uint,
-	from time.Time,
-	to time.Time,
-) []entity.Order {
-
-	var orders []entity.Order
-
-	data := o.DB.Model(&entity.Order{})
-
-	if search != "" {
-		data = data.Where("number=?", search).Or("customer_name=?", search)
-	}
-
-	if status_id != 0 {
-		data = data.Where("status_id=?", status_id)
-	}
-
-	if from.IsZero() && to.IsZero() {
-		data = data.Where("created_at BETWEEN ? AND ?", from, to)
-	}
-
-	data.Order("id ASC").Preload("Status").Preload("Articles").Find(&orders)
-
-	return orders
-}
-
-func (o *OrderRepository) GetByOrderNumber(order_number string) entity.Order {
+func (o *OrderRepository) GetByNumber(order_number string) entity.Order {
 
 	var order entity.Order
 
@@ -78,35 +51,6 @@ func (o *OrderRepository) GetByOrderNumber(order_number string) entity.Order {
 	return order
 }
 
-func (o *OrderRepository) GetByCustomerID(customer_id uint) []entity.Order {
-
-	var orders []entity.Order
-
-	o.DB.Where("customer_id=?", customer_id).Order("id asc").
-		Preload("Articles").Preload("Status").Find(&orders)
-
-	return orders
-}
-
-func (o *OrderRepository) GetByStatusID(status_id uint) []entity.Order {
-
-	var orders []entity.Order
-
-	o.DB.Where("status_id=?", status_id).Order("id asc").
-		Preload("Articles").Preload("Status").Find(&orders)
-
-	return orders
-}
-
-func (o *OrderRepository) GetByDate(first_date time.Time, last_date time.Time) []entity.Order {
-
-	var orders []entity.Order
-
-	o.DB.Where("created_at BETWEEN ? AND ?", first_date, last_date).Find(&orders)
-
-	return orders
-}
-
 func (o *OrderRepository) Create(order entity.Order) error {
 
 	return o.DB.Create(&order).Error
@@ -116,4 +60,50 @@ func (o *OrderRepository) Update(order entity.Order) error {
 
 	// update Order by id
 	return o.DB.Model(&order).Update(&order).Error
+}
+
+func (o *OrderRepository) ChangeStatus(order entity.Order) error {
+
+	// change is actived and is deleted value
+	return o.DB.Model(&order).Where("id=?", order.ID).Updates(map[string]interface{}{
+		"is_actived": order.Base.Is_Actived,
+		"is_deleted": order.Base.Is_Deleted,
+		"updated_at": order.Base.Updated_At,
+		"updated_by": order.Base.Updated_By,
+	}).Error
+}
+
+func (o *OrderRepository) Filter() *gorm.DB {
+
+	return o.DB.Model(&entity.Order{})
+}
+
+func (o *OrderRepository) FilterSearch(data *gorm.DB, search string) *gorm.DB {
+
+	return data.Where("number=?", search).
+		Or("customer_name=?", search)
+}
+
+func (o *OrderRepository) FilterStatus(data *gorm.DB, status_id uint) *gorm.DB {
+
+	return data.Where("status_id=?", status_id)
+}
+
+func (o *OrderRepository) FilterCustomer(data *gorm.DB, customer_id uint) *gorm.DB {
+
+	return data.Where("customer_id=?", customer_id)
+}
+
+func (o *OrderRepository) FilterTime(data *gorm.DB, from time.Time, to time.Time) *gorm.DB {
+
+	return data.Where("created_at BETWEEN ? AND ?", from, to)
+}
+
+func (o *OrderRepository) Exec(data *gorm.DB) []entity.Order {
+
+	var orders []entity.Order
+
+	data.Order("id asc").Preload("Status").Preload("Articles").Find(&orders)
+
+	return orders
 }

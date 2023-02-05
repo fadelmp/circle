@@ -12,10 +12,8 @@ import (
 )
 
 type OrderUsecaseContract interface {
-	GetAll() []dto.ShowOrder
-	GetByOrderNumber(string) dto.ShowOrderDetail
-	GetByCustomer(uint) []dto.ShowOrder
-	GetByStatus(uint) []dto.ShowOrder
+	GetAll(dto.QueryParam) []dto.ShowOrder
+	GetByNumber(string) dto.ShowOrderDetail
 
 	Create(entity.Order) error
 	Update(entity.Order) error
@@ -31,32 +29,38 @@ func ProviderOrderUsecase(o repository.OrderRepository) OrderUsecase {
 	}
 }
 
-func (o *OrderUsecase) GetAll() []dto.ShowOrder {
+func (o *OrderUsecase) GetAll(query dto.QueryParam) []dto.ShowOrder {
 
-	orders := o.OrderRepository.GetAll()
+	gorm_db := o.OrderRepository.Filter()
+
+	if query.Search != "" {
+		gorm_db = o.OrderRepository.FilterSearch(gorm_db, query.Search)
+	}
+
+	if query.StatusID != "" {
+		status_id, _ := strconv.ParseUint(query.StatusID, 10, 64)
+		gorm_db = o.OrderRepository.FilterStatus(gorm_db, uint(status_id))
+	}
+
+	if query.CustomerID != "" {
+		customer_id, _ := strconv.ParseUint(query.StatusID, 10, 64)
+		gorm_db = o.OrderRepository.FilterCustomer(gorm_db, uint(customer_id))
+	}
+
+	if !query.From.IsZero() && !query.To.IsZero() {
+		gorm_db = o.OrderRepository.FilterTime(gorm_db, query.From, query.To)
+	}
+
+	orders := o.OrderRepository.Exec(gorm_db)
 
 	return mapper.ToShowOrderDtoList(orders)
 }
 
-func (o *OrderUsecase) GetByOrderNumber(order_number string) dto.ShowOrderDetail {
+func (o *OrderUsecase) GetByNumber(order_number string) dto.ShowOrderDetail {
 
-	order := o.OrderRepository.GetByOrderNumber(order_number)
+	order := o.OrderRepository.GetByNumber(order_number)
 
 	return mapper.ToShowOrderDetailDto(order)
-}
-
-func (o *OrderUsecase) GetByCustomerID(customer_id uint) []dto.ShowOrder {
-
-	orders := o.OrderRepository.GetByCustomerID(customer_id)
-
-	return mapper.ToShowOrderDtoList(orders)
-}
-
-func (o *OrderUsecase) GetByStatusID(status_id uint) []dto.ShowOrder {
-
-	orders := o.OrderRepository.GetByStatusID(status_id)
-
-	return mapper.ToShowOrderDtoList(orders)
 }
 
 func (o *OrderUsecase) Create(dto dto.Order) error {
@@ -92,7 +96,10 @@ func (o *OrderUsecase) GenerateOrderNumber() string {
 		date = "0" + date
 	}
 
-	orders := o.OrderRepository.GetByDate(Bod(today), Bod(tomorrow))
+	gorm_db := o.OrderRepository.Filter()
+	gorm_db = o.OrderRepository.FilterTime(gorm_db, Bod(today), Bod(tomorrow))
+	orders := o.OrderRepository.Exec(gorm_db)
+
 	count := len(orders) + 1
 	number_str := strconv.FormatUint(uint64(count), 10)
 
@@ -135,7 +142,7 @@ func Bod(t time.Time) time.Time {
 
 func (o *OrderUsecase) CheckOrderNumber(order_number string) bool {
 
-	order := o.OrderRepository.GetByOrderNumber(order_number)
+	order := o.OrderRepository.GetByNumber(order_number)
 
 	if order.ID == 0 {
 		return false

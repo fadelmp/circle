@@ -5,7 +5,6 @@ import (
 	"order/config"
 	"order/dto"
 	"order/usecase"
-	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -22,7 +21,13 @@ func ProviderOrderController(o usecase.OrderUsecase) OrderController {
 
 func (o *OrderController) GetAll(e echo.Context) error {
 
-	orders := o.OrderUsecase.GetAll()
+	var query dto.QueryParam
+
+	if e.Bind(&query) != nil {
+		return ErrorResponse(e, http.StatusInternalServerError, 3, config.BadRequest)
+	}
+
+	orders := o.OrderUsecase.GetAll(query)
 
 	if len(orders) == 0 {
 		return SuccessResponse(e, nil, config.OrderNotFound)
@@ -31,38 +36,11 @@ func (o *OrderController) GetAll(e echo.Context) error {
 	return SuccessResponse(e, orders, config.GetOrderSuccess)
 }
 
-func (o *OrderController) GetByCustomerID(e echo.Context) error {
+func (o *OrderController) GetByNumber(e echo.Context) error {
 
-	customer_id, _ := strconv.ParseUint(e.Param("customer_id"), 10, 32)
+	order_number := e.Param("number")
 
-	orders := o.OrderUsecase.GetByCustomerID(uint(customer_id))
-
-	if len(orders) == 0 {
-		return SuccessResponse(e, nil, config.OrderNotFound)
-	}
-
-	return SuccessResponse(e, orders, config.GetOrderSuccess)
-
-}
-
-func (o *OrderController) GetByStatusID(e echo.Context) error {
-
-	status_id, _ := strconv.ParseUint(e.Param("status_id"), 10, 32)
-
-	orders := o.OrderUsecase.GetByStatusID(uint(status_id))
-
-	if len(orders) == 0 {
-		return SuccessResponse(e, nil, config.OrderNotFound)
-	}
-
-	return SuccessResponse(e, orders, config.GetOrderSuccess)
-}
-
-func (o *OrderController) GetByOrderNumber(e echo.Context) error {
-
-	order_number := e.Param("order_number")
-
-	order := o.OrderUsecase.GetByOrderNumber(order_number)
+	order := o.OrderUsecase.GetByNumber(order_number)
 
 	if order.ID == 0 {
 		return SuccessResponse(e, nil, config.GetOrderSuccess)
