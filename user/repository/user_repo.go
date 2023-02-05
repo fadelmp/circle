@@ -16,7 +16,7 @@ type UserRepositoryContract interface {
 
 	Create(entity.User) error
 	Update(entity.User) error
-	Delete(entity.User) error
+	ChangeStatus(entity.User) error
 }
 
 type UserRepository struct {
@@ -75,40 +75,22 @@ func (u *UserRepository) GetByName(name string) entity.User {
 func (u *UserRepository) Create(user entity.User) error {
 
 	// Create User
-	err := u.DB.Create(&user).Error
-
-	return err
+	return u.DB.Create(&user).Error
 }
 
 func (u *UserRepository) Update(user entity.User) error {
 
 	// update User by id
-	err := u.DB.Model(&user).Update(&user).Error
-
-	return err
+	return u.DB.Model(&user).Update(&user).Error
 }
 
 func (u *UserRepository) Delete(user entity.User) error {
 
 	// delete User by id, by change is active value to false
-	err := u.DB.Model(&user).Where("id=?", user.ID).Updates(map[string]interface{}{
+	return u.DB.Model(&user).Where("id=?", user.ID).Updates(map[string]interface{}{
 		"is_actived": user.Base.Is_Actived,
 		"is_deleted": user.Base.Is_Deleted,
 		"updated_at": user.Base.Updated_At,
 		"updated_by": user.Base.Updated_By,
 	}).Error
-
-	return err
-}
-
-func (u *UserRepository) ActiveStatus(user entity.User) error {
-
-	// delete User by id, by change is active value to false
-	err := u.DB.Model(&user).Where("id=?", user.ID).Updates(map[string]interface{}{
-		"is_actived": user.Base.Is_Actived,
-		"updated_at": user.Base.Updated_At,
-		"updated_by": user.Base.Updated_By,
-	}).Error
-
-	return err
 }

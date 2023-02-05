@@ -114,10 +114,6 @@ func (o *OrderRepository) Create(order entity.Order) error {
 
 func (o *OrderRepository) Update(order entity.Order) error {
 
-	// delete Service by id, by change is active value to false
-	return o.DB.Model(&order).Where("id=?", order.ID).Updates(map[string]interface{}{
-		"status_id":  order.StatusID,
-		"updated_at": order.Base.Updated_At,
-		"updated_by": order.Base.Updated_By,
-	}).Error
+	// update Order by id
+	return o.DB.Model(&order).Update(&order).Error
 }

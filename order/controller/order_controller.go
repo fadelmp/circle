@@ -87,3 +87,20 @@ func (o *OrderController) Create(e echo.Context) error {
 
 	return SuccessResponse(e, nil, config.CreateOrderSuccess)
 }
+
+func (o *OrderController) Update(e echo.Context) error {
+
+	var order dto.Order
+
+	if e.Bind(&order) != nil {
+		return ErrorResponse(e, http.StatusInternalServerError, 3, config.BadRequest)
+	}
+
+	err := o.OrderUsecase.Update(order)
+
+	if err != nil {
+		return ErrorResponse(e, http.StatusInternalServerError, 3, err.Error())
+	}
+
+	return SuccessResponse(e, nil, config.UpdateOrderSuccess)
+}

@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"errors"
+	"order/config"
 	"order/dto"
 	entity "order/entity"
 	"order/mapper"
@@ -68,6 +70,18 @@ func (o *OrderUsecase) Create(dto dto.Order) error {
 	return o.OrderRepository.Create(order_entity)
 }
 
+func (o *OrderUsecase) Update(dto dto.Order) error {
+
+	if !o.CheckOrderNumber(dto.Number) {
+		return errors.New(config.OrderNotFound)
+	}
+
+	order_entity := mapper.ToOrderEntity(dto)
+	order_entity.Base = entity.BaseUpdate()
+
+	return o.OrderRepository.Update(order_entity)
+}
+
 func (o *OrderUsecase) GenerateOrderNumber() string {
 
 	date := GetDate()
@@ -117,4 +131,15 @@ func GetDate() string {
 func Bod(t time.Time) time.Time {
 	year, month, day := t.Date()
 	return time.Date(year, month, day, 0, 0, 0, 0, t.Location())
+}
+
+func (o *OrderUsecase) CheckOrderNumber(order_number string) bool {
+
+	order := o.OrderRepository.GetByOrderNumber(order_number)
+
+	if order.ID == 0 {
+		return false
+	}
+
+	return true
 }

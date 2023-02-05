@@ -16,5 +16,6 @@ func OrderRoutes(routes *echo.Echo, api controller.OrderController) {
 		order.GET("/status/:status_id", api.GetByStatusID)
 
 		order.POST("", api.Create)
+		order.PUT("", api.Update)
 	}
 }

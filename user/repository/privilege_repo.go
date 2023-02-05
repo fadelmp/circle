@@ -16,7 +16,6 @@ type PrivilegeRepositoryContract interface {
 
 	Create(entity.Privilege) error
 	Update(entity.Privilege) error
-	Delete(entity.Privilege) error
 	ActiveStatus(entity.Privilege) error
 }
 
@@ -76,40 +75,22 @@ func (p *PrivilegeRepository) GetByName(name string) entity.Privilege {
 func (p *PrivilegeRepository) Create(privilege entity.Privilege) error {
 
 	// Create Privilege
-	err := p.DB.Create(&privilege).Error
-
-	return err
+	return p.DB.Create(&privilege).Error
 }
 
 func (p *PrivilegeRepository) Update(privilege entity.Privilege) error {
 
 	// update Privilege by id
-	err := p.DB.Model(&privilege).Update(&privilege).Error
-
-	return err
+	return p.DB.Model(&privilege).Update(&privilege).Error
 }
 
-func (p *PrivilegeRepository) Delete(privilege entity.Privilege) error {
+func (p *PrivilegeRepository) ChangeStatus(privilege entity.Privilege) error {
 
 	// delete Privilege by id, by change is active value to false
-	err := p.DB.Model(&privilege).Where("id=?", privilege.ID).Updates(map[string]interface{}{
+	return p.DB.Model(&privilege).Where("id=?", privilege.ID).Updates(map[string]interface{}{
 		"is_actived": privilege.Base.Is_Actived,
 		"is_deleted": privilege.Base.Is_Deleted,
 		"updated_at": privilege.Base.Updated_At,
 		"updated_by": privilege.Base.Updated_By,
 	}).Error
-
-	return err
-}
-
-func (p *PrivilegeRepository) ActiveStatus(privilege entity.Privilege) error {
-
-	// delete Privilege by id, by change is active value to false
-	err := p.DB.Model(&privilege).Where("id=?", privilege.ID).Updates(map[string]interface{}{
-		"is_actived": privilege.Base.Is_Actived,
-		"updated_at": privilege.Base.Updated_At,
-		"updated_by": privilege.Base.Updated_By,
-	}).Error
-
-	return err
 }
