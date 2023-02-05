@@ -74,3 +74,16 @@ func (o *OrderController) CreateOrder(e echo.Context) error {
 
 	return CheckResponse(e, res)
 }
+
+func (o *OrderController) UpdateOrder(e echo.Context) error {
+
+	var request interface{}
+
+	if e.Bind(&request) != nil {
+		return config.ErrorResponse(e, http.StatusInternalServerError, 3, config.BadRequest)
+	}
+
+	res := o.OrderUsecase.UpdateOrder(request)
+
+	return CheckResponse(e, res)
+}

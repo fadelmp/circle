@@ -16,21 +16,25 @@ type OrderUsecaseContract interface {
 	GetOrderByStatus(uint) dto.Response
 
 	CreateOrder(interface{}) dto.Response
+	UpdateOrder(interface{}) dto.Response
 }
 
 type OrderUsecase struct {
 	GetRequest   request.GetRequest
+	PutRequest   request.PutRequest
 	PostRequest  request.PostRequest
 	PatchRequest request.PatchRequest
 }
 
 func ProviderOrderUsecase(
 	g request.GetRequest,
+	pu request.PutRequest,
 	po request.PostRequest,
 	pa request.PatchRequest,
 ) OrderUsecase {
 	return OrderUsecase{
 		GetRequest:   g,
+		PutRequest:   pu,
 		PostRequest:  po,
 		PatchRequest: pa,
 	}
@@ -85,4 +89,14 @@ func (o *OrderUsecase) CreateOrder(form_data interface{}) dto.Response {
 	request_body := bytes.NewBuffer(post_body)
 
 	return o.PostRequest.Main(uri, request_body)
+}
+
+func (o *OrderUsecase) UpdateOrder(form_data interface{}) dto.Response {
+
+	uri := getOrderUri()
+
+	put_body, _ := json.Marshal(form_data)
+	request_body := bytes.NewBuffer(put_body)
+
+	return o.PutRequest.Main(uri, request_body)
 }
