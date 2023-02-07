@@ -72,7 +72,7 @@ func (o *OrderUsecase) GetOrders(query_param dto.QueryParam) dto.Response {
 	if !query_param.From.IsZero() && !query_param.To.IsZero() {
 		uri = o.AddQuestionMark(uri)
 		uri = uri + "from=" + query_param.From.String()
-		uri = uri + "to=" + query_param.To.String()
+		uri = uri + "&to=" + query_param.To.String()
 	}
 
 	return o.GetRequest.Main(uri)
@@ -108,8 +108,10 @@ func (o *OrderUsecase) UpdateOrder(form_data interface{}) dto.Response {
 
 func (o *OrderUsecase) AddQuestionMark(uri string) string {
 
-	if strings.Contains(uri, "?") {
+	if !strings.Contains(uri, "?") {
 		uri = uri + "?"
+	} else {
+		uri = "&" + uri
 	}
 
 	return uri
