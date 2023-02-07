@@ -6,11 +6,11 @@ import (
 	request "core/request"
 	"encoding/json"
 	"os"
-	"strconv"
+	"strings"
 )
 
 type OrderUsecaseContract interface {
-	GetOrders() dto.Response
+	GetOrders(dto.QueryParam) dto.Response
 	GetOrderByOrderNumber(string) dto.Response
 	GetOrderByCustomer(uint) dto.Response
 	GetOrderByStatus(uint) dto.Response
@@ -50,9 +50,30 @@ func getOrderUri() string {
 
 // Implementation
 
-func (o *OrderUsecase) GetOrders() dto.Response {
+func (o *OrderUsecase) GetOrders(query_param dto.QueryParam) dto.Response {
 
 	uri := getOrderUri()
+
+	if query_param.Search != "" {
+		uri = o.AddQuestionMark(uri)
+		uri = uri + "search=" + query_param.Search
+	}
+
+	if query_param.StatusID != "" {
+		uri = o.AddQuestionMark(uri)
+		uri = uri + "status_id=" + query_param.StatusID
+	}
+
+	if query_param.CustomerID != "" {
+		uri = o.AddQuestionMark(uri)
+		uri = uri + "customer_id=" + query_param.CustomerID
+	}
+
+	if !query_param.From.IsZero() && !query_param.To.IsZero() {
+		uri = o.AddQuestionMark(uri)
+		uri = uri + "from=" + query_param.From.String()
+		uri = uri + "to=" + query_param.To.String()
+	}
 
 	return o.GetRequest.Main(uri)
 }
@@ -61,22 +82,6 @@ func (o *OrderUsecase) GetOrderByOrderNumber(number string) dto.Response {
 
 	uri := getOrderUri()
 	uri += "/number/" + number
-
-	return o.GetRequest.Main(uri)
-}
-
-func (o *OrderUsecase) GetOrderByCustomer(customer_id uint) dto.Response {
-
-	uri := getOrderUri()
-	uri += "/customer/" + strconv.FormatUint(uint64(customer_id), 10)
-
-	return o.GetRequest.Main(uri)
-}
-
-func (o *OrderUsecase) GetOrderByStatus(status_id uint) dto.Response {
-
-	uri := getOrderUri()
-	uri += "/status/" + strconv.FormatUint(uint64(status_id), 10)
 
 	return o.GetRequest.Main(uri)
 }
@@ -99,4 +104,13 @@ func (o *OrderUsecase) UpdateOrder(form_data interface{}) dto.Response {
 	request_body := bytes.NewBuffer(put_body)
 
 	return o.PutRequest.Main(uri, request_body)
+}
+
+func (o *OrderUsecase) AddQuestionMark(uri string) string {
+
+	if strings.Contains(uri, "?") {
+		uri = uri + "?"
+	}
+
+	return uri
 }

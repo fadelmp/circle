@@ -2,9 +2,9 @@ package controller
 
 import (
 	"core/config"
+	"core/dto"
 	"core/usecase"
 	"net/http"
-	"strconv"
 
 	"github.com/labstack/echo"
 	_ "github.com/labstack/echo"
@@ -22,7 +22,13 @@ func ProviderOrderController(o usecase.OrderUsecase) OrderController {
 
 func (o *OrderController) GetOrders(e echo.Context) error {
 
-	res := o.OrderUsecase.GetOrders()
+	var query dto.QueryParam
+
+	if e.Bind(&query) != nil {
+		return config.ErrorResponse(e, http.StatusInternalServerError, 3, config.BadRequest)
+	}
+
+	res := o.OrderUsecase.GetOrders(query)
 
 	return CheckResponse(e, res)
 }
@@ -32,32 +38,6 @@ func (o *OrderController) GetOrderByNumber(e echo.Context) error {
 	number := e.Param("number")
 
 	res := o.OrderUsecase.GetOrderByOrderNumber(number)
-
-	return CheckResponse(e, res)
-}
-
-func (o *OrderController) GetOrderByCustomer(e echo.Context) error {
-
-	id, err := strconv.ParseUint(e.Param("customer_id"), 10, 64)
-
-	if err != nil {
-		return config.ErrorResponse(e, http.StatusBadRequest, 3, config.BadRequest)
-	}
-
-	res := o.OrderUsecase.GetOrderByCustomer(uint(id))
-
-	return CheckResponse(e, res)
-}
-
-func (o *OrderController) GetOrderByStatus(e echo.Context) error {
-
-	id, err := strconv.ParseUint(e.Param("status_id"), 10, 64)
-
-	if err != nil {
-		return config.ErrorResponse(e, http.StatusBadRequest, 3, config.BadRequest)
-	}
-
-	res := o.OrderUsecase.GetOrderByStatus(uint(id))
 
 	return CheckResponse(e, res)
 }
