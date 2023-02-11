@@ -43,7 +43,7 @@ func (o *OrderUsecase) GetAll(query dto.QueryParam) []dto.ShowOrder {
 	}
 
 	if query.CustomerID != "" {
-		customer_id, _ := strconv.ParseUint(query.StatusID, 10, 64)
+		customer_id, _ := strconv.ParseUint(query.CustomerID, 10, 64)
 		gorm_db = o.OrderRepository.FilterCustomer(gorm_db, uint(customer_id))
 	}
 
