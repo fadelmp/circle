@@ -38,7 +38,7 @@ func (o *OrderController) GetAll(e echo.Context) error {
 
 func (o *OrderController) GetByNumber(e echo.Context) error {
 
-	order_number := e.Param("number")
+	order_number := e.Param("order_number")
 
 	order := o.OrderUsecase.GetByNumber(order_number)
 
